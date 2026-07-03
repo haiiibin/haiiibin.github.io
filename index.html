@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Allen (Haibin) Yu. Data analyst in Vancouver: forecasting, optimization, machine learning. UBC MBAN.">
+<title>Allen Yu | Data Analytics Portfolio</title>
+<style>
+  :root { --accent: #14385c; --text: #1c2530; --muted: #5b6875; --line: #e4e8ec; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+         color: var(--text); line-height: 1.6; background: #fff; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  header { padding: 72px 0 48px; border-bottom: 1px solid var(--line); }
+  header h1 { font-size: 2.2rem; letter-spacing: -0.02em; }
+  header .tagline { color: var(--accent); font-weight: 600; margin: 6px 0 14px; }
+  header .links a { color: var(--muted); text-decoration: none; margin-right: 18px; font-size: 0.95rem; }
+  header .links a:hover { color: var(--accent); }
+  section { padding: 44px 0; border-bottom: 1px solid var(--line); }
+  h2 { font-size: 1.3rem; margin-bottom: 24px; color: var(--accent); }
+  .project { display: flex; gap: 24px; margin-bottom: 36px; align-items: flex-start; flex-wrap: wrap; }
+  .project img { width: 320px; max-width: 100%; border: 1px solid var(--line); border-radius: 6px; }
+  .project .body { flex: 1; min-width: 260px; }
+  .project h3 { font-size: 1.05rem; margin-bottom: 6px; }
+  .project h3 a { color: var(--text); text-decoration: none; }
+  .project h3 a:hover { color: var(--accent); }
+  .metric { display: inline-block; background: #eef3f8; color: var(--accent); border-radius: 4px;
+            padding: 2px 8px; font-size: 0.85rem; font-weight: 600; margin: 6px 6px 0 0; }
+  .skills li { margin-bottom: 8px; }
+  .skills b { color: var(--accent); }
+  ul { list-style: none; }
+  .edu p { margin-bottom: 10px; }
+  footer { padding: 32px 0 48px; color: var(--muted); font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Allen (Haibin) Yu</h1>
+    <p class="tagline">Data &amp; People Analytics · Vancouver, Canada</p>
+    <p>People Analyst at Electronic Arts. UBC Master of Business Analytics. I build forecasting, optimization, and machine learning solutions, with an AI-assisted workflow (Claude Code, MCP) built in.</p>
+    <p class="links" style="margin-top:14px">
+      <a href="mailto:haibiny123@gmail.com">Email</a>
+      <a href="https://www.linkedin.com/in/haiiibin">LinkedIn</a>
+      <a href="https://github.com/haiiibin">GitHub</a>
+    </p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>Projects</h2>
+
+    <div class="project">
+      <img src="images/yvr_forecast.png" alt="YVR energy forecast chart">
+      <div class="body">
+        <h3><a href="https://github.com/haiiibin/Vancouver-International-Airport-Energy-Consumption-Forecasting">YVR Energy Consumption Forecasting</a></h3>
+        <p>Seasonal ARIMA on 14 years of monthly energy data for Vancouver International Airport; 3-year projections supporting procurement planning.</p>
+        <span class="metric">MAPE 1.7%</span><span class="metric">ARIMA + Box-Cox</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <img src="images/diabetes_results.png" alt="Diabetes model results chart">
+      <div class="body">
+        <h3><a href="https://github.com/haiiibin/Machine-Learning-for-Diabetes-Risk-Screening">Diabetes Risk Screening (Two-Stage ML)</a></h3>
+        <p>Logistic regression screening followed by random forest diagnosis, reducing unnecessary lab tests while preserving sensitivity.</p>
+        <span class="metric">F1 0.87</span><span class="metric">-30% lab tests</span><span class="metric">95% sensitivity</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <img src="images/schoolbus_result.png" alt="School bus optimization chart">
+      <div class="body">
+        <h3><a href="https://github.com/haiiibin/school-bus-route-optimization">School Bus Route Optimization</a></h3>
+        <p>MILP model reassigning 2,000 students after a school closure under capacity, grade-distribution, and distance constraints.</p>
+        <span class="metric">$1.73M/yr base</span><span class="metric">29 buses</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="body">
+        <h3><a href="https://github.com/haiiibin/us-stock-price-prediction">US Stock Price Prediction (SPY)</a></h3>
+        <p>VAR vs LASSO vs LSTM on 2017-2019 data; LASSO wins with 12 features auto-selected from 30+ candidates.</p>
+        <span class="metric">MSE 5.87</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="body">
+        <h3><a href="https://github.com/haiiibin/health-service-industry-analysis">Health Service Industry Analysis (10-K NLP)</a></h3>
+        <p>TF-IDF + Word2Vec over 5,481 SEC 10-K filings (358 firms, 1994-2020); competitor mapping and growth analysis for HCA Healthcare.</p>
+        <span class="metric">99.6% similarity match</span><span class="metric">Telehealth 24.7% CAGR</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Skills</h2>
+    <ul class="skills">
+      <li><b>Languages &amp; Data Science:</b> Python, R, SQL, Pandas, NumPy, scikit-learn, PyTorch, TensorFlow, time series forecasting</li>
+      <li><b>Visualization &amp; BI:</b> Power BI, Tableau, Looker Studio, advanced Excel</li>
+      <li><b>Databases &amp; Cloud:</b> PostgreSQL, MS SQL Server, MongoDB, Neo4j, Google BigQuery, AWS, Google Cloud, Azure</li>
+      <li><b>AI &amp; Developer Tools:</b> Claude Code (MCP, CLI, API), GitHub Copilot, prompt engineering, AI workflow automation</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap edu">
+    <h2>Education</h2>
+    <p><b>Master of Business Analytics (MBAN)</b>, UBC Sauder School of Business · Nov 2025</p>
+    <p><b>BA in Economics</b>, Minor in Commerce, UBC · May 2024 · graduated with distinction</p>
+    <p><b>CFA Level II Candidate</b></p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© 2026 Allen Yu · Built by hand, no frameworks.</div>
+</footer>
+</body>
+</html>
