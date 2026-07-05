@@ -7,108 +7,174 @@
 <title>Allen Yu | Data Analytics Portfolio</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
 <style>
-  :root { --accent: #14385c; --text: #1c2530; --muted: #5b6875; --line: #e4e8ec; }
+  :root {
+    --text: #1c2530;
+    --muted: #5b6875;
+    --accent: #14385c;
+    --line: #e4e8ec;
+    --radius: 16px;
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-         color: var(--text); line-height: 1.6; background: #fff; }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
-  header { padding: 72px 0 48px; border-bottom: 1px solid var(--line); }
-  header h1 { font-size: 2.2rem; letter-spacing: -0.02em; }
-  header .tagline { color: var(--accent); font-weight: 600; margin: 6px 0 14px; }
-  header .links a { color: var(--muted); text-decoration: none; margin-right: 18px; font-size: 0.95rem; }
-  header .links a:hover { color: var(--accent); }
-  section { padding: 44px 0; border-bottom: 1px solid var(--line); }
-  h2 { font-size: 1.3rem; margin-bottom: 24px; color: var(--accent); }
-  .project { display: flex; gap: 24px; margin-bottom: 36px; align-items: flex-start; flex-wrap: wrap; }
-  .project img { width: 320px; max-width: 100%; border: 1px solid var(--line); border-radius: 6px; }
-  .project .body { flex: 1; min-width: 260px; }
-  .project h3 { font-size: 1.05rem; margin-bottom: 6px; }
-  .project h3 a { color: var(--text); text-decoration: none; }
-  .project h3 a:hover { color: var(--accent); }
-  .metric { display: inline-block; background: #eef3f8; color: var(--accent); border-radius: 4px;
-            padding: 2px 8px; font-size: 0.85rem; font-weight: 600; margin: 6px 6px 0 0; }
-  .skills li { margin-bottom: 8px; }
-  .skills b { color: var(--accent); }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text); line-height: 1.65; background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+  /* Hero */
+  header { padding: 96px 0 64px; }
+  header h1 {
+    font-size: clamp(1.8rem, 4.5vw, 2.6rem);
+    line-height: 1.25; letter-spacing: -0.02em; max-width: 21em;
+  }
+  header .sub { color: var(--muted); margin-top: 18px; max-width: 44em; }
+  .links { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .links a {
+    color: var(--accent); text-decoration: none; font-size: 0.92rem; font-weight: 600;
+    border: 1px solid var(--line); border-radius: 999px; padding: 7px 16px;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .links a:hover { background: #f2f6fa; border-color: #c8d4de; }
+
+  /* Case studies */
+  .case {
+    border-radius: var(--radius);
+    padding: 44px 44px 40px;
+    margin-bottom: 36px;
+  }
+  .case.cream { background: #fdf3e7; --hl: #b25e2e; }
+  .case.blue  { background: #e9f2f9; --hl: #2b6cb0; }
+  .case.green { background: #eaf4ec; --hl: #3f7652; }
+  .case h2 { font-size: clamp(1.25rem, 2.6vw, 1.6rem); line-height: 1.3; letter-spacing: -0.01em; }
+  .case .meta { color: var(--muted); font-size: 0.88rem; margin-top: 10px; }
+  .tags { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag {
+    background: rgba(255,255,255,0.75); color: var(--muted);
+    font-size: 0.78rem; font-weight: 600; border-radius: 999px; padding: 3px 12px;
+  }
+  .headline-metric { margin-top: 22px; font-size: 1.05rem; }
+  .headline-metric b { color: var(--hl); font-size: 1.5rem; font-weight: 800; margin-right: 6px; }
+  .case p.body { margin-top: 16px; max-width: 46em; }
+  .case p.body b.lead { color: var(--text); }
+  .case img {
+    display: block; width: 100%; max-width: 620px; margin: 28px auto 0;
+    border-radius: 10px; border: 1px solid rgba(0,0,0,0.07); background: #fff;
+  }
+  .case .cta { display: inline-block; margin-top: 24px; color: var(--hl); font-weight: 700; text-decoration: none; font-size: 0.95rem; }
+  .case .cta:hover { text-decoration: underline; }
+
+  /* Sections */
+  section { padding: 40px 0; }
+  section > .wrap > h2.sec { font-size: 1.35rem; color: var(--accent); margin-bottom: 28px; }
+
+  /* More projects grid */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .mini {
+    border: 1px solid var(--line); border-radius: 12px; padding: 22px 24px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .mini:hover { border-color: #c8d4de; box-shadow: 0 2px 10px rgba(20,56,92,0.06); }
+  .mini h3 { font-size: 1rem; }
+  .mini h3 a { color: var(--text); text-decoration: none; }
+  .mini h3 a:hover { color: var(--accent); }
+  .mini p { color: var(--muted); font-size: 0.9rem; margin-top: 8px; }
+  .metric {
+    display: inline-block; background: #eef3f8; color: var(--accent); border-radius: 4px;
+    padding: 2px 8px; font-size: 0.8rem; font-weight: 700; margin: 10px 6px 0 0;
+  }
+
+  /* Experience timeline */
+  .xp { border-left: 2px solid var(--line); }
+  .xp-item { position: relative; padding: 4px 0 26px 28px; }
+  .xp-item:last-child { padding-bottom: 4px; }
+  .xp-item::before {
+    content: ""; position: absolute; left: -7px; top: 10px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--accent); border: 3px solid #fff;
+  }
+  .xp-item h3 { font-size: 1rem; }
+  .xp-item .when { color: var(--muted); font-size: 0.85rem; margin-top: 2px; }
+  .xp-item p.what { color: var(--muted); font-size: 0.92rem; margin-top: 8px; max-width: 46em; }
+
+  /* Skills / education */
+  .skills li, .edu p { margin-bottom: 10px; }
+  .skills b, .edu b { color: var(--accent); }
   ul { list-style: none; }
-  .edu p { margin-bottom: 10px; }
-  footer { padding: 32px 0 48px; color: var(--muted); font-size: 0.9rem; }
+
+  /* Contact */
+  .contact {
+    background: #14385c; color: #eaf0f6; border-radius: var(--radius);
+    padding: 48px 44px; text-align: center; margin: 24px 0 64px;
+  }
+  .contact h2 { font-size: 1.4rem; }
+  .contact p { color: #b9c9d9; margin-top: 10px; }
+  .contact .links { justify-content: center; }
+  .contact .links a { color: #fff; border-color: #3c5c7d; }
+  .contact .links a:hover { background: #1d4a75; border-color: #5b7da0; }
+
+  footer { padding: 0 0 40px; color: var(--muted); font-size: 0.85rem; text-align: center; }
+
+  @media (max-width: 640px) {
+    header { padding: 64px 0 44px; }
+    .case { padding: 28px 22px 26px; }
+    .grid { grid-template-columns: 1fr; }
+    .contact { padding: 36px 22px; }
+  }
 </style>
 </head>
 <body>
+
 <header>
   <div class="wrap">
-    <h1>Allen (Haibin) Yu</h1>
-    <p class="tagline">Data &amp; People Analytics · Vancouver, Canada</p>
-    <p>People Analyst at Electronic Arts. UBC Master of Business Analytics. I build forecasting, optimization, and machine learning solutions, with an AI-assisted workflow (Claude Code, MCP) built in.</p>
-    <p class="links" style="margin-top:14px">
+    <h1>Turning messy data into decisions with forecasting, optimization, and machine learning.</h1>
+    <p class="sub">I'm Allen (Haibin) Yu, a People Analyst at Electronic Arts and UBC Master of Business Analytics graduate in Vancouver. I build models that end in a business decision, with an AI-assisted workflow (Claude Code, MCP) built into how I work.</p>
+    <div class="links">
       <a href="mailto:haibiny123@gmail.com">Email</a>
       <a href="https://www.linkedin.com/in/haiiibin">LinkedIn</a>
       <a href="https://github.com/haiiibin">GitHub</a>
-    </p>
+    </div>
   </div>
 </header>
 
 <section>
   <div class="wrap">
-    <h2>Projects</h2>
 
-    <div class="project">
+    <div class="case cream">
+      <h2>Forecasting airport energy demand within 1.7% of actuals</h2>
+      <p class="meta">Vancouver International Airport (YVR) &middot; Time series forecasting</p>
+      <div class="tags"><span class="tag">ARIMA</span><span class="tag">Box-Cox</span><span class="tag">R</span><span class="tag">Energy</span></div>
+      <p class="headline-metric"><b>1.7%</b> MAPE on holdout data</p>
+      <p class="body"><b class="lead">Problem.</b> Airport operations need reliable energy forecasts to negotiate procurement contracts and plan demand, working from 14 years of monthly consumption data with strong yearly seasonality.</p>
+      <p class="body"><b class="lead">Approach.</b> Stabilized variance with a Box-Cox transformation, fitted a seasonal ARIMA(1,1,0)(0,1,1)[12], and validated on a holdout window of the most recent observations.</p>
+      <p class="body"><b class="lead">Outcome.</b> Forecasts landed within 1.7% of actuals, and 3-year forward projections now support procurement contract and demand planning decisions.</p>
       <img src="images/yvr_forecast.png" alt="YVR energy forecast chart">
-      <div class="body">
-        <h3><a href="https://github.com/haiiibin/Vancouver-International-Airport-Energy-Consumption-Forecasting">YVR Energy Consumption Forecasting</a></h3>
-        <p>Seasonal ARIMA on 14 years of monthly energy data for Vancouver International Airport; 3-year projections supporting procurement planning.</p>
-        <span class="metric">MAPE 1.7%</span><span class="metric">ARIMA + Box-Cox</span>
-      </div>
+      <a class="cta" href="https://github.com/haiiibin/Vancouver-International-Airport-Energy-Consumption-Forecasting">View on GitHub &rarr;</a>
     </div>
 
-    <div class="project">
-      <img src="images/diabetes_results.png" alt="Diabetes model results chart">
-      <div class="body">
-        <h3><a href="https://github.com/haiiibin/Machine-Learning-for-Diabetes-Risk-Screening">Diabetes Risk Screening (Two-Stage ML)</a></h3>
-        <p>Logistic regression screening followed by random forest diagnosis, reducing unnecessary lab tests while preserving sensitivity.</p>
-        <span class="metric">F1 0.87</span><span class="metric">-30% lab tests</span><span class="metric">95% sensitivity</span>
-      </div>
+    <div class="case blue">
+      <h2>Cutting unnecessary lab tests by 30% without missing patients</h2>
+      <p class="meta">Diabetes risk screening &middot; Two-stage machine learning</p>
+      <div class="tags"><span class="tag">scikit-learn</span><span class="tag">Classification</span><span class="tag">Healthcare</span><span class="tag">Python</span></div>
+      <p class="headline-metric"><b>-30%</b> lab tests at <b>95%</b> detection sensitivity</p>
+      <p class="body"><b class="lead">Problem.</b> Laboratory testing for diabetes is expensive and slow. The goal: screen patients with non-invasive demographic and physiological data before committing to a lab test.</p>
+      <p class="body"><b class="lead">Approach.</b> A two-stage pipeline: logistic regression for initial risk screening (F1 = 0.78), then a random forest for final classification (F1 = 0.87), with decision thresholds tuned for sensitivity.</p>
+      <p class="body"><b class="lead">Outcome.</b> The pipeline removes 30% of unnecessary lab tests while keeping 95% detection sensitivity, freeing healthcare resources without missing at-risk patients.</p>
+      <img src="images/diabetes_results.png" alt="Diabetes model feature importance">
+      <a class="cta" href="https://github.com/haiiibin/Machine-Learning-for-Diabetes-Risk-Screening">View on GitHub &rarr;</a>
     </div>
 
-    <div class="project">
-      <img src="images/schoolbus_result.png" alt="School bus optimization chart">
-      <div class="body">
-        <h3><a href="https://github.com/haiiibin/school-bus-route-optimization">School Bus Route Optimization</a></h3>
-        <p>MILP model reassigning 2,000 students after a school closure under capacity, grade-distribution, and distance constraints.</p>
-        <span class="metric">$1.73M/yr base</span><span class="metric">29 buses</span>
-      </div>
-    </div>
-
-    <div class="project">
-      <div class="body">
-        <h3><a href="https://github.com/haiiibin/us-stock-price-prediction">US Stock Price Prediction (SPY)</a></h3>
-        <p>VAR vs LASSO vs LSTM on 2017-2019 data; LASSO wins with 12 features auto-selected from 30+ candidates.</p>
-        <span class="metric">MSE 5.87</span>
-      </div>
-    </div>
-
-    <div class="project">
-      <div class="body">
-        <h3><a href="https://github.com/haiiibin/health-service-industry-analysis">Health Service Industry Analysis (10-K NLP)</a></h3>
-        <p>TF-IDF + Word2Vec over 5,481 SEC 10-K filings (358 firms, 1994-2020); competitor mapping and growth analysis for HCA Healthcare.</p>
-        <span class="metric">99.6% similarity match</span><span class="metric">Telehealth 24.7% CAGR</span>
-      </div>
-    </div>
-
-    <div class="project">
-      <div class="body">
-        <h3><a href="https://github.com/haiiibin/tiktok-reviews-sentiment-analysis">TikTok Reviews Sentiment Analysis (Python + R)</a></h3>
-        <p>TextBlob sentiment scoring of 307K Google Play reviews, then OLS and fixed-effects regressions in R linking sentiment to engagement.</p>
-        <span class="metric">307K reviews</span><span class="metric">+6.4% thumbs-up probability</span>
-      </div>
-    </div>
-
-    <div class="project">
-      <div class="body">
-        <h3><a href="https://github.com/haiiibin/nutrition-planning-optimization">Nutrition Planning Optimization (LP)</a></h3>
-        <p>Four-stage linear programming for institutional meal planning across 50+ foods, from minimum-cost daily plans to a no-repeat weekly menu.</p>
-        <span class="metric">$2.43/day at 100% RDA</span><span class="metric">7-day rotating menu</span>
-      </div>
+    <div class="case green">
+      <h2>Reassigning 2,000 students at minimum cost after a school closure</h2>
+      <p class="meta">School bus routing &middot; Mixed-integer linear programming</p>
+      <div class="tags"><span class="tag">Gurobi</span><span class="tag">Optimization</span><span class="tag">Operations research</span><span class="tag">Python</span></div>
+      <p class="headline-metric"><b>$1.73M/yr</b> optimal plan using <b>29</b> buses</p>
+      <p class="body"><b class="lead">Problem.</b> A school closure displaced 2,000 students. The reassignment had to respect school capacities, keep every grade's share between 30% and 36% per school, and cap travel distance, at minimum bus cost.</p>
+      <p class="body"><b class="lead">Approach.</b> Formulated the assignment as a MILP with binary decision variables and solved it with Gurobi, then re-solved under seasonal weather constraints as a scenario analysis.</p>
+      <p class="body"><b class="lead">Outcome.</b> The base plan costs $1,728,000 per year with 29 buses; the weather-constrained plan ($2,112,500) puts a hard number on the safety vs. efficiency trade-off for decision makers.</p>
+      <img src="images/schoolbus_result.png" alt="School bus optimization cost comparison">
+      <a class="cta" href="https://github.com/haiiibin/school-bus-route-optimization">View on GitHub &rarr;</a>
     </div>
 
   </div>
@@ -116,7 +182,79 @@
 
 <section>
   <div class="wrap">
-    <h2>Skills</h2>
+    <h2 class="sec">More Projects</h2>
+    <div class="grid">
+
+      <div class="mini">
+        <h3><a href="https://github.com/haiiibin/us-stock-price-prediction">US Stock Price Prediction (SPY)</a></h3>
+        <p>VAR vs LASSO vs LSTM on 2017-2019 data; LASSO wins with 12 features auto-selected from 30+ candidates.</p>
+        <span class="metric">MSE 5.87</span><span class="metric">3 model families</span>
+      </div>
+
+      <div class="mini">
+        <h3><a href="https://github.com/haiiibin/health-service-industry-analysis">Health Service Industry Analysis (10-K NLP)</a></h3>
+        <p>TF-IDF + Word2Vec over 5,481 SEC 10-K filings (358 firms, 1994-2020); competitor mapping for HCA Healthcare.</p>
+        <span class="metric">99.6% similarity match</span><span class="metric">66.55% market share</span>
+      </div>
+
+      <div class="mini">
+        <h3><a href="https://github.com/haiiibin/tiktok-reviews-sentiment-analysis">TikTok Reviews Sentiment Analysis</a></h3>
+        <p>TextBlob sentiment on 307K Google Play reviews, then OLS and fixed-effects regressions in R linking sentiment to engagement.</p>
+        <span class="metric">307K reviews</span><span class="metric">+6.4% thumbs-up probability</span>
+      </div>
+
+      <div class="mini">
+        <h3><a href="https://github.com/haiiibin/nutrition-planning-optimization">Nutrition Planning Optimization (LP)</a></h3>
+        <p>Four-stage linear programming for institutional meal planning across 50+ foods, up to a no-repeat weekly menu.</p>
+        <span class="metric">$2.43/day at 100% RDA</span><span class="metric">7-day rotating menu</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">Experience</h2>
+    <div class="xp">
+
+      <div class="xp-item">
+        <h3>People Analyst · Electronic Arts</h3>
+        <p class="when">May 2026 to Present · Vancouver, Canada</p>
+        <p class="what">Built a skills self-service AI assistant (5 Snowflake SQL tools served to an agentic LLM via MCP) and own the monthly executive headcount briefing for a ~15,000-person workforce.</p>
+      </div>
+
+      <div class="xp-item">
+        <h3>Marketing Business Analyst · Norsat International Inc.</h3>
+        <p class="when">Dec 2025 to May 2026 · Richmond, BC, Canada</p>
+        <p class="what">Built an AI-assisted manual-conversion pipeline cutting production time by ~80% across 13+ product lines, plus a 4-page Power BI marketing &amp; sales dashboard (8-table star schema, 50+ DAX measures).</p>
+      </div>
+
+      <div class="xp-item">
+        <h3>Graduate Academic Assistant · UBC School of Public Policy and Global Affairs</h3>
+        <p class="when">Jun 2025 to Aug 2025 · Vancouver, Canada</p>
+        <p class="what">Created 3 real-time datasets (50,000+ data points across 20+ countries) supporting two academic books under contract with Cambridge University Press and Cornell University Press.</p>
+      </div>
+
+      <div class="xp-item">
+        <h3>Business Consultant Analyst · Redteam Projects Inc.</h3>
+        <p class="when">May 2025 to Jul 2025 · Vancouver, Canada</p>
+        <p class="what">Growth strategy analysis for a consulting firm scaling from $1.8M to $3.3M revenue; built 5 Power BI dashboards and a Monte Carlo risk framework that cut analysis time from 8 hours to 2.</p>
+      </div>
+
+      <div class="xp-item">
+        <h3>Data Analysis Project Intern · Accenture</h3>
+        <p class="when">Jun 2023 to Sep 2023 · Shanghai, China</p>
+        <p class="what">Processed 13M+ supply chain records at 98% integrity and built an FBProphet demand forecast beating baseline by 15% for a B2B e-commerce digital transformation.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">Skills</h2>
     <ul class="skills">
       <li><b>Languages &amp; Data Science:</b> Python, R, SQL, Pandas, NumPy, scikit-learn, PyTorch, TensorFlow, time series forecasting</li>
       <li><b>Visualization &amp; BI:</b> Power BI, Tableau, Looker Studio, advanced Excel</li>
@@ -128,15 +266,28 @@
 
 <section>
   <div class="wrap edu">
-    <h2>Education</h2>
-    <p><b>Master of Business Analytics (MBAN)</b>, UBC Sauder School of Business · Nov 2025</p>
-    <p><b>BA in Economics</b>, Minor in Commerce, UBC · May 2024 · graduated with distinction</p>
+    <h2 class="sec">Education</h2>
+    <p><b>Master of Business Analytics (MBAN)</b>, UBC Sauder School of Business &middot; Nov 2025</p>
+    <p><b>BA in Economics</b>, Minor in Commerce, UBC &middot; May 2024 &middot; graduated with distinction</p>
     <p><b>CFA Level II Candidate</b></p>
   </div>
 </section>
 
+<div class="wrap">
+  <div class="contact">
+    <h2>Let's talk data</h2>
+    <p>Open to data analytics opportunities in Vancouver and beyond.</p>
+    <div class="links">
+      <a href="mailto:haibiny123@gmail.com">Email</a>
+      <a href="https://www.linkedin.com/in/haiiibin">LinkedIn</a>
+      <a href="https://github.com/haiiibin">GitHub</a>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div class="wrap">© 2026 Allen Yu · Built by hand, no frameworks.</div>
 </footer>
+
 </body>
 </html>
