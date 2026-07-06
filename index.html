@@ -1,309 +1,950 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Allen (Haibin) Yu. Data analyst in Vancouver: forecasting, optimization, machine learning. UBC MBAN.">
-<title>Allen Yu | Data Analytics Portfolio</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Haibin (Allen) Yu, data and people analytics professional in Vancouver. Career map, quantified case studies, and open-source data projects.">
+<meta property="og:title" content="Haibin (Allen) Yu | Data & People Analytics">
+<meta property="og:description" content="Career map, quantified case studies, and open-source data projects.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='9' cy='22' r='5' fill='%232a78d6'/%3E%3Ccircle cx='23' cy='9' r='4' fill='%231baf7a'/%3E%3Ccircle cx='24' cy='24' r='3.2' fill='%23eda100'/%3E%3Cpath d='M12 19 21 12M13 24l7.5-.5' stroke='%23898781' stroke-width='1.6'/%3E%3C/svg%3E">
+<title>Haibin (Allen) Yu | Data & People Analytics</title>
 <style>
   :root {
-    --text: #1c2530;
-    --muted: #5b6875;
-    --accent: #14385c;
-    --line: #e4e8ec;
-    --radius: 16px;
+    color-scheme: light;
+    --plane:#f9f9f7; --surface:#fcfcfb;
+    --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+    --hair:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,0.10);
+    --exp:#2a78d6; --proj:#1baf7a; --dom:#eda100;
+    --edu:#4a3aa7; --exp-wash:rgba(42,120,214,0.13);
+    --edge:rgba(11,11,11,0.13); --edge-hi:rgba(11,11,11,0.42);
+    --chip:#ffffff; --chip-ink:#52514e;
+    --shadow:0 1px 2px rgba(11,11,11,0.06), 0 8px 24px rgba(11,11,11,0.08);
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; padding:0; background:var(--plane); }
+  button { -webkit-appearance:none; appearance:none; }
+  .wrap {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--ink);
+    background: var(--plane);
+    max-width: 968px; margin: 0 auto;
+    padding: 34px 24px 56px;
+    display: flex; flex-direction: column; gap: 18px;
+  }
+
+  /* Header */
+  .eyebrow { font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--exp); margin:0 0 10px; }
+  .title { font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+    font-size: clamp(30px, 5vw, 44px); font-weight:600; letter-spacing:-0.015em; margin:0; text-wrap:balance; }
+  .subtitle { font-size: 15px; color:var(--ink2); margin:14px 0 0; max-width:58ch; line-height:1.65; }
+
+  .btn {
+    font:inherit; font-size:12.5px; cursor:pointer; background:var(--plane); color:var(--ink2);
+    border:1px solid var(--border); border-radius:8px; padding:5px 11px;
+  }
+  .btn:hover { border-color:var(--axis); color:var(--ink); }
+  .btn:focus-visible { outline:2px solid var(--exp); outline-offset:2px; }
+
+  /* Stage */
+  .stage { position:relative; background:var(--surface); border:1px solid var(--hair);
+    border-radius:12px; overflow:hidden; margin-top:6px; }
+  svg#graph { display:block; width:100%; height: min(50vh, 500px); touch-action:none; cursor:grab; }
+  svg#graph.panning { cursor:grabbing; }
+  .edge { stroke:var(--edge); stroke-width:1.4px; }
+  .edge.hi { stroke:var(--edge-hi); stroke-width:2px; }
+  .node { cursor:pointer; }
+  .node circle { stroke:var(--surface); stroke-width:2px; }
+  .node.exp circle { fill:var(--exp); }
+  .node.proj circle { fill:var(--proj); }
+  .node.dom circle { fill:var(--dom); }
+  .node text { font-size:11px; fill:var(--ink2); paint-order:stroke; stroke:var(--surface); stroke-width:3px; stroke-linejoin:round; pointer-events:none; }
+  .node.dom text { fill:var(--ink); font-weight:700; font-size:11.5px; letter-spacing:0.04em; }
+  .node.exp text { fill:var(--ink); font-weight:500; }
+  .dimmed { opacity:0.11; }
+  .node.sel circle { stroke:var(--ink); stroke-width:2.5px; }
+
+  .hint { position:absolute; left:14px; bottom:12px; font-size:11.5px; color:var(--muted);
+    background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:5px 10px; pointer-events:none; }
+  .zoomctl { position:absolute; right:12px; bottom:12px; display:flex; flex-direction:column; gap:6px; }
+  .zoomctl button { width:32px; height:32px; font-size:16px; line-height:1; border-radius:8px;
+    border:1px solid var(--hair); background:var(--surface); color:var(--ink); cursor:pointer; }
+  .zoomctl button:hover { border-color:var(--axis); }
+
+  /* Graph caption (legend + list link) */
+  .caption { display:flex; flex-wrap:wrap; gap:6px 16px; align-items:center;
+    font-size:11.5px; color:var(--muted); margin-top:-8px; }
+  .caption .item { display:flex; align-items:center; gap:6px; }
+  .caption .swatch { width:9px; height:9px; border-radius:50%; }
+  .caption .linklike { font:inherit; background:none; border:none; padding:0; cursor:pointer;
+    color:var(--muted); text-decoration:underline; text-underline-offset:2px; margin-left:auto; }
+  .caption .linklike:hover { color:var(--ink); }
+  .caption .linklike:focus-visible { outline:2px solid var(--exp); outline-offset:2px; }
+
+  /* Tooltip */
+  #tip { position:fixed; pointer-events:none; z-index:40; max-width:260px;
+    background:var(--surface); color:var(--ink); border:1px solid var(--border);
+    border-radius:10px; padding:9px 11px; box-shadow:var(--shadow); font-size:12.5px; opacity:0; transition:opacity .1s; }
+  #tip .t-name { font-weight:700; margin-bottom:3px; }
+  #tip .t-meta { color:var(--ink2); font-size:11.5px; }
+  #tip .t-doms { margin-top:5px; display:flex; flex-wrap:wrap; gap:4px; }
+  #tip .t-doms span { font-size:10.5px; background:var(--chip); border:1px solid var(--border); border-radius:5px; padding:1px 6px; color:var(--chip-ink); }
+
+  /* Detail panel */
+  #panel { position:fixed; top:0; right:0; height:100%; width:min(340px, 88vw); z-index:50;
+    background:var(--surface); border-left:1px solid var(--border); box-shadow:var(--shadow);
+    transform:translateX(102%); transition:transform .22s ease; padding:22px; overflow-y:auto; }
+  #panel.open { transform:translateX(0); }
+  #panel .close { float:right; border:none; background:transparent; font-size:22px; line-height:1; color:var(--muted); cursor:pointer; }
+  #panel .p-type { font-size:11px; letter-spacing:0.1em; text-transform:uppercase; font-weight:700; }
+  #panel .p-name { font-size:20px; font-weight:700; margin:8px 0 4px; text-wrap:balance; }
+  #panel .p-date { color:var(--ink2); font-size:13px; }
+  #panel h4 { font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin:20px 0 8px; }
+  #panel .p-doms { display:flex; flex-wrap:wrap; gap:6px; }
+  #panel .p-doms span { font-size:12px; background:var(--chip); color:var(--chip-ink);
+    border:1px solid var(--border); border-radius:999px; padding:4px 11px; }
+  #panel .p-links { margin:0; padding:0; list-style:none; }
+  #panel .p-links li { padding:6px 0; border-bottom:1px solid var(--hair); font-size:13px; display:flex; align-items:center; gap:8px; cursor:pointer; }
+  #panel .p-links li .d { width:8px; height:8px; border-radius:50%; flex:none; }
+
+  /* Table view */
+  .tablewrap { overflow-x:auto; background:var(--surface); border:1px solid var(--hair); border-radius:12px; }
+  table { border-collapse:collapse; width:100%; font-size:13px; min-width:520px; }
+  th, td { text-align:left; padding:9px 14px; border-bottom:1px solid var(--hair); }
+  th { font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); position:sticky; top:0; background:var(--surface); }
+  td .d { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; vertical-align:middle; }
+  tbody tr:hover { background:var(--plane); }
+  .hidden { display:none; }
   html { scroll-behavior: smooth; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--text); line-height: 1.65; background: #fff;
-    -webkit-font-smoothing: antialiased;
-  }
-  .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+  section[id], .case, .stage { scroll-margin-top: 56px; }
+  .topbar { position: sticky; top: 0; z-index: 30; background: var(--plane); border-bottom: 1px solid var(--hair);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); }
+  .tb-in { max-width: 968px; margin: 0 auto; display: flex; align-items: center; gap: 18px; padding: 11px 24px; }
+  .topbar .brand { font-weight: 650; font-size: 14px; }
+  .topbar .navlinks { display: flex; gap: 16px; flex: 1; }
+  .topbar a { color: var(--ink2); text-decoration: none; font-size: 13px; }
+  .topbar a:hover { color: var(--ink); }
+  .contact { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 16px; }
+  .contact a { color: var(--exp); font-size: 13.5px; text-decoration: none; border-bottom: 1px solid transparent; }
+  .contact a:hover { border-bottom-color: var(--exp); }
+  section { margin-top: 42px; }
+  .section-title { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--exp); margin: 0 0 4px; }
 
-  /* Hero */
-  header { padding: 96px 0 64px; }
-  header h1 {
-    font-size: clamp(1.8rem, 4.5vw, 2.6rem);
-    line-height: 1.25; letter-spacing: -0.02em; max-width: 21em;
+  /* Timeline */
+  #timeline { margin-top: 30px; }
+  .tl-gantt { position: relative; margin-top: 14px; }
+  .tl-lane { position: relative; height: 30px; margin-bottom: 6px; }
+  .tl-bar { position: absolute; top: 2px; height: 26px; border-radius: 6px;
+    background: var(--exp-wash); border-left: 3px solid var(--exp);
+    display: flex; align-items: center; cursor: pointer; }
+  .tl-bar span { font-size: 11.5px; font-weight: 600; color: var(--ink); padding-left: 7px; white-space: nowrap; }
+  .tl-bar:hover, .tl-bar:focus-visible { background: var(--exp); }
+  .tl-bar:hover span, .tl-bar:focus-visible span { color: #fff; }
+  .tl-bar:focus-visible { outline: 2px solid var(--exp); outline-offset: 2px; }
+  .tl-axis { position: relative; height: 22px; border-top: 1px solid var(--axis); }
+  .tl-tick { position: absolute; top: 4px; transform: translateX(-50%);
+    font-size: 10.5px; letter-spacing: 0.06em; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .tl-tick::before { content: ""; position: absolute; left: 50%; top: -5px; height: 4px; border-left: 1px solid var(--axis); }
+  .tl-now { position: absolute; top: 0; bottom: 22px; border-left: 1px dashed var(--axis); }
+  .tl-now i { position: absolute; top: -14px; left: 4px; font-style: normal;
+    font-size: 9.5px; letter-spacing: 0.1em; color: var(--muted); }
+  .tl-edu-row { position: relative; height: 34px; margin-top: 4px; }
+  .tl-edu { position: absolute; top: 4px; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 7px; cursor: pointer; background: none; border: none; padding: 2px; font: inherit; }
+  .tl-edu i { width: 9px; height: 9px; background: var(--edu); transform: rotate(45deg); flex: none; }
+  .tl-edu span { font-size: 11.5px; color: var(--ink2); white-space: nowrap; }
+  .tl-edu:hover span, .tl-edu:focus-visible span { color: var(--ink); }
+  .tl-edu:focus-visible { outline: 2px solid var(--edu); outline-offset: 2px; }
+  .tl-list { display: none; }
+  @media (max-width: 720px) {
+    .tl-gantt { display: none; }
+    .tl-list { display: block; list-style: none; margin: 12px 0 0; padding: 0 0 0 2px; }
+    .tl-list li { position: relative; padding: 0 0 16px 22px; border-left: 1px solid var(--hair); margin-left: 5px; }
+    .tl-list li:last-child { border-left-color: transparent; padding-bottom: 2px; }
+    .tl-list li::before { content: ""; position: absolute; left: -6px; top: 3px;
+      width: 11px; height: 11px; border-radius: 50%; background: var(--exp); border: 2px solid var(--plane); }
+    .tl-list li.edu::before { border-radius: 2px; transform: rotate(45deg); background: var(--edu); }
+    .tl-list .tll-t { font-size: 13.5px; font-weight: 600; }
+    .tl-list .tll-d { font-size: 11.5px; color: var(--muted); margin-top: 1px; text-transform: uppercase; letter-spacing: 0.04em; }
   }
-  header .sub { color: var(--muted); margin-top: 18px; max-width: 44em; }
-  .links { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px; }
-  .links a {
-    color: var(--accent); text-decoration: none; font-size: 0.92rem; font-weight: 600;
-    border: 1px solid var(--line); border-radius: 999px; padding: 7px 16px;
-    transition: background 0.15s ease, border-color 0.15s ease;
-  }
-  .links a:hover { background: #f2f6fa; border-color: #c8d4de; }
-
-  /* Case studies */
-  .case {
-    border-radius: var(--radius);
-    padding: 44px 44px 40px;
-    margin-bottom: 36px;
-  }
-  .case.cream { background: #fdf3e7; --hl: #b25e2e; }
-  .case.blue  { background: #e9f2f9; --hl: #2b6cb0; }
-  .case.green { background: #eaf4ec; --hl: #3f7652; }
-  .case h2 { font-size: clamp(1.25rem, 2.6vw, 1.6rem); line-height: 1.3; letter-spacing: -0.01em; }
-  .case .meta { color: var(--muted); font-size: 0.88rem; margin-top: 10px; }
-  .tags { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
-  .tag {
-    background: rgba(255,255,255,0.75); color: var(--muted);
-    font-size: 0.78rem; font-weight: 600; border-radius: 999px; padding: 3px 12px;
-  }
-  .headline-metric { margin-top: 22px; font-size: 1.05rem; }
-  .headline-metric b { color: var(--hl); font-size: 1.5rem; font-weight: 800; margin-right: 6px; }
-  .case p.body { margin-top: 16px; max-width: 46em; }
-  .case p.body b.lead { color: var(--text); }
-  .case img {
-    display: block; width: 100%; max-width: 620px; margin: 28px auto 0;
-    border-radius: 10px; border: 1px solid rgba(0,0,0,0.07); background: #fff;
-  }
-  .case .cta { display: inline-block; margin-top: 24px; color: var(--hl); font-weight: 700; text-decoration: none; font-size: 0.95rem; }
-  .case .cta:hover { text-decoration: underline; }
-
-  /* Sections */
-  section { padding: 40px 0; }
-  section > .wrap > h2.sec { font-size: 1.35rem; color: var(--accent); margin-bottom: 28px; }
-
-  /* More projects grid */
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .mini {
-    border: 1px solid var(--line); border-radius: 12px; padding: 22px 24px;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  }
-  .mini:hover { border-color: #c8d4de; box-shadow: 0 2px 10px rgba(20,56,92,0.06); }
-  .mini h3 { font-size: 1rem; }
-  .mini h3 a { color: var(--text); text-decoration: none; }
-  .mini h3 a:hover { color: var(--accent); }
-  .mini p { color: var(--muted); font-size: 0.9rem; margin-top: 8px; }
-  .metric {
-    display: inline-block; background: #eef3f8; color: var(--accent); border-radius: 4px;
-    padding: 2px 8px; font-size: 0.8rem; font-weight: 700; margin: 10px 6px 0 0;
-  }
-
-  /* Experience timeline */
-  .xp { border-left: 2px solid var(--line); }
-  .xp-item { position: relative; padding: 4px 0 26px 28px; }
-  .xp-item:last-child { padding-bottom: 4px; }
-  .xp-item::before {
-    content: ""; position: absolute; left: -7px; top: 10px;
-    width: 12px; height: 12px; border-radius: 50%;
-    background: var(--accent); border: 3px solid #fff;
-  }
-  .xp-item h3 { font-size: 1rem; }
-  .xp-item .when { color: var(--muted); font-size: 0.85rem; margin-top: 2px; }
-  .xp-item p.what { color: var(--muted); font-size: 0.92rem; margin-top: 8px; max-width: 46em; }
-
-  /* Skills / education */
-  .skills li, .edu p { margin-bottom: 10px; }
-  .skills b, .edu b { color: var(--accent); }
-  ul { list-style: none; }
-
-  /* Contact */
-  .contact {
-    background: #14385c; color: #eaf0f6; border-radius: var(--radius);
-    padding: 48px 44px; text-align: center; margin: 24px 0 64px;
-  }
-  .contact h2 { font-size: 1.4rem; }
-  .contact p { color: #b9c9d9; margin-top: 10px; }
-  .contact .links { justify-content: center; }
-  .contact .links a { color: #fff; border-color: #3c5c7d; }
-  .contact .links a:hover { background: #1d4a75; border-color: #5b7da0; }
-
-  footer { padding: 0 0 40px; color: var(--muted); font-size: 0.85rem; text-align: center; }
-
+  .section-sub { color: var(--muted); font-size: 13px; margin: 0 0 10px; max-width: 70ch; }
+  .site-footer { border-top: 1px solid var(--hair); padding-top: 20px; margin-top: 48px; }
+  .site-footer .fineprint { color: var(--muted); font-size: 12px; margin-top: 12px; }
   @media (max-width: 640px) {
-    header { padding: 64px 0 44px; }
-    .case { padding: 28px 22px 26px; }
-    .grid { grid-template-columns: 1fr; }
-    .contact { padding: 36px 22px; }
+    .topbar .navlinks { gap: 10px; overflow-x: auto; }
+    svg#graph { height: 52vh; }
   }
+  /* Collapsed rows (progressive disclosure) */
+  .rows { display: flex; flex-direction: column; border-top: 1px solid var(--hair); }
+  details.case, details.proj { border-bottom: 1px solid var(--hair); }
+  summary { list-style: none; cursor: pointer; display: grid;
+    grid-template-columns: 14px auto minmax(0, 1fr) max-content;
+    align-items: baseline; gap: 4px 12px; padding: 16px 10px; margin: 0 -10px; border-radius: 8px; }
+  summary::-webkit-details-marker { display: none; }
+  summary:hover { background: var(--surface); }
+  summary:focus-visible { outline: 2px solid var(--exp); outline-offset: -2px; }
+  .sum-mark { color: var(--exp); width: 14px; display: inline-block;
+    transition: transform .15s ease; transform-origin: 45% 55%; }
+  details[open] .sum-mark { transform: rotate(45deg); }
+  @media (prefers-reduced-motion: reduce) { .sum-mark { transition: none; } }
+  .case-role, .proj-title { font-weight: 600; font-size: 14.5px; }
+  .case-gist { color: var(--ink2); font-size: 13.5px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .case-date, .proj-tag { color: var(--muted); font-size: 12px; grid-column: 4; justify-self: end;
+    text-transform: uppercase; letter-spacing: .04em; }
+  @media (max-width: 720px) {
+    summary { grid-template-columns: 14px minmax(0,1fr) max-content; }
+    .case-date, .proj-tag { grid-column: 3; }
+    .case-gist { grid-column: 2 / -1; white-space: normal; }
+  }
+  .case-body, .proj-body { padding: 2px 4px 18px 30px; max-width: 74ch; }
+  .case-metrics { display: flex; gap: 18px; margin: 8px 0 12px; flex-wrap: wrap; }
+  .case-metrics b { display: block; font-size: 17px; font-variant-numeric: tabular-nums; }
+  .case-metrics span { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+  .case-body p { font-size: 13.5px; line-height: 1.55; color: var(--ink2); margin: 8px 0; }
+  .case-body p b { color: var(--ink); }
+  .case-stack { font-size: 12px; color: var(--muted); margin-top: 10px; }
+  .p-case-link { color: var(--exp); font-size: 13px; text-decoration: none; }
+  .p-case-link:hover { text-decoration: underline; }
+  .proj-body p { font-size: 13px; line-height: 1.5; color: var(--ink2); margin: 6px 0 10px; }
+  .proj-body a { color: var(--exp); font-size: 13px; text-decoration: none; }
+  .proj-body a:hover { text-decoration: underline; }
+  /* Skills & education (flat) */
+  .skill-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 24px; }
+  @media (max-width: 760px) { .skill-grid { grid-template-columns: 1fr; } }
+  .skill-list dt { font-size: 13px; font-weight: 650; color: var(--ink); margin-top: 14px; }
+  .skill-list dt:first-of-type { margin-top: 0; }
+  .skill-list dd { font-size: 13px; color: var(--ink2); margin: 3px 0 0; line-height: 1.55; }
+  .edu { margin-bottom: 14px; }
+  .edu h3 { font-size: 13.5px; margin: 0 0 3px; }
+  .edu p { font-size: 12.5px; color: var(--ink2); margin: 0; }
 </style>
 </head>
 <body>
-
-<header>
-  <div class="wrap">
-    <h1>Turning messy data into decisions with forecasting, optimization, and machine learning.</h1>
-    <p class="sub">I'm Allen (Haibin) Yu, a People Analyst at Electronic Arts and UBC Master of Business Analytics graduate in Vancouver. I build models that end in a business decision, with an AI-assisted workflow (Claude Code, MCP) built into how I work.</p>
-    <div class="links">
-      <a href="mailto:haibiny123@gmail.com">Email</a>
-      <a href="https://www.linkedin.com/in/haiiibin">LinkedIn</a>
-      <a href="https://github.com/haiiibin">GitHub</a>
+<nav class="topbar">
+  <div class="tb-in">
+    <span class="brand">Haibin (Allen) Yu</span>
+    <div class="navlinks">
+      <a href="#timeline">Timeline</a>
+      <a href="#graph-section">Map</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
     </div>
   </div>
-</header>
-
-<section>
-  <div class="wrap">
-
-    <div class="case cream">
-      <h2>Forecasting airport energy demand within 1.7% of actuals</h2>
-      <p class="meta">Vancouver International Airport (YVR) &middot; Time series forecasting</p>
-      <div class="tags"><span class="tag">ARIMA</span><span class="tag">Box-Cox</span><span class="tag">R</span><span class="tag">Energy</span></div>
-      <p class="headline-metric"><b>1.7%</b> MAPE on holdout data</p>
-      <p class="body"><b class="lead">Problem.</b> Airport operations need reliable energy forecasts to negotiate procurement contracts and plan demand, working from 14 years of monthly consumption data with strong yearly seasonality.</p>
-      <p class="body"><b class="lead">Approach.</b> Stabilized variance with a Box-Cox transformation, fitted a seasonal ARIMA(1,1,0)(0,1,1)[12], and validated on a holdout window of the most recent observations.</p>
-      <p class="body"><b class="lead">Outcome.</b> Forecasts landed within 1.7% of actuals, and 3-year forward projections now support procurement contract and demand planning decisions.</p>
-      <img src="images/yvr_forecast.png" alt="YVR energy forecast chart">
-      <a class="cta" href="https://github.com/haiiibin/Vancouver-International-Airport-Energy-Consumption-Forecasting">View on GitHub &rarr;</a>
-    </div>
-
-    <div class="case blue">
-      <h2>Cutting unnecessary lab tests by 30% without missing patients</h2>
-      <p class="meta">Diabetes risk screening &middot; Two-stage machine learning</p>
-      <div class="tags"><span class="tag">scikit-learn</span><span class="tag">Classification</span><span class="tag">Healthcare</span><span class="tag">Python</span></div>
-      <p class="headline-metric"><b>-30%</b> lab tests at <b>95%</b> detection sensitivity</p>
-      <p class="body"><b class="lead">Problem.</b> Laboratory testing for diabetes is expensive and slow. The goal: screen patients with non-invasive demographic and physiological data before committing to a lab test.</p>
-      <p class="body"><b class="lead">Approach.</b> A two-stage pipeline: logistic regression for initial risk screening (F1 = 0.78), then a random forest for final classification (F1 = 0.87), with decision thresholds tuned for sensitivity.</p>
-      <p class="body"><b class="lead">Outcome.</b> The pipeline removes 30% of unnecessary lab tests while keeping 95% detection sensitivity, freeing healthcare resources without missing at-risk patients.</p>
-      <img src="images/diabetes_results.png" alt="Diabetes model feature importance">
-      <a class="cta" href="https://github.com/haiiibin/Machine-Learning-for-Diabetes-Risk-Screening">View on GitHub &rarr;</a>
-    </div>
-
-    <div class="case green">
-      <h2>Reassigning 2,000 students at minimum cost after a school closure</h2>
-      <p class="meta">School bus routing &middot; Mixed-integer linear programming</p>
-      <div class="tags"><span class="tag">Gurobi</span><span class="tag">Optimization</span><span class="tag">Operations research</span><span class="tag">Python</span></div>
-      <p class="headline-metric"><b>$1.73M/yr</b> optimal plan using <b>29</b> buses</p>
-      <p class="body"><b class="lead">Problem.</b> A school closure displaced 2,000 students. The reassignment had to respect school capacities, keep every grade's share between 30% and 36% per school, and cap travel distance, at minimum bus cost.</p>
-      <p class="body"><b class="lead">Approach.</b> Formulated the assignment as a MILP with binary decision variables and solved it with Gurobi, then re-solved under seasonal weather constraints as a scenario analysis.</p>
-      <p class="body"><b class="lead">Outcome.</b> The base plan costs $1,728,000 per year with 29 buses; the weather-constrained plan ($2,112,500) puts a hard number on the safety vs. efficiency trade-off for decision makers.</p>
-      <img src="images/schoolbus_result.png" alt="School bus optimization cost comparison">
-      <a class="cta" href="https://github.com/haiiibin/school-bus-route-optimization">View on GitHub &rarr;</a>
-    </div>
-
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <h2 class="sec">More Projects</h2>
-    <div class="grid">
-
-      <div class="mini">
-        <h3><a href="https://github.com/haiiibin/us-stock-price-prediction">US Stock Price Prediction (SPY)</a></h3>
-        <p>VAR vs LASSO vs LSTM on 2017-2019 data; LASSO wins with 12 features auto-selected from 30+ candidates.</p>
-        <span class="metric">MSE 5.87</span><span class="metric">3 model families</span>
-      </div>
-
-      <div class="mini">
-        <h3><a href="https://github.com/haiiibin/health-service-industry-analysis">Health Service Industry Analysis (10-K NLP)</a></h3>
-        <p>TF-IDF + Word2Vec over 5,481 SEC 10-K filings (358 firms, 1994-2020); competitor mapping for HCA Healthcare.</p>
-        <span class="metric">99.6% similarity match</span><span class="metric">66.55% market share</span>
-      </div>
-
-      <div class="mini">
-        <h3><a href="https://github.com/haiiibin/tiktok-reviews-sentiment-analysis">TikTok Reviews Sentiment Analysis</a></h3>
-        <p>TextBlob sentiment on 307K Google Play reviews, then OLS and fixed-effects regressions in R linking sentiment to engagement.</p>
-        <span class="metric">307K reviews</span><span class="metric">+6.4% thumbs-up probability</span>
-      </div>
-
-      <div class="mini">
-        <h3><a href="https://github.com/haiiibin/nutrition-planning-optimization">Nutrition Planning Optimization (LP)</a></h3>
-        <p>Four-stage linear programming for institutional meal planning across 50+ foods, up to a no-repeat weekly menu.</p>
-        <span class="metric">$2.43/day at 100% RDA</span><span class="metric">7-day rotating menu</span>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <h2 class="sec">AI Engineering</h2>
-    <p style="color:var(--muted);margin-bottom:20px;">Tools I build and use daily, powered by Claude Code.</p>
-    <div class="grid">
-
-      <div class="mini">
-        <h3><a href="https://github.com/haiiibin/claude-multi-agent-investing">Multi-Agent Investing Framework</a></h3>
-        <p>Buffett, Munger, and Burry personas debate every holding; a portfolio-manager agent synthesizes the verdict.</p>
-        <span class="metric">12 agents &middot; 13 commands</span>
-      </div>
-
-      <div class="mini">
-        <h3><a href="https://github.com/haiiibin/ai-job-hunt-pipeline">AI Job Hunt Pipeline</a></h3>
-        <p>Scans job boards, scores postings against a weighted rubric, tailors a one-page resume, and always stops before Submit.</p>
-        <span class="metric">5-stage workflow</span>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <h2 class="sec">Experience</h2>
-    <div class="xp">
-
-      <div class="xp-item">
-        <h3>People Analyst · Electronic Arts</h3>
-        <p class="when">May 2026 to Present · Vancouver, Canada</p>
-        <p class="what">Built a skills self-service AI assistant (5 Snowflake SQL tools served to an agentic LLM via MCP) and own the monthly executive headcount briefing for a ~15,000-person workforce.</p>
-      </div>
-
-      <div class="xp-item">
-        <h3>Marketing Business Analyst · Norsat International Inc.</h3>
-        <p class="when">Dec 2025 to May 2026 · Richmond, BC, Canada</p>
-        <p class="what">Built an AI-assisted manual-conversion pipeline cutting production time by ~80% across 13+ product lines, plus a 4-page Power BI marketing &amp; sales dashboard (8-table star schema, 50+ DAX measures).</p>
-      </div>
-
-      <div class="xp-item">
-        <h3>Graduate Academic Assistant · UBC School of Public Policy and Global Affairs</h3>
-        <p class="when">Jun 2025 to Aug 2025 · Vancouver, Canada</p>
-        <p class="what">Created 3 real-time datasets (50,000+ data points across 20+ countries) supporting two academic books under contract with Cambridge University Press and Cornell University Press.</p>
-      </div>
-
-      <div class="xp-item">
-        <h3>Business Consultant Analyst · Redteam Projects Inc.</h3>
-        <p class="when">May 2025 to Jul 2025 · Vancouver, Canada</p>
-        <p class="what">Growth strategy analysis for a consulting firm scaling from $1.8M to $3.3M revenue; built 5 Power BI dashboards and a Monte Carlo risk framework that cut analysis time from 8 hours to 2.</p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <h2 class="sec">Skills</h2>
-    <ul class="skills">
-      <li><b>Languages &amp; Data Science:</b> Python, R, SQL, Pandas, NumPy, scikit-learn, PyTorch, TensorFlow, time series forecasting</li>
-      <li><b>Visualization &amp; BI:</b> Power BI, Tableau, Looker Studio, advanced Excel</li>
-      <li><b>Databases &amp; Cloud:</b> PostgreSQL, MS SQL Server, MongoDB, Neo4j, Google BigQuery, AWS, Google Cloud, Azure</li>
-      <li><b>AI &amp; Developer Tools:</b> Claude Code (MCP, CLI, API), GitHub Copilot, prompt engineering, AI workflow automation</li>
-    </ul>
-  </div>
-</section>
-
-<section>
-  <div class="wrap edu">
-    <h2 class="sec">Education</h2>
-    <p><b>Master of Business Analytics (MBAN)</b>, UBC Sauder School of Business &middot; Nov 2025</p>
-    <p><b>BA in Economics</b>, Minor in Commerce, UBC &middot; May 2024 &middot; graduated with distinction</p>
-    <p><b>CFA Level II Candidate</b></p>
-  </div>
-</section>
-
+</nav>
 <div class="wrap">
-  <div class="contact">
-    <h2>Let's talk data</h2>
-    <p>Open to data analytics opportunities in Vancouver and beyond.</p>
-    <div class="links">
-      <a href="mailto:haibiny123@gmail.com">Email</a>
-      <a href="https://www.linkedin.com/in/haiiibin">LinkedIn</a>
-      <a href="https://github.com/haiiibin">GitHub</a>
+  <header id="top">
+    <p class="eyebrow">Data &amp; People Analytics · Vancouver, Canada</p>
+    <h1 class="title">Haibin (Allen) Yu</h1>
+    <p class="subtitle">I turn messy operational data into decisions. People analytics at Electronic Arts; previously AI-assisted marketing automation at Norsat. The map below shows how my work connects; click anything that interests you.</p>
+    <div class="contact">
+      <a href="mailto:haibiny123@gmail.com">haibiny123@gmail.com</a>
+      <a href="https://www.linkedin.com/in/haiiibin" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/haiiibin" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </header>
+
+  <section id="timeline">
+    <h2 class="section-title">Timeline</h2>
+    <p class="section-sub">Roles above the axis, education milestones below. Click a bar to jump to its story.</p>
+    <div class="tl-gantt" id="tlGantt"></div>
+    <ol class="tl-list" id="tlList"></ol>
+  </section>
+
+  <div class="stage" id="graph-section">
+    <svg id="graph" role="img" aria-label="Force-directed network of roles, projects and skill domains"></svg>
+    <div class="hint">Hover to highlight · Click a node for details</div>
+    <div class="zoomctl">
+      <button id="zoomIn" aria-label="Zoom in">+</button>
+      <button id="zoomOut" aria-label="Zoom out">−</button>
+      <button id="zoomReset" aria-label="Fit view" style="font-size:13px;">⤢</button>
     </div>
   </div>
+
+  <div class="caption">
+    <div class="item"><span class="swatch" style="background:var(--exp)"></span>Roles</div>
+    <div class="item"><span class="swatch" style="background:var(--proj)"></span>Projects</div>
+    <div class="item"><span class="swatch" style="background:var(--dom)"></span>Skill domains</div>
+    <button class="linklike" id="tableBtn">View as list</button>
+  </div>
+
+  <section id="experience">
+    <h2 class="section-title">Experience</h2>
+    <p class="section-sub">Click any role for the full problem, approach and outcome.</p>
+    <div class="rows">
+
+      <details class="case" id="case-ea">
+        <summary><span class="sum-mark">+</span><span class="case-role">People Analyst · Electronic Arts</span>
+          <span class="case-gist">Headcount truth for a 15,000-person workforce, plus an AI skills assistant</span>
+          <span class="case-date">May 2026 to Present</span></summary>
+        <div class="case-body">
+          <div class="case-metrics"><div><b>15,000</b><span>person workforce</span></div>
+            <div><b>100%</b><span>ID-level parity</span></div><div><b>5</b><span>AI tools shipped</span></div></div>
+          <p><b>Problem.</b> A 15,000-person workforce needed a single headcount truth reconciled against the finance plan, but the reporting process was manual and undocumented.</p>
+          <p><b>Approach.</b> Automated the Snowflake headcount pull to replace manual exports, rebuilt the process into a documented repeatable workflow, and built a skills self-service AI assistant: five SQL-backed Snowflake tools (course recommendations, skill-gap analysis, internal-mobility planning) exposed to an agentic LLM through an MCP server, with PII-safe handling via surrogate-ID mapping.</p>
+          <p><b>Outcome.</b> Owns the monthly SVP headcount briefing surfacing hiring, attrition and seat-capacity risk by org and geography; data validated to 100% ID-level parity with published figures; working end-to-end AI Q&amp;A demo delivered.</p>
+          <p class="case-stack">Snowflake SQL · Python · MCP · Azure OpenAI · Power BI · Visier · Workday</p>
+        </div>
+      </details>
+
+      <details class="case" id="case-norsat">
+        <summary><span class="sum-mark">+</span><span class="case-role">Marketing Business Analyst · Norsat International</span>
+          <span class="case-gist">AI pipelines cut manual production time 80% across 13+ lines</span>
+          <span class="case-date">Dec 2025 to May 2026</span></summary>
+        <div class="case-body">
+          <div class="case-metrics"><div><b>80%</b><span>manual time cut</span></div>
+            <div><b>13+</b><span>product lines</span></div><div><b>50+</b><span>DAX measures</span></div></div>
+          <p><b>Problem.</b> Vendor manuals were rebranded by hand, and product data lived inconsistently across four systems (Windchill PLM, Business Central, Shopify, HubSpot), slowing every product launch.</p>
+          <p><b>Approach.</b> Built an AI-assisted manual-conversion pipeline (Python, Word COM automation, PDF extraction), designed a five-stage product-launch workflow from vendor intake to Matrixify-ready Shopify listings, unified the product taxonomy across all four systems, and shipped a four-page Power BI dashboard on a star-schema model with eight tables.</p>
+          <p><b>Outcome.</b> Cut per-manual production time by roughly 80% across 13+ antenna and robotics product lines, standardized onboarding for 20+ product categories, and gave the team live funnel-to-sales KPIs with period-over-period tracking.</p>
+          <p class="case-stack">Python · Power BI · DAX · Shopify · HubSpot · Claude Code</p>
+        </div>
+      </details>
+
+      <details class="case" id="case-aa">
+        <summary><span class="sum-mark">+</span><span class="case-role">Graduate Academic Assistant · UBC</span>
+          <span class="case-gist">50,000+ data points powering two university-press books, delivered on time</span>
+          <span class="case-date">Jun to Aug 2025</span></summary>
+        <div class="case-body">
+          <div class="case-metrics"><div><b>50,000+</b><span>data points</span></div>
+            <div><b>20+</b><span>countries</span></div><div><b>100%</b><span>on-time delivery</span></div></div>
+          <p><b>Problem.</b> Two academic books under contract with Cambridge University Press and Cornell University Press needed real-time evidence on trade-war impacts and geopolitical positioning, on strict three-week deadlines.</p>
+          <p><b>Approach.</b> Built three real-time datasets with 50,000+ systematically categorized data points across 20+ countries, processed macroeconomic, UN-voting and BRICS positioning data with advanced Excel, and independently managed four concurrent sub-projects with collaborators at Sciences Po Paris.</p>
+          <p><b>Outcome.</b> Delivered 30+ visualizations and 10+ interactive dashboards for publication, with both manuscript submissions completed 100% on time.</p>
+          <p class="case-stack">Excel · Data Visualization · Research Design</p>
+        </div>
+      </details>
+
+      <details class="case" id="case-redteam">
+        <summary><span class="sum-mark">+</span><span class="case-role">Business Consultant Analyst · Redteam Projects</span>
+          <span class="case-gist">Data-backed growth plan from $1.8M to $3.3M revenue</span>
+          <span class="case-date">May to Jul 2025</span></summary>
+        <div class="case-body">
+          <div class="case-metrics"><div><b>$1.8M→$3.3M</b><span>growth plan</span></div>
+            <div><b>8h→2h</b><span>risk analysis</span></div><div><b>20+</b><span>KPIs live</span></div></div>
+          <p><b>Problem.</b> A consulting firm scaling from 6 to 30 employees needed a data-backed plan to grow revenue from $1.8M to $3.3M, with cash-flow visibility stuck in periodic manual reports.</p>
+          <p><b>Approach.</b> Analyzed two years of financial and operational data, integrated QuickBooks and BigTime through Power Query into five Power BI dashboards tracking AR aging, utilization and 20+ KPIs, and standardized risk assessment with an @Risk Monte Carlo framework covering 1,000+ variables and 10,000+ iterations plus DCF scenario modeling.</p>
+          <p><b>Outcome.</b> Management adopted the growth recommendations; risk analysis time dropped from 8 hours to 2 with 35% better assessment accuracy; leadership gained real-time cash-flow monitoring.</p>
+          <p class="case-stack">Power BI · Power Query · @Risk · Monte Carlo · DCF</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <section id="projects">
+    <h2 class="section-title">Projects</h2>
+    <p class="section-sub">Six open-source analytics projects; every repository is public on GitHub.</p>
+    <div class="rows">
+
+      <details class="proj">
+        <summary><span class="sum-mark">+</span><span class="proj-title">Forecasting airport energy demand to 1.7% MAPE</span>
+          <span class="proj-tag">Time Series</span></summary>
+        <div class="proj-body">
+          <p>14 years of Vancouver International Airport monthly energy data, Box-Cox transformation and seasonal ARIMA, producing 3-year projections for procurement and demand planning.</p>
+          <a href="https://github.com/haiiibin/Vancouver-International-Airport-Energy-Consumption-Forecasting" target="_blank" rel="noopener">View on GitHub ↗</a>
+        </div>
+      </details>
+
+      <details class="proj">
+        <summary><span class="sum-mark">+</span><span class="proj-title">Cutting unnecessary lab tests 30% at 95% sensitivity</span>
+          <span class="proj-tag">Machine Learning</span></summary>
+        <div class="proj-body">
+          <p>Two-stage diabetes screening: logistic regression on non-invasive features (F1 0.777), then random forest with blood panels (F1 0.870).</p>
+          <a href="https://github.com/haiiibin/Machine-Learning-for-Diabetes-Risk-Screening" target="_blank" rel="noopener">View on GitHub ↗</a>
+        </div>
+      </details>
+
+      <details class="proj">
+        <summary><span class="sum-mark">+</span><span class="proj-title">Routing 2,000 students on 29 buses for $1.73M a year</span>
+          <span class="proj-tag">Optimization</span></summary>
+        <div class="proj-body">
+          <p>Mixed-integer linear program balancing school capacity, grade distribution and distance limits; a weather-constrained variant quantified the cost of safety at $2.11M.</p>
+          <a href="https://github.com/haiiibin/school-bus-route-optimization" target="_blank" rel="noopener">View on GitHub ↗</a>
+        </div>
+      </details>
+
+      <details class="proj">
+        <summary><span class="sum-mark">+</span><span class="proj-title">Mining 307,057 reviews: positive tone lifts upvotes 6.4%</span>
+          <span class="proj-tag">NLP</span></summary>
+        <div class="proj-body">
+          <p>TextBlob sentiment classification over TikTok's Google Play reviews with OLS and fixed-effects regression, controlling for app versions.</p>
+          <a href="https://github.com/haiiibin/tiktok-reviews-sentiment-analysis" target="_blank" rel="noopener">View on GitHub ↗</a>
+        </div>
+      </details>
+
+      <details class="proj">
+        <summary><span class="sum-mark">+</span><span class="proj-title">Mapping competitors inside 5,481 SEC 10-K filings</span>
+          <span class="proj-tag">NLP · Finance</span></summary>
+        <div class="proj-body">
+          <p>TF-IDF and Word2Vec over 27 years of healthcare filings; cosine similarity surfaced strategic competitors at 99.6% similarity and sized telehealth growth at 24.7% CAGR.</p>
+          <a href="https://github.com/haiiibin/health-service-industry-analysis" target="_blank" rel="noopener">View on GitHub ↗</a>
+        </div>
+      </details>
+
+      <details class="proj">
+        <summary><span class="sum-mark">+</span><span class="proj-title">LASSO beats VAR and LSTM on S&amp;P 500 prediction</span>
+          <span class="proj-tag">ML · Finance</span></summary>
+        <div class="proj-body">
+          <p>Three model families on 2017 to 2019 SPY data with 30+ engineered features (moving averages, RSI, MACD, gold/USD): LASSO won at MSE 5.87 with 12 selected features.</p>
+          <a href="https://github.com/haiiibin/us-stock-price-prediction" target="_blank" rel="noopener">View on GitHub ↗</a>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <section id="skills">
+    <h2 class="section-title">Skills &amp; Education</h2>
+    <div class="skill-grid">
+      <div class="skill-col">
+        <dl class="skill-list">
+          <dt>Programming &amp; Data Science</dt><dd>Python, R, SQL, PyTorch, TensorFlow, Pandas, Scikit-learn, A/B Testing, Time Series Forecasting</dd>
+          <dt>Machine Learning &amp; Optimization</dt><dd>Prophet, Genetic Algorithms, Simulated Annealing, Particle Swarm, Monte Carlo Simulation, Gurobi</dd>
+          <dt>Visualization &amp; Analytics</dt><dd>Power BI, Tableau, Looker Studio, Advanced Excel, Interactive Dashboards, KPI Tracking</dd>
+          <dt>AI &amp; Developer Tools</dt><dd>Claude Code (MCP, CLI, API), GitHub Copilot, Power Automate, Prompt Engineering, AI Workflow Automation</dd>
+          <dt>Finance &amp; Research</dt><dd>DCF Modeling, Equity Valuation, Comparable Company Analysis, Quantitative Risk Analysis, @Risk, Market Research · CFA Level II Candidate</dd>
+        </dl>
+      </div>
+      <div class="skill-col">
+        <div class="edu">
+          <h3>University of British Columbia · Sauder School of Business</h3>
+          <p>Master of Business Analytics (MBAN), Nov 2025 · GPA 3.75/4.33</p>
+        </div>
+        <div class="edu">
+          <h3>University of British Columbia · Vancouver School of Economics</h3>
+          <p>BA Economics, Minor in Commerce, with Distinction, May 2024 · GPA 3.7/4.33</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="tablewrap hidden" id="tableView">
+    <table>
+      <thead><tr><th>Name</th><th>Type</th><th>Date</th><th>Domains</th></tr></thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <footer class="site-footer">
+    <div class="contact">
+      <a href="mailto:haibiny123@gmail.com">haibiny123@gmail.com</a>
+      <a href="https://www.linkedin.com/in/haiiibin" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/haiiibin" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <p class="fineprint">Hand-coded single-file site. No trackers, no cookies. © 2026 Haibin Yu</p>
+  </footer>
+
 </div>
 
-<footer>
-  <div class="wrap">© 2026 Allen Yu · Built by hand, no frameworks.</div>
-</footer>
+<div id="tip" role="status" aria-live="polite"></div>
+<aside id="panel" aria-label="Node details"></aside>
 
+<script>
+(function(){
+  "use strict";
+
+  // ---- Data (from resume/source/_index.yaml) ----
+  const domainMeta = {
+    data:"Data Analytics", ai:"AI & Automation", ml:"Machine Learning", finance:"Finance",
+    consulting:"Consulting", marketing:"Marketing", ops:"Operations", product:"Product", research:"Research"
+  };
+  const experiences = [
+    {id:"ea", label:"People Analyst · Electronic Arts", date:"May 2026 to Present", domains:["data","ai","ops","product"]},
+    {id:"norsat", label:"Marketing Business Analyst · Norsat", date:"Dec 2025 to May 2026", domains:["data","marketing","ops","product","ai"]},
+    {id:"aa", label:"Academic Assistant · UBC SPPGA", date:"Jun to Aug 2025", domains:["research","data","ops"]},
+    {id:"redteam", label:"Business Consultant · Redteam Projects", date:"May to Jul 2025", domains:["consulting","finance","data","ops"]}
+  ];
+  const projects = [
+    {id:"yvr_energy", label:"YVR Energy Forecasting", date:"Jan to Feb 2025", domains:["data","ml","ops"]},
+    {id:"diabetes_ml", label:"Diabetes Risk Screening", date:"Jan to Feb 2025", domains:["ml","data"]},
+    {id:"cross_sectional_returns", label:"Cross-Sectional Returns", date:"Feb to Apr 2025", domains:["finance","data","research"]},
+    {id:"climate_policy", label:"Climate Policy Analysis", date:"Apr 2025", domains:["research","data"]},
+    {id:"school_bus_optimization", label:"School Bus Optimization", date:"Oct to Dec 2024", domains:["ops","consulting","data"]},
+    {id:"pharmaceutical_marketing", label:"Pharma Marketing Analytics", date:"Oct to Dec 2024", domains:["marketing","data","consulting"]},
+    {id:"hospital_energy", label:"Hospital Energy Audit", date:"Dec 2024", domains:["ops","consulting","data"]},
+    {id:"restaurant_analysis", label:"Restaurant Analytics", date:"Oct 2024", domains:["data","marketing"]},
+    {id:"nutrition_planning", label:"Nutrition Planning", date:"Sep to Oct 2024", domains:["ops","data"]},
+    {id:"health_service_10k", label:"Health-Service 10-K NLP", date:"Sep to Oct 2024", domains:["data","ml","finance","research"]},
+    {id:"tiktok_sentiment", label:"TikTok Sentiment Analysis", date:"Sep to Dec 2023", domains:["ml","data","marketing"]},
+    {id:"stock_prediction", label:"US Stock Prediction", date:"May to Jun 2023", domains:["ml","finance","data"]},
+    {id:"gender_wage_gap", label:"Gender Wage Gap Study", date:"Jan to Apr 2023", domains:["research","data"]},
+    {id:"miami_housing", label:"Miami Housing Analysis", date:"Jan to Apr 2023", domains:["research","data","finance"]},
+    {id:"google_cloud_hackathon", label:"Google Cloud Hackathon", date:"Feb 2025", domains:["data","ml","marketing"]},
+    {id:"rogers_hackathon", label:"Rogers API Hackathon", date:"Sep 2024", domains:["data","product","marketing"]},
+    {id:"learning_analytics_hackathon", label:"Learning Analytics Hackathon", date:"Oct 2024", domains:["ml","data","product"]}
+  ];
+
+  const CASE_LINKS = {ea:"#case-ea", norsat:"#case-norsat", aa:"#case-aa", redteam:"#case-redteam"};
+  const REPO_LINKS = {
+    yvr_energy: "https://github.com/haiiibin/Vancouver-International-Airport-Energy-Consumption-Forecasting",
+    diabetes_ml: "https://github.com/haiiibin/Machine-Learning-for-Diabetes-Risk-Screening",
+    school_bus_optimization: "https://github.com/haiiibin/school-bus-route-optimization",
+    stock_prediction: "https://github.com/haiiibin/us-stock-price-prediction",
+    health_service_10k: "https://github.com/haiiibin/health-service-industry-analysis",
+    tiktok_sentiment: "https://github.com/haiiibin/tiktok-reviews-sentiment-analysis",
+    nutrition_planning: "https://github.com/haiiibin/nutrition-planning-optimization"
+  };
+
+  // ---- Build nodes & links ----
+  const nodes = [];
+  const nodeById = {};
+  const domainDegree = {};
+  Object.keys(domainMeta).forEach(d => domainDegree[d] = 0);
+
+  function addNode(n){ nodes.push(n); nodeById[n.id] = n; }
+
+  experiences.forEach(e => addNode({id:e.id, label:e.label, type:"experience", date:e.date, domains:e.domains}));
+  projects.forEach(p => addNode({id:p.id, label:p.label, type:"project", date:p.date, domains:p.domains}));
+  [...experiences, ...projects].forEach(item => item.domains.forEach(d => domainDegree[d]++));
+  Object.keys(domainMeta).forEach(d => addNode({
+    id:"dom_"+d, label:d.toUpperCase(), type:"domain", date:domainMeta[d], domains:[], degree:domainDegree[d]
+  }));
+
+  const links = [];
+  [...experiences, ...projects].forEach(item => item.domains.forEach(d =>
+    links.push({source:item.id, target:"dom_"+d})
+  ));
+  // adjacency
+  const adj = {}; nodes.forEach(n => adj[n.id] = new Set());
+  links.forEach(l => { adj[l.source].add(l.target); adj[l.target].add(l.source); });
+
+  // radius
+  function radiusOf(n){
+    if(n.type==="domain") return 9 + Math.sqrt(n.degree) * 3.4;   // data(21)->~25, ai(2)->~14
+    if(n.type==="experience") return 8.5;
+    return 6;
+  }
+  function massOf(n){
+    if(n.type==="domain") return 3 + n.degree*0.25;
+    if(n.type==="experience") return 1.4;
+    return 1;
+  }
+  nodes.forEach(n => { n.r = radiusOf(n); n.m = massOf(n); });
+
+  const visibleTypes = new Set(["experience","project","domain"]);
+  let selectedId = null;
+  let scale = 1, tx = 0, ty = 0;
+
+  // ---- SVG scaffold ----
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.getElementById("graph");
+  const viewport = document.createElementNS(NS, "g");
+  svg.appendChild(viewport);
+  const gEdges = document.createElementNS(NS, "g");
+  const gNodes = document.createElementNS(NS, "g");
+  viewport.appendChild(gEdges); viewport.appendChild(gNodes);
+
+  let W = svg.clientWidth || 800, H = svg.clientHeight || 600;
+  function centerXY(){ return [W/2, H/2]; }
+
+  // initial positions: rings by type
+  (function seed(){
+    const [cx, cy] = centerXY();
+    const doms = nodes.filter(n=>n.type==="domain");
+    const exps = nodes.filter(n=>n.type==="experience");
+    const projs = nodes.filter(n=>n.type==="project");
+    function ring(arr, rad){ arr.forEach((n,i)=>{ const a = (i/arr.length)*Math.PI*2;
+      n.x = cx + Math.cos(a)*rad + (Math.random()-0.5)*30;
+      n.y = cy + Math.sin(a)*rad + (Math.random()-0.5)*30;
+      n.vx = 0; n.vy = 0; }); }
+    ring(doms, Math.min(W,H)*0.16);
+    ring(exps, Math.min(W,H)*0.30);
+    ring(projs, Math.min(W,H)*0.42);
+  })();
+
+  // ---- Force simulation ----
+  const SPRING = 0.035, SPRING_LEN = 78, REPULSION = 900, GRAVITY = 0.015, DAMP = 0.86;
+  let alpha = 1;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function step(){
+    const [cx, cy] = centerXY();
+    // repulsion (O(n^2), n small)
+    for(let i=0;i<nodes.length;i++){
+      const a = nodes[i];
+      for(let j=i+1;j<nodes.length;j++){
+        const b = nodes[j];
+        let dx = a.x-b.x, dy = a.y-b.y;
+        let d2 = dx*dx+dy*dy; if(d2<0.01){ d2=0.01; dx=(Math.random()-0.5); dy=(Math.random()-0.5); }
+        const d = Math.sqrt(d2);
+        const mind = a.r + b.r + 6;
+        let f = REPULSION*(a.r*0.14)*(b.r*0.14)/d2;
+        if(a.type==="domain" && b.type==="domain") f *= 1.7;   // spread labeled hubs apart
+        if(d < mind) f += (mind-d)*0.9;         // hard-ish anti-overlap
+        f = Math.min(f, 40);                      // clamp to avoid blow-up
+        const ux = dx/d, uy = dy/d;
+        a.vx += ux*f/a.m; a.vy += uy*f/a.m;
+        b.vx -= ux*f/b.m; b.vy -= uy*f/b.m;
+      }
+    }
+    // springs
+    for(const l of links){
+      const a = nodeById[l.source], b = nodeById[l.target];
+      let dx = b.x-a.x, dy = b.y-a.y;
+      let d = Math.sqrt(dx*dx+dy*dy) || 0.01;
+      const f = SPRING*(d - SPRING_LEN);
+      const ux = dx/d, uy = dy/d;
+      a.vx += ux*f/a.m; a.vy += uy*f/a.m;
+      b.vx -= ux*f/b.m; b.vy -= uy*f/b.m;
+    }
+    // gravity to center
+    for(const n of nodes){
+      n.vx += (cx-n.x)*GRAVITY/n.m;
+      n.vy += (cy-n.y)*GRAVITY/n.m;
+    }
+    // integrate
+    for(const n of nodes){
+      if(n.fx!=null){ n.x=n.fx; n.y=n.fy; n.vx=0; n.vy=0; continue; }
+      n.vx*=DAMP; n.vy*=DAMP;
+      n.x += n.vx*alpha; n.y += n.vy*alpha;
+      // bounds
+      n.x = Math.max(n.r+4, Math.min(W-n.r-4, n.x));
+      n.y = Math.max(n.r+4, Math.min(H-n.r-4, n.y));
+    }
+    alpha *= 0.992; if(alpha<0.02) alpha=0.02;
+  }
+
+  // ---- Render DOM (build once) ----
+  const edgeEls = links.map(l => {
+    const ln = document.createElementNS(NS,"line");
+    ln.setAttribute("class","edge");
+    ln._l = l; gEdges.appendChild(ln); return ln;
+  });
+  const nodeEls = nodes.map(n => {
+    const g = document.createElementNS(NS,"g");
+    g.setAttribute("class","node "+({experience:"exp",project:"proj",domain:"dom"})[n.type]);
+    const c = document.createElementNS(NS,"circle");
+    c.setAttribute("r", n.r);
+    g.appendChild(c);
+    const showLabel = n.type==="domain";   // hubs only; role/project names appear on hover/select
+    const t = document.createElementNS(NS,"text");
+    t.setAttribute("text-anchor","middle");
+    t.setAttribute("dy", n.r + 12);
+    t.textContent = n.label.length>22 ? n.label.slice(0,21)+"…" : n.label;
+    t.style.display = showLabel ? "" : "none";
+    g.appendChild(t);
+    g._n = n; g._label = t;
+    gNodes.appendChild(g);
+    return g;
+  });
+
+  function draw(){
+    for(const ln of edgeEls){
+      const a = nodeById[ln._l.source], b = nodeById[ln._l.target];
+      ln.setAttribute("x1",a.x); ln.setAttribute("y1",a.y);
+      ln.setAttribute("x2",b.x); ln.setAttribute("y2",b.y);
+    }
+    for(const g of nodeEls){ g.setAttribute("transform","translate("+g._n.x+","+g._n.y+")"); }
+  }
+
+  let running = true, ticks = 0;
+  function loop(){
+    if(!running) return;
+    step(); draw(); ticks++;
+    if(alpha<=0.021 && ticks>120){ running=false; fitView(); }   // settled
+    else requestAnimationFrame(loop);
+  }
+  if(reduceMotion){
+    for(let i=0;i<420;i++) step();   // settle synchronously
+    draw(); fitView();
+  } else {
+    requestAnimationFrame(loop);
+  }
+  function reheat(a){ alpha = Math.max(alpha, a||0.5); if(!running){ running=true; requestAnimationFrame(loop); } }
+
+  // ---- Interaction state ----
+  function applyTransform(){ viewport.setAttribute("transform","translate("+tx+","+ty+") scale("+scale+")"); }
+  applyTransform();
+
+  function fitView(){
+    W = svg.clientWidth || W; H = svg.clientHeight || H;
+    const vis = nodes.filter(n => visibleTypes.has(n.type));
+    if(!vis.length) return;
+    let xmin=1e9,xmax=-1e9,ymin=1e9,ymax=-1e9;
+    for(const n of vis){ xmin=Math.min(xmin,n.x-n.r); xmax=Math.max(xmax,n.x+n.r);
+      ymin=Math.min(ymin,n.y-n.r); ymax=Math.max(ymax,n.y+n.r); }
+    const bw=Math.max(1,xmax-xmin), bh=Math.max(1,ymax-ymin), pad=56;
+    scale = Math.max(0.4, Math.min(2.2, Math.min((W-pad*2)/bw, (H-pad*2)/bh)));
+    const bcx=(xmin+xmax)/2, bcy=(ymin+ymax)/2;
+    tx = W/2 - bcx*scale; ty = H/2 - bcy*scale;
+    applyTransform();
+  }
+
+  function neighborsOf(id){ const s = new Set(adj[id]); s.add(id); return s; }
+
+  function refreshStyles(hoverId){
+    // determine highlight set
+    let hi = null;
+    if(hoverId){ hi = neighborsOf(hoverId); }
+    else if(selectedId){ hi = neighborsOf(selectedId); }
+    for(const g of nodeEls){
+      const n = g._n;
+      const typeHidden = !visibleTypes.has(n.type);
+      let dim = typeHidden;
+      if(hi && !hi.has(n.id)) dim = true;
+      g.classList.toggle("dimmed", dim);
+      g.classList.toggle("sel", n.id===selectedId);
+      // reveal role/project labels when highlighted/selected/hovered
+      if(n.type!=="domain"){
+        const reveal = hi ? hi.has(n.id) : false;
+        g._label.style.display = reveal ? "" : "none";
+      }
+    }
+    for(const ln of edgeEls){
+      const a=ln._l.source, b=ln._l.target;
+      const aHidden = !visibleTypes.has(nodeById[a].type), bHidden = !visibleTypes.has(nodeById[b].type);
+      let show = !(aHidden||bHidden);
+      if(hi){ show = show && hi.has(a) && hi.has(b); }
+      ln.classList.toggle("dimmed", !show);
+      ln.classList.toggle("hi", show && !!hi);
+    }
+  }
+
+  // Tooltip
+  const tip = document.getElementById("tip");
+  function showTip(n, ev){
+    const doms = n.domains.length ? n.domains.map(d=>'<span>'+d+' '+domainMeta[d]+'</span>').join('') : '';
+    const typeName = {experience:"Experience", project:"Project", domain:"Domain hub"}[n.type];
+    const meta = n.type==="domain" ? (n.date+" · "+n.degree+" connections") : (typeName+" · "+n.date);
+    tip.innerHTML = '<div class="t-name">'+n.label+'</div><div class="t-meta">'+meta+'</div>'+(doms?'<div class="t-doms">'+doms+'</div>':'');
+    tip.style.opacity = 1;
+    moveTip(ev);
+  }
+  function moveTip(ev){
+    const pad=14; let x=ev.clientX+pad, y=ev.clientY+pad;
+    const r=tip.getBoundingClientRect();
+    if(x+r.width>window.innerWidth-8) x=ev.clientX-r.width-pad;
+    if(y+r.height>window.innerHeight-8) y=ev.clientY-r.height-pad;
+    tip.style.left=x+"px"; tip.style.top=y+"px";
+  }
+  function hideTip(){ tip.style.opacity=0; }
+
+  // Node hover + click + drag
+  let dragNode=null, dragMoved=false;
+  nodeEls.forEach(g => {
+    g.addEventListener("pointerenter", e => { if(dragNode) return; refreshStyles(g._n.id); showTip(g._n, e); });
+    g.addEventListener("pointermove", e => { if(!dragNode) moveTip(e); });
+    g.addEventListener("pointerleave", () => { if(dragNode) return; refreshStyles(null); hideTip(); });
+    g.addEventListener("pointerdown", e => {
+      e.stopPropagation();
+      dragNode=g._n; dragMoved=false;
+      g.setPointerCapture(e.pointerId);
+      dragNode.fx=dragNode.x; dragNode.fy=dragNode.y;
+    });
+    g.addEventListener("pointermove", e => {
+      if(dragNode!==g._n) return;
+      const p = toWorld(e); dragNode.fx=p.x; dragNode.fy=p.y; dragMoved=true; reheat(0.4); draw();
+    });
+    g.addEventListener("pointerup", e => {
+      if(dragNode===g._n){
+        dragNode.fx=null; dragNode.fy=null; dragNode=null;
+        if(!dragMoved){ selectNode(g._n.id); }
+      }
+    });
+  });
+
+  function toWorld(ev){
+    const rect = svg.getBoundingClientRect();
+    return { x:(ev.clientX-rect.left-tx)/scale, y:(ev.clientY-rect.top-ty)/scale };
+  }
+
+  // Detail panel
+  const panel = document.getElementById("panel");
+  function selectNode(id){
+    selectedId = id; refreshStyles(null);
+    const n = nodeById[id];
+    const typeName = {experience:"EXPERIENCE", project:"PROJECT", domain:"DOMAIN"}[n.type];
+    const color = {experience:"var(--exp)", project:"var(--proj)", domain:"var(--dom)"}[n.type];
+    let body = '<button class="close" aria-label="Close">×</button>';
+    body += '<div class="p-type" style="color:'+color+'">'+typeName+'</div>';
+    body += '<div class="p-name">'+n.label+'</div>';
+    body += '<div class="p-date">'+n.date+'</div>';
+    if(n.type==="domain"){
+      const members = [...adj[id]].map(x=>nodeById[x]);
+      body += '<h4>Linked roles & projects ('+members.length+')</h4><ul class="p-links">';
+      members.forEach(m=>{ const c={experience:"var(--exp)",project:"var(--proj)"}[m.type];
+        body += '<li data-goto="'+m.id+'"><span class="d" style="background:'+c+'"></span>'+m.label+'</li>'; });
+      body += '</ul>';
+    } else {
+      if(n.type==="experience" && CASE_LINKS[n.id]){
+        body += '<p style="margin:10px 0 0"><a href="'+CASE_LINKS[n.id]+'" class="p-case-link">View case study ↓</a></p>';
+      }
+      if(REPO_LINKS[n.id]){
+        body += '<p style="margin:10px 0 0"><a href="'+REPO_LINKS[n.id]+'" target="_blank" rel="noopener" class="p-case-link">View on GitHub ↗</a></p>';
+      }
+      body += '<h4>Domains</h4><div class="p-doms">';
+      n.domains.forEach(d=> body += '<span>'+d.toUpperCase()+' '+domainMeta[d]+'</span>');
+      body += '</div>';
+      body += '<h4>Related nodes</h4><ul class="p-links">';
+      const sib = new Set();
+      n.domains.forEach(d=> adj["dom_"+d].forEach(x=>{ if(x!==id) sib.add(x); }));
+      [...sib].map(x=>nodeById[x]).forEach(m=>{ const c={experience:"var(--exp)",project:"var(--proj)"}[m.type];
+        body += '<li data-goto="'+m.id+'"><span class="d" style="background:'+c+'"></span>'+m.label+'</li>'; });
+      body += '</ul>';
+    }
+    panel.innerHTML = body; panel.classList.add("open");
+    panel.querySelector(".close").onclick = closePanel;
+    panel.querySelectorAll("[data-goto]").forEach(li=> li.onclick=()=> selectNode(li.getAttribute("data-goto")));
+    const cl = panel.querySelector(".p-case-link[href^='#']");
+    if(cl) cl.onclick = () => {
+      const t = document.querySelector(cl.getAttribute("href"));
+      if(t && t.tagName === "DETAILS") t.open = true;   // expand the case row before jumping
+      closePanel();
+    };
+  }
+  function closePanel(){ panel.classList.remove("open"); selectedId=null; refreshStyles(null); }
+
+  // Background pan + zoom
+  let panning=false, panStart=null;
+  svg.addEventListener("pointerdown", e => {
+    if(e.target.closest(".node")) return;
+    panning=true; panStart={x:e.clientX-tx, y:e.clientY-ty}; svg.classList.add("panning");
+    if(selectedId) closePanel();
+  });
+  window.addEventListener("pointermove", e => {
+    if(panning){ tx=e.clientX-panStart.x; ty=e.clientY-panStart.y; applyTransform(); }
+  });
+  window.addEventListener("pointerup", () => { panning=false; svg.classList.remove("panning"); });
+  svg.addEventListener("wheel", e => {
+    e.preventDefault();
+    const rect=svg.getBoundingClientRect();
+    const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+    const f = e.deltaY<0 ? 1.12 : 1/1.12;
+    const ns = Math.max(0.4, Math.min(3, scale*f));
+    tx = mx - (mx-tx)*(ns/scale); ty = my - (my-ty)*(ns/scale);
+    scale = ns; applyTransform();
+  }, {passive:false});
+
+  function zoomBy(f){
+    const ns=Math.max(0.4,Math.min(3,scale*f));
+    tx=W/2-(W/2-tx)*(ns/scale); ty=H/2-(H/2-ty)*(ns/scale); scale=ns; applyTransform();
+  }
+  document.getElementById("zoomIn").onclick=()=>zoomBy(1.2);
+  document.getElementById("zoomOut").onclick=()=>zoomBy(1/1.2);
+  document.getElementById("zoomReset").onclick=()=> fitView();
+
+  // Table / theme
+  const tableView=document.getElementById("tableView");
+  document.getElementById("tableBtn").onclick=()=>{
+    tableView.classList.toggle("hidden");
+    if(!tableView.classList.contains("hidden")) tableView.scrollIntoView({behavior:"smooth", block:"nearest"});
+  };
+  (function buildTable(){
+    const tb=document.getElementById("tableBody");
+    const order={experience:0,project:1,domain:2};
+    [...nodes].sort((a,b)=>order[a.type]-order[b.type]).forEach(n=>{
+      const tr=document.createElement("tr");
+      const c={experience:"var(--exp)",project:"var(--proj)",domain:"var(--dom)"}[n.type];
+      const tn={experience:"Experience",project:"Project",domain:"Domain"}[n.type];
+      const doms = n.type==="domain" ? (n.degree+" connections") : n.domains.map(d=>d).join(", ");
+      tr.innerHTML='<td><span class="d" style="background:'+c+'"></span>'+n.label+'</td><td>'+tn+'</td><td>'+n.date+'</td><td>'+doms+'</td>';
+      tr.style.cursor="pointer"; tr.onclick=()=>selectNode(n.id);
+      tb.appendChild(tr);
+    });
+  })();
+
+  // Resize
+  let rt;
+  window.addEventListener("resize", ()=>{ clearTimeout(rt); rt=setTimeout(()=>{
+    W=svg.clientWidth||W; H=svg.clientHeight||H; reheat(0.3);
+  }, 150); });
+
+  // keyboard: Esc closes panel
+  window.addEventListener("keydown", e=>{ if(e.key==="Escape"){ closePanel(); tableView.classList.add("hidden"); } });
+
+  // ---- Timeline (roles as spans, education as graduation milestones) ----
+  (function buildTimeline(){
+    const M = (y, m) => y*12 + (m-1);
+    const T0 = M(2024,1), T1 = M(2026,9), NOW = M(2026,7);
+    const pct = t => ((t - T0) / (T1 - T0) * 100);
+    const work = [
+      {label:"Redteam", full:"Business Consultant Analyst · Redteam Projects", s:M(2025,5), e:M(2025,7), lane:0, target:"#case-redteam", dates:"May to Jul 2025", gist:"Data-backed growth plan from $1.8M to $3.3M revenue"},
+      {label:"Norsat International", full:"Marketing Business Analyst · Norsat International", s:M(2025,12), e:M(2026,5), lane:0, target:"#case-norsat", dates:"Dec 2025 to May 2026", gist:"AI pipelines cut manual production time 80% across 13+ lines"},
+      {label:"UBC RA", full:"Graduate Academic Assistant · UBC", s:M(2025,6), e:M(2025,8), lane:1, target:"#case-aa", dates:"Jun to Aug 2025", gist:"50,000+ data points powering two university-press books"},
+      {label:"Electronic Arts", full:"People Analyst · Electronic Arts", s:M(2026,5), e:NOW, lane:1, target:"#case-ea", dates:"May 2026 to Present", gist:"Headcount truth for a 15,000-person workforce, plus an AI skills assistant"}
+    ];
+    const edu = [
+      {label:"BA Economics · UBC", t:M(2024,5), dates:"Graduated May 2024", gist:"Minor in Commerce, with Distinction · GPA 3.7/4.33"},
+      {label:"MBAN · UBC Sauder", t:M(2025,11), dates:"Graduated Nov 2025", gist:"Master of Business Analytics · GPA 3.75/4.33"}
+    ];
+
+    function tlTip(title, dates, gist, ev){
+      tip.innerHTML = '<div class="t-name">'+title+'</div><div class="t-meta">'+dates+'</div><div class="t-meta" style="margin-top:3px">'+gist+'</div>';
+      tip.style.opacity = 1; moveTip(ev);
+    }
+    function jump(sel){
+      const t = document.querySelector(sel);
+      if(!t) return;
+      if(t.tagName === "DETAILS") t.open = true;
+      t.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+
+    const gantt = document.getElementById("tlGantt");
+    // lanes
+    const lanes = [document.createElement("div"), document.createElement("div")];
+    lanes.forEach(l => { l.className = "tl-lane"; gantt.appendChild(l); });
+    work.forEach(w => {
+      const b = document.createElement("div");
+      b.className = "tl-bar"; b.tabIndex = 0; b.setAttribute("role","link");
+      b.setAttribute("aria-label", w.full + ", " + w.dates + ", view case study");
+      b.style.left = pct(w.s) + "%";
+      b.style.width = Math.max(pct(w.e) - pct(w.s), 1.5) + "%";
+      b.innerHTML = "<span>" + w.label + "</span>";
+      b.addEventListener("pointerenter", e => tlTip(w.full, w.dates, w.gist, e));
+      b.addEventListener("pointermove", e => moveTip(e));
+      b.addEventListener("pointerleave", hideTip);
+      b.addEventListener("click", () => { hideTip(); jump(w.target); });
+      b.addEventListener("keydown", e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); jump(w.target); } });
+      lanes[w.lane].appendChild(b);
+    });
+    // axis with year ticks
+    const axis = document.createElement("div"); axis.className = "tl-axis";
+    [2024, 2025, 2026].forEach(y => {
+      const tk = document.createElement("div"); tk.className = "tl-tick";
+      tk.style.left = pct(M(y,1)) + "%"; tk.textContent = y;
+      axis.appendChild(tk);
+    });
+    gantt.appendChild(axis);
+    // education milestones
+    const eduRow = document.createElement("div"); eduRow.className = "tl-edu-row";
+    edu.forEach(d => {
+      const m = document.createElement("button");
+      m.className = "tl-edu"; m.type = "button";
+      m.setAttribute("aria-label", d.label + ", " + d.dates);
+      m.style.left = pct(d.t) + "%";
+      m.innerHTML = "<i></i><span>" + d.label + "</span>";
+      m.addEventListener("pointerenter", e => tlTip(d.label, d.dates, d.gist, e));
+      m.addEventListener("pointermove", e => moveTip(e));
+      m.addEventListener("pointerleave", hideTip);
+      m.addEventListener("click", () => { hideTip(); jump("#skills"); });
+      eduRow.appendChild(m);
+    });
+    gantt.appendChild(eduRow);
+    // now marker
+    const nowLine = document.createElement("div"); nowLine.className = "tl-now";
+    nowLine.style.left = pct(NOW) + "%"; nowLine.innerHTML = "<i>NOW</i>";
+    gantt.appendChild(nowLine);
+
+    // mobile vertical list (newest first)
+    const list = document.getElementById("tlList");
+    const items = [
+      ...work.map(w => ({t:w.s, type:"work", title:w.full, dates:w.dates, target:w.target})),
+      ...edu.map(d => ({t:d.t, type:"edu", title:d.label, dates:d.dates, target:"#skills"}))
+    ].sort((a,b) => b.t - a.t);
+    items.forEach(it => {
+      const li = document.createElement("li");
+      if(it.type === "edu") li.className = "edu";
+      li.innerHTML = '<div class="tll-t">'+it.title+'</div><div class="tll-d">'+it.dates+'</div>';
+      li.style.cursor = "pointer";
+      li.addEventListener("click", () => jump(it.target));
+      list.appendChild(li);
+    });
+  })();
+
+})();
+</script>
 </body>
 </html>
