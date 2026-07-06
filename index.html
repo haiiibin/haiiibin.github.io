@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Haibin (Allen) Yu, data and people analytics professional in Vancouver. Career map, quantified case studies, and open-source data projects.">
+<meta name="description" content="Haibin (Allen) Yu, data and people analytics professional in Vancouver. Career timeline, filterable project map, quantified case studies, and open-source data projects.">
 <meta property="og:title" content="Haibin (Allen) Yu | Data & People Analytics">
-<meta property="og:description" content="Career map, quantified case studies, and open-source data projects.">
+<meta property="og:description" content="Career timeline, filterable project map, and open-source data projects.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='9' cy='22' r='5' fill='%232a78d6'/%3E%3Ccircle cx='23' cy='9' r='4' fill='%231baf7a'/%3E%3Ccircle cx='24' cy='24' r='3.2' fill='%23eda100'/%3E%3Cpath d='M12 19 21 12M13 24l7.5-.5' stroke='%23898781' stroke-width='1.6'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='7' width='17' height='6' rx='2' fill='%232a78d6'/%3E%3Crect x='9' y='16' width='20' height='6' rx='2' fill='%231baf7a'/%3E%3Crect x='5' y='25' width='12' height='5' rx='2' fill='%23eda100'/%3E%3C/svg%3E">
 <title>Haibin (Allen) Yu | Data & People Analytics</title>
 <style>
   :root {
@@ -15,9 +15,8 @@
     --plane:#f9f9f7; --surface:#fcfcfb;
     --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
     --hair:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,0.10);
-    --exp:#2a78d6; --proj:#1baf7a; --dom:#eda100;
+    --exp:#2a78d6; --proj:#1baf7a;
     --edu:#4a3aa7; --exp-wash:rgba(42,120,214,0.20); --proj-wash:rgba(27,175,122,0.18); --exp-strong:#1c5cab;
-    --edge:rgba(11,11,11,0.13); --edge-hi:rgba(11,11,11,0.42);
     --chip:#ffffff; --chip-ink:#52514e;
     --shadow:0 1px 2px rgba(11,11,11,0.06), 0 8px 24px rgba(11,11,11,0.08);
   }
@@ -39,56 +38,12 @@
     font-size: clamp(30px, 5vw, 44px); font-weight:600; letter-spacing:-0.015em; margin:0; text-wrap:balance; }
   .subtitle { font-size: 15px; color:var(--ink2); margin:14px 0 0; max-width:58ch; line-height:1.65; }
 
-  .btn {
-    font:inherit; font-size:12.5px; cursor:pointer; background:var(--plane); color:var(--ink2);
-    border:1px solid var(--border); border-radius:8px; padding:5px 11px;
-  }
-  .btn:hover { border-color:var(--axis); color:var(--ink); }
-  .btn:focus-visible { outline:2px solid var(--exp); outline-offset:2px; }
-
-  /* Stage */
-  .stage { position:relative; background:var(--surface); border:1px solid var(--hair);
-    border-radius:12px; overflow:hidden; margin-top:6px; }
-  svg#graph { display:block; width:100%; height: min(50vh, 500px); touch-action:none; cursor:grab; }
-  svg#graph.panning { cursor:grabbing; }
-  .edge { stroke:var(--edge); stroke-width:1.4px; }
-  .edge.hi { stroke:var(--edge-hi); stroke-width:2px; }
-  .node { cursor:pointer; }
-  .node circle { stroke:var(--surface); stroke-width:2px; }
-  .node.exp circle { fill:var(--exp); }
-  .node.proj circle { fill:var(--proj); }
-  .node.dom circle { fill:var(--dom); }
-  .node text { font-size:11px; fill:var(--ink2); paint-order:stroke; stroke:var(--surface); stroke-width:3px; stroke-linejoin:round; pointer-events:none; }
-  .node.dom text { fill:var(--ink); font-weight:700; font-size:11.5px; letter-spacing:0.04em; }
-  .node.exp text { fill:var(--ink); font-weight:500; }
-  .dimmed { opacity:0.11; }
-  .node.sel circle { stroke:var(--ink); stroke-width:2.5px; }
-
-  .hint { position:absolute; left:14px; bottom:12px; font-size:11.5px; color:var(--muted);
-    background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:5px 10px; pointer-events:none; }
-  .zoomctl { position:absolute; right:12px; bottom:12px; display:flex; flex-direction:column; gap:6px; }
-  .zoomctl button { width:32px; height:32px; font-size:16px; line-height:1; border-radius:8px;
-    border:1px solid var(--hair); background:var(--surface); color:var(--ink); cursor:pointer; }
-  .zoomctl button:hover { border-color:var(--axis); }
-
-  /* Graph caption (legend + list link) */
-  .caption { display:flex; flex-wrap:wrap; gap:6px 16px; align-items:center;
-    font-size:11.5px; color:var(--muted); margin-top:-8px; }
-  .caption .item { display:flex; align-items:center; gap:6px; }
-  .caption .swatch { width:9px; height:9px; border-radius:50%; }
-  .caption .linklike { font:inherit; background:none; border:none; padding:0; cursor:pointer;
-    color:var(--muted); text-decoration:underline; text-underline-offset:2px; margin-left:auto; }
-  .caption .linklike:hover { color:var(--ink); }
-  .caption .linklike:focus-visible { outline:2px solid var(--exp); outline-offset:2px; }
-
   /* Tooltip */
   #tip { position:fixed; pointer-events:none; z-index:40; max-width:260px;
     background:var(--surface); color:var(--ink); border:1px solid var(--border);
     border-radius:10px; padding:9px 11px; box-shadow:var(--shadow); font-size:12.5px; opacity:0; transition:opacity .1s; }
   #tip .t-name { font-weight:700; margin-bottom:3px; }
   #tip .t-meta { color:var(--ink2); font-size:11.5px; }
-  #tip .t-doms { margin-top:5px; display:flex; flex-wrap:wrap; gap:4px; }
-  #tip .t-doms span { font-size:10.5px; background:var(--chip); border:1px solid var(--border); border-radius:5px; padding:1px 6px; color:var(--chip-ink); }
 
   /* Detail panel */
   #panel { position:fixed; top:0; right:0; height:100%; width:min(340px, 88vw); z-index:50;
@@ -107,16 +62,8 @@
   #panel .p-links li { padding:6px 0; border-bottom:1px solid var(--hair); font-size:13px; display:flex; align-items:center; gap:8px; cursor:pointer; }
   #panel .p-links li .d { width:8px; height:8px; border-radius:50%; flex:none; }
 
-  /* Table view */
-  .tablewrap { overflow-x:auto; background:var(--surface); border:1px solid var(--hair); border-radius:12px; }
-  table { border-collapse:collapse; width:100%; font-size:13px; min-width:520px; }
-  th, td { text-align:left; padding:9px 14px; border-bottom:1px solid var(--hair); }
-  th { font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); position:sticky; top:0; background:var(--surface); }
-  td .d { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; vertical-align:middle; }
-  tbody tr:hover { background:var(--plane); }
-  .hidden { display:none; }
   html { scroll-behavior: smooth; }
-  section[id], .case, .stage { scroll-margin-top: 56px; }
+  section[id], .case { scroll-margin-top: 56px; }
   .topbar { position: sticky; top: 0; z-index: 30; background: var(--plane); border-bottom: 1px solid var(--hair);
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); }
   .tb-in { max-width: 968px; margin: 0 auto; display: flex; align-items: center; gap: 18px; padding: 11px 24px; }
@@ -131,7 +78,7 @@
   .section-title { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--exp); margin: 0 0 4px; }
 
-  /* Timeline / Gantt */
+  /* Gantt (career timeline + project map) */
   #timeline { margin-top: 30px; }
   .tl-chips { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0 4px; }
   .tl-chip { font: inherit; font-size: 12px; cursor: pointer; background: var(--surface);
@@ -153,6 +100,9 @@
   .tl-bar:focus-visible { outline: 2px solid var(--exp); outline-offset: 2px; }
   .tl-bar.proj { background: var(--proj-wash); border-left-color: var(--proj); }
   .tl-bar.proj:hover, .tl-bar.proj:focus-visible { background: var(--proj); }
+  .tl-bar.flip span { position: absolute; right: 100%; top: 50%; transform: translateY(-50%);
+    margin-right: 8px; padding-left: 0; }
+  .tl-bar.flip:hover span, .tl-bar.flip:focus-visible span { color: var(--ink); }
   .tl-axis { position: relative; height: 22px; border-top: 1px solid var(--axis); }
   .tl-tick { position: absolute; top: 4px; transform: translateX(-50%);
     font-size: 10.5px; letter-spacing: 0.06em; color: var(--muted); font-variant-numeric: tabular-nums; }
@@ -169,12 +119,13 @@
   .tl-edu:focus-visible { outline: 2px solid var(--edu); outline-offset: 2px; }
   .tl-list { display: none; }
   @media (max-width: 720px) {
-    .tl-gantt, .tl-chips { display: none; }
+    .tl-gantt { display: none; }
     .tl-list { display: block; list-style: none; margin: 12px 0 0; padding: 0 0 0 2px; }
     .tl-list li { position: relative; padding: 0 0 16px 22px; border-left: 1px solid var(--hair); margin-left: 5px; }
     .tl-list li:last-child { border-left-color: transparent; padding-bottom: 2px; }
     .tl-list li::before { content: ""; position: absolute; left: -6px; top: 3px;
       width: 11px; height: 11px; border-radius: 50%; background: var(--exp); border: 2px solid var(--plane); }
+    .tl-list li.proj::before { background: var(--proj); }
     .tl-list li.edu::before { border-radius: 2px; transform: rotate(45deg); background: var(--edu); }
     .tl-list .tll-t { font-size: 13.5px; font-weight: 600; }
     .tl-list .tll-d { font-size: 11.5px; color: var(--muted); margin-top: 1px; text-transform: uppercase; letter-spacing: 0.04em; }
@@ -184,7 +135,6 @@
   .site-footer .fineprint { color: var(--muted); font-size: 12px; margin-top: 12px; }
   @media (max-width: 640px) {
     .topbar .navlinks { gap: 10px; overflow-x: auto; }
-    svg#graph { height: 52vh; }
   }
   /* Collapsed rows (progressive disclosure) */
   .rows { display: flex; flex-direction: column; border-top: 1px solid var(--hair); }
@@ -238,7 +188,7 @@
     <span class="brand">Haibin (Allen) Yu</span>
     <div class="navlinks">
       <a href="#timeline">Timeline</a>
-      <a href="#graph-section">Map</a>
+      <a href="#project-map">Map</a>
       <a href="#experience">Experience</a>
       <a href="#projects">Projects</a>
       <a href="#skills">Skills</a>
@@ -249,7 +199,7 @@
   <header id="top">
     <p class="eyebrow">Data &amp; People Analytics · Vancouver, Canada</p>
     <h1 class="title">Haibin (Allen) Yu</h1>
-    <p class="subtitle">I turn messy operational data into decisions. People analytics at Electronic Arts; previously AI-assisted marketing automation at Norsat. The map below shows how my work connects; click anything that interests you.</p>
+    <p class="subtitle">I turn messy operational data into decisions. People analytics at Electronic Arts; previously AI-assisted marketing automation at Norsat. Below: my career timeline and a map of everything I've built; click anything that interests you.</p>
     <div class="contact">
       <a href="mailto:haibiny123@gmail.com">haibiny123@gmail.com</a>
       <a href="https://www.linkedin.com/in/haiiibin" target="_blank" rel="noopener">LinkedIn</a>
@@ -259,28 +209,18 @@
 
   <section id="timeline">
     <h2 class="section-title">Timeline</h2>
-    <p class="section-sub">Roles in blue, projects in green, education milestones below the axis. Filter by domain, then click any bar for its story.</p>
-    <div class="tl-chips" id="tlChips"></div>
+    <p class="section-sub">Where I've worked, with education milestones below the axis; click a bar for the full story.</p>
     <div class="tl-gantt" id="tlGantt"></div>
     <ol class="tl-list" id="tlList"></ol>
   </section>
 
-  <div class="stage" id="graph-section">
-    <svg id="graph" role="img" aria-label="Force-directed network of roles, projects and skill domains"></svg>
-    <div class="hint">Hover to highlight · Click a node for details</div>
-    <div class="zoomctl">
-      <button id="zoomIn" aria-label="Zoom in">+</button>
-      <button id="zoomOut" aria-label="Zoom out">−</button>
-      <button id="zoomReset" aria-label="Fit view" style="font-size:13px;">⤢</button>
-    </div>
-  </div>
-
-  <div class="caption">
-    <div class="item"><span class="swatch" style="background:var(--exp)"></span>Roles</div>
-    <div class="item"><span class="swatch" style="background:var(--proj)"></span>Projects</div>
-    <div class="item"><span class="swatch" style="background:var(--dom)"></span>Skill domains</div>
-    <button class="linklike" id="tableBtn">View as list</button>
-  </div>
+  <section id="project-map">
+    <h2 class="section-title">Project Map</h2>
+    <p class="section-sub">Everything I've built since 2023: roles in blue, projects in green. Filter by domain, then click a bar; roles open their case study, projects open details and links.</p>
+    <div class="tl-chips" id="pmChips"></div>
+    <div class="tl-gantt" id="pmGantt"></div>
+    <ol class="tl-list" id="pmList"></ol>
+  </section>
 
   <section id="experience">
     <h2 class="section-title">Experience</h2>
@@ -433,13 +373,6 @@
     </div>
   </section>
 
-  <div class="tablewrap hidden" id="tableView">
-    <table>
-      <thead><tr><th>Name</th><th>Type</th><th>Date</th><th>Domains</th></tr></thead>
-      <tbody id="tableBody"></tbody>
-    </table>
-  </div>
-
   <footer class="site-footer">
     <div class="contact">
       <a href="mailto:haibiny123@gmail.com">haibiny123@gmail.com</a>
@@ -452,7 +385,7 @@
 </div>
 
 <div id="tip" role="status" aria-live="polite"></div>
-<aside id="panel" aria-label="Node details"></aside>
+<aside id="panel" aria-label="Details"></aside>
 
 <script>
 (function(){
@@ -500,230 +433,20 @@
     nutrition_planning: "https://github.com/haiiibin/nutrition-planning-optimization"
   };
 
-  // ---- Build nodes & links ----
-  const nodes = [];
+  // ---- Lookups ----
   const nodeById = {};
+  experiences.forEach(e => nodeById[e.id] = Object.assign({type:"experience"}, e));
+  projects.forEach(p => nodeById[p.id] = Object.assign({type:"project"}, p));
+  const domMembers = {};
   const domainDegree = {};
-  Object.keys(domainMeta).forEach(d => domainDegree[d] = 0);
+  Object.keys(domainMeta).forEach(d => { domMembers[d] = []; domainDegree[d] = 0; });
+  [...experiences, ...projects].forEach(it => it.domains.forEach(d => { domMembers[d].push(it.id); domainDegree[d]++; }));
 
-  function addNode(n){ nodes.push(n); nodeById[n.id] = n; }
-
-  experiences.forEach(e => addNode({id:e.id, label:e.label, type:"experience", date:e.date, domains:e.domains}));
-  projects.forEach(p => addNode({id:p.id, label:p.label, type:"project", date:p.date, domains:p.domains}));
-  [...experiences, ...projects].forEach(item => item.domains.forEach(d => domainDegree[d]++));
-  Object.keys(domainMeta).forEach(d => addNode({
-    id:"dom_"+d, label:d.toUpperCase(), type:"domain", date:domainMeta[d], domains:[], degree:domainDegree[d]
-  }));
-
-  const links = [];
-  [...experiences, ...projects].forEach(item => item.domains.forEach(d =>
-    links.push({source:item.id, target:"dom_"+d})
-  ));
-  // adjacency
-  const adj = {}; nodes.forEach(n => adj[n.id] = new Set());
-  links.forEach(l => { adj[l.source].add(l.target); adj[l.target].add(l.source); });
-
-  // radius
-  function radiusOf(n){
-    if(n.type==="domain") return 9 + Math.sqrt(n.degree) * 3.4;   // data(21)->~25, ai(2)->~14
-    if(n.type==="experience") return 8.5;
-    return 6;
-  }
-  function massOf(n){
-    if(n.type==="domain") return 3 + n.degree*0.25;
-    if(n.type==="experience") return 1.4;
-    return 1;
-  }
-  nodes.forEach(n => { n.r = radiusOf(n); n.m = massOf(n); });
-
-  const visibleTypes = new Set(["experience","project","domain"]);
-  let selectedId = null;
-  let scale = 1, tx = 0, ty = 0;
-
-  // ---- SVG scaffold ----
-  const NS = "http://www.w3.org/2000/svg";
-  const svg = document.getElementById("graph");
-  const viewport = document.createElementNS(NS, "g");
-  svg.appendChild(viewport);
-  const gEdges = document.createElementNS(NS, "g");
-  const gNodes = document.createElementNS(NS, "g");
-  viewport.appendChild(gEdges); viewport.appendChild(gNodes);
-
-  let W = svg.clientWidth || 800, H = svg.clientHeight || 600;
-  function centerXY(){ return [W/2, H/2]; }
-
-  // initial positions: rings by type
-  (function seed(){
-    const [cx, cy] = centerXY();
-    const doms = nodes.filter(n=>n.type==="domain");
-    const exps = nodes.filter(n=>n.type==="experience");
-    const projs = nodes.filter(n=>n.type==="project");
-    function ring(arr, rad){ arr.forEach((n,i)=>{ const a = (i/arr.length)*Math.PI*2;
-      n.x = cx + Math.cos(a)*rad + (Math.random()-0.5)*30;
-      n.y = cy + Math.sin(a)*rad + (Math.random()-0.5)*30;
-      n.vx = 0; n.vy = 0; }); }
-    ring(doms, Math.min(W,H)*0.16);
-    ring(exps, Math.min(W,H)*0.30);
-    ring(projs, Math.min(W,H)*0.42);
-  })();
-
-  // ---- Force simulation ----
-  const SPRING = 0.035, SPRING_LEN = 78, REPULSION = 900, GRAVITY = 0.015, DAMP = 0.86;
-  let alpha = 1;
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  function step(){
-    const [cx, cy] = centerXY();
-    // repulsion (O(n^2), n small)
-    for(let i=0;i<nodes.length;i++){
-      const a = nodes[i];
-      for(let j=i+1;j<nodes.length;j++){
-        const b = nodes[j];
-        let dx = a.x-b.x, dy = a.y-b.y;
-        let d2 = dx*dx+dy*dy; if(d2<0.01){ d2=0.01; dx=(Math.random()-0.5); dy=(Math.random()-0.5); }
-        const d = Math.sqrt(d2);
-        const mind = a.r + b.r + 6;
-        let f = REPULSION*(a.r*0.14)*(b.r*0.14)/d2;
-        if(a.type==="domain" && b.type==="domain") f *= 1.7;   // spread labeled hubs apart
-        if(d < mind) f += (mind-d)*0.9;         // hard-ish anti-overlap
-        f = Math.min(f, 40);                      // clamp to avoid blow-up
-        const ux = dx/d, uy = dy/d;
-        a.vx += ux*f/a.m; a.vy += uy*f/a.m;
-        b.vx -= ux*f/b.m; b.vy -= uy*f/b.m;
-      }
-    }
-    // springs
-    for(const l of links){
-      const a = nodeById[l.source], b = nodeById[l.target];
-      let dx = b.x-a.x, dy = b.y-a.y;
-      let d = Math.sqrt(dx*dx+dy*dy) || 0.01;
-      const f = SPRING*(d - SPRING_LEN);
-      const ux = dx/d, uy = dy/d;
-      a.vx += ux*f/a.m; a.vy += uy*f/a.m;
-      b.vx -= ux*f/b.m; b.vy -= uy*f/b.m;
-    }
-    // gravity to center
-    for(const n of nodes){
-      n.vx += (cx-n.x)*GRAVITY/n.m;
-      n.vy += (cy-n.y)*GRAVITY/n.m;
-    }
-    // integrate
-    for(const n of nodes){
-      if(n.fx!=null){ n.x=n.fx; n.y=n.fy; n.vx=0; n.vy=0; continue; }
-      n.vx*=DAMP; n.vy*=DAMP;
-      n.x += n.vx*alpha; n.y += n.vy*alpha;
-      // bounds
-      n.x = Math.max(n.r+4, Math.min(W-n.r-4, n.x));
-      n.y = Math.max(n.r+4, Math.min(H-n.r-4, n.y));
-    }
-    alpha *= 0.992; if(alpha<0.02) alpha=0.02;
-  }
-
-  // ---- Render DOM (build once) ----
-  const edgeEls = links.map(l => {
-    const ln = document.createElementNS(NS,"line");
-    ln.setAttribute("class","edge");
-    ln._l = l; gEdges.appendChild(ln); return ln;
-  });
-  const nodeEls = nodes.map(n => {
-    const g = document.createElementNS(NS,"g");
-    g.setAttribute("class","node "+({experience:"exp",project:"proj",domain:"dom"})[n.type]);
-    const c = document.createElementNS(NS,"circle");
-    c.setAttribute("r", n.r);
-    g.appendChild(c);
-    const showLabel = n.type==="domain";   // hubs only; role/project names appear on hover/select
-    const t = document.createElementNS(NS,"text");
-    t.setAttribute("text-anchor","middle");
-    t.setAttribute("dy", n.r + 12);
-    t.textContent = n.label.length>22 ? n.label.slice(0,21)+"…" : n.label;
-    t.style.display = showLabel ? "" : "none";
-    g.appendChild(t);
-    g._n = n; g._label = t;
-    gNodes.appendChild(g);
-    return g;
-  });
-
-  function draw(){
-    for(const ln of edgeEls){
-      const a = nodeById[ln._l.source], b = nodeById[ln._l.target];
-      ln.setAttribute("x1",a.x); ln.setAttribute("y1",a.y);
-      ln.setAttribute("x2",b.x); ln.setAttribute("y2",b.y);
-    }
-    for(const g of nodeEls){ g.setAttribute("transform","translate("+g._n.x+","+g._n.y+")"); }
-  }
-
-  let running = true, ticks = 0;
-  function loop(){
-    if(!running) return;
-    step(); draw(); ticks++;
-    if(alpha<=0.021 && ticks>120){ running=false; fitView(); }   // settled
-    else requestAnimationFrame(loop);
-  }
-  if(reduceMotion){
-    for(let i=0;i<420;i++) step();   // settle synchronously
-    draw(); fitView();
-  } else {
-    requestAnimationFrame(loop);
-  }
-  function reheat(a){ alpha = Math.max(alpha, a||0.5); if(!running){ running=true; requestAnimationFrame(loop); } }
-
-  // ---- Interaction state ----
-  function applyTransform(){ viewport.setAttribute("transform","translate("+tx+","+ty+") scale("+scale+")"); }
-  applyTransform();
-
-  function fitView(){
-    W = svg.clientWidth || W; H = svg.clientHeight || H;
-    const vis = nodes.filter(n => visibleTypes.has(n.type));
-    if(!vis.length) return;
-    let xmin=1e9,xmax=-1e9,ymin=1e9,ymax=-1e9;
-    for(const n of vis){ xmin=Math.min(xmin,n.x-n.r); xmax=Math.max(xmax,n.x+n.r);
-      ymin=Math.min(ymin,n.y-n.r); ymax=Math.max(ymax,n.y+n.r); }
-    const bw=Math.max(1,xmax-xmin), bh=Math.max(1,ymax-ymin), pad=56;
-    scale = Math.max(0.4, Math.min(2.2, Math.min((W-pad*2)/bw, (H-pad*2)/bh)));
-    const bcx=(xmin+xmax)/2, bcy=(ymin+ymax)/2;
-    tx = W/2 - bcx*scale; ty = H/2 - bcy*scale;
-    applyTransform();
-  }
-
-  function neighborsOf(id){ const s = new Set(adj[id]); s.add(id); return s; }
-
-  function refreshStyles(hoverId){
-    // determine highlight set
-    let hi = null;
-    if(hoverId){ hi = neighborsOf(hoverId); }
-    else if(selectedId){ hi = neighborsOf(selectedId); }
-    for(const g of nodeEls){
-      const n = g._n;
-      const typeHidden = !visibleTypes.has(n.type);
-      let dim = typeHidden;
-      if(hi && !hi.has(n.id)) dim = true;
-      g.classList.toggle("dimmed", dim);
-      g.classList.toggle("sel", n.id===selectedId);
-      // reveal role/project labels when highlighted/selected/hovered
-      if(n.type!=="domain"){
-        const reveal = hi ? hi.has(n.id) : false;
-        g._label.style.display = reveal ? "" : "none";
-      }
-    }
-    for(const ln of edgeEls){
-      const a=ln._l.source, b=ln._l.target;
-      const aHidden = !visibleTypes.has(nodeById[a].type), bHidden = !visibleTypes.has(nodeById[b].type);
-      let show = !(aHidden||bHidden);
-      if(hi){ show = show && hi.has(a) && hi.has(b); }
-      ln.classList.toggle("dimmed", !show);
-      ln.classList.toggle("hi", show && !!hi);
-    }
-  }
-
-  // Tooltip
+  // ---- Tooltip ----
   const tip = document.getElementById("tip");
-  function showTip(n, ev){
-    const doms = n.domains.length ? n.domains.map(d=>'<span>'+d+' '+domainMeta[d]+'</span>').join('') : '';
-    const typeName = {experience:"Experience", project:"Project", domain:"Domain hub"}[n.type];
-    const meta = n.type==="domain" ? (n.date+" · "+n.degree+" connections") : (typeName+" · "+n.date);
-    tip.innerHTML = '<div class="t-name">'+n.label+'</div><div class="t-meta">'+meta+'</div>'+(doms?'<div class="t-doms">'+doms+'</div>':'');
-    tip.style.opacity = 1;
-    moveTip(ev);
+  function tlTip(title, dates, gist, ev){
+    tip.innerHTML = '<div class="t-name">'+title+'</div><div class="t-meta">'+dates+'</div>'+(gist?'<div class="t-meta" style="margin-top:3px">'+gist+'</div>':'');
+    tip.style.opacity = 1; moveTip(ev);
   }
   function moveTip(ev){
     const pad=14; let x=ev.clientX+pad, y=ev.clientY+pad;
@@ -734,72 +457,35 @@
   }
   function hideTip(){ tip.style.opacity=0; }
 
-  // Node hover + click + drag
-  let dragNode=null, dragMoved=false;
-  nodeEls.forEach(g => {
-    g.addEventListener("pointerenter", e => { if(dragNode) return; refreshStyles(g._n.id); showTip(g._n, e); });
-    g.addEventListener("pointermove", e => { if(!dragNode) moveTip(e); });
-    g.addEventListener("pointerleave", () => { if(dragNode) return; refreshStyles(null); hideTip(); });
-    g.addEventListener("pointerdown", e => {
-      e.stopPropagation();
-      dragNode=g._n; dragMoved=false;
-      g.setPointerCapture(e.pointerId);
-      dragNode.fx=dragNode.x; dragNode.fy=dragNode.y;
-    });
-    g.addEventListener("pointermove", e => {
-      if(dragNode!==g._n) return;
-      const p = toWorld(e); dragNode.fx=p.x; dragNode.fy=p.y; dragMoved=true; reheat(0.4); draw();
-    });
-    g.addEventListener("pointerup", e => {
-      if(dragNode===g._n){
-        dragNode.fx=null; dragNode.fy=null; dragNode=null;
-        if(!dragMoved){ selectNode(g._n.id); }
-      }
-    });
-  });
-
-  function toWorld(ev){
-    const rect = svg.getBoundingClientRect();
-    return { x:(ev.clientX-rect.left-tx)/scale, y:(ev.clientY-rect.top-ty)/scale };
-  }
-
-  // Detail panel
+  // ---- Detail panel ----
   const panel = document.getElementById("panel");
   function selectNode(id){
-    selectedId = id; refreshStyles(null);
     const n = nodeById[id];
-    const typeName = {experience:"EXPERIENCE", project:"PROJECT", domain:"DOMAIN"}[n.type];
-    const color = {experience:"var(--exp)", project:"var(--proj)", domain:"var(--dom)"}[n.type];
+    const isExp = n.type === "experience";
     let body = '<button class="close" aria-label="Close">×</button>';
-    body += '<div class="p-type" style="color:'+color+'">'+typeName+'</div>';
+    body += '<div class="p-type" style="color:'+(isExp?"var(--exp)":"var(--proj)")+'">'+(isExp?"EXPERIENCE":"PROJECT")+'</div>';
     body += '<div class="p-name">'+n.label+'</div>';
     body += '<div class="p-date">'+n.date+'</div>';
-    if(n.type==="domain"){
-      const members = [...adj[id]].map(x=>nodeById[x]);
-      body += '<h4>Linked roles & projects ('+members.length+')</h4><ul class="p-links">';
-      members.forEach(m=>{ const c={experience:"var(--exp)",project:"var(--proj)"}[m.type];
-        body += '<li data-goto="'+m.id+'"><span class="d" style="background:'+c+'"></span>'+m.label+'</li>'; });
-      body += '</ul>';
-    } else {
-      if(n.type==="experience" && CASE_LINKS[n.id]){
-        body += '<p style="margin:10px 0 0"><a href="'+CASE_LINKS[n.id]+'" class="p-case-link">View case study ↓</a></p>';
-      }
-      if(REPO_LINKS[n.id]){
-        body += '<p style="margin:10px 0 0"><a href="'+REPO_LINKS[n.id]+'" target="_blank" rel="noopener" class="p-case-link">View on GitHub ↗</a></p>';
-      }
-      body += '<h4>Domains</h4><div class="p-doms">';
-      n.domains.forEach(d=> body += '<span>'+d.toUpperCase()+' '+domainMeta[d]+'</span>');
-      body += '</div>';
-      body += '<h4>Related nodes</h4><ul class="p-links">';
-      const sib = new Set();
-      n.domains.forEach(d=> adj["dom_"+d].forEach(x=>{ if(x!==id) sib.add(x); }));
-      [...sib].map(x=>nodeById[x]).forEach(m=>{ const c={experience:"var(--exp)",project:"var(--proj)"}[m.type];
-        body += '<li data-goto="'+m.id+'"><span class="d" style="background:'+c+'"></span>'+m.label+'</li>'; });
-      body += '</ul>';
+    if(isExp && CASE_LINKS[n.id]){
+      body += '<p style="margin:10px 0 0"><a href="'+CASE_LINKS[n.id]+'" class="p-case-link">View case study ↓</a></p>';
     }
+    if(REPO_LINKS[n.id]){
+      body += '<p style="margin:10px 0 0"><a href="'+REPO_LINKS[n.id]+'" target="_blank" rel="noopener" class="p-case-link">View on GitHub ↗</a></p>';
+    }
+    body += '<h4>Domains</h4><div class="p-doms">';
+    n.domains.forEach(d => body += '<span>'+d.toUpperCase()+' '+domainMeta[d]+'</span>');
+    body += '</div>';
+    body += '<h4>Related work</h4><ul class="p-links">';
+    const sib = new Set();
+    n.domains.forEach(d => domMembers[d].forEach(x => { if(x !== id) sib.add(x); }));
+    [...sib].map(x => nodeById[x]).forEach(m => {
+      const c = m.type === "experience" ? "var(--exp)" : "var(--proj)";
+      body += '<li data-goto="'+m.id+'"><span class="d" style="background:'+c+'"></span>'+m.label+'</li>';
+    });
+    body += '</ul>';
     panel.innerHTML = body; panel.classList.add("open");
     panel.querySelector(".close").onclick = closePanel;
-    panel.querySelectorAll("[data-goto]").forEach(li=> li.onclick=()=> selectNode(li.getAttribute("data-goto")));
+    panel.querySelectorAll("[data-goto]").forEach(li => li.onclick = () => selectNode(li.getAttribute("data-goto")));
     const cl = panel.querySelector(".p-case-link[href^='#']");
     if(cl) cl.onclick = () => {
       const t = document.querySelector(cl.getAttribute("href"));
@@ -807,156 +493,96 @@
       closePanel();
     };
   }
-  function closePanel(){ panel.classList.remove("open"); selectedId=null; refreshStyles(null); }
+  function closePanel(){ panel.classList.remove("open"); }
+  window.addEventListener("keydown", e => { if(e.key === "Escape") closePanel(); });
 
-  // Background pan + zoom
-  let panning=false, panStart=null;
-  svg.addEventListener("pointerdown", e => {
-    if(e.target.closest(".node")) return;
-    panning=true; panStart={x:e.clientX-tx, y:e.clientY-ty}; svg.classList.add("panning");
-    if(selectedId) closePanel();
-  });
-  window.addEventListener("pointermove", e => {
-    if(panning){ tx=e.clientX-panStart.x; ty=e.clientY-panStart.y; applyTransform(); }
-  });
-  window.addEventListener("pointerup", () => { panning=false; svg.classList.remove("panning"); });
-  svg.addEventListener("wheel", e => {
-    e.preventDefault();
-    const rect=svg.getBoundingClientRect();
-    const mx=e.clientX-rect.left, my=e.clientY-rect.top;
-    const f = e.deltaY<0 ? 1.12 : 1/1.12;
-    const ns = Math.max(0.4, Math.min(3, scale*f));
-    tx = mx - (mx-tx)*(ns/scale); ty = my - (my-ty)*(ns/scale);
-    scale = ns; applyTransform();
-  }, {passive:false});
-
-  function zoomBy(f){
-    const ns=Math.max(0.4,Math.min(3,scale*f));
-    tx=W/2-(W/2-tx)*(ns/scale); ty=H/2-(H/2-ty)*(ns/scale); scale=ns; applyTransform();
-  }
-  document.getElementById("zoomIn").onclick=()=>zoomBy(1.2);
-  document.getElementById("zoomOut").onclick=()=>zoomBy(1/1.2);
-  document.getElementById("zoomReset").onclick=()=> fitView();
-
-  // Table / theme
-  const tableView=document.getElementById("tableView");
-  document.getElementById("tableBtn").onclick=()=>{
-    tableView.classList.toggle("hidden");
-    if(!tableView.classList.contains("hidden")) tableView.scrollIntoView({behavior:"smooth", block:"nearest"});
+  // ---- Gantt machinery (shared by career timeline and project map) ----
+  const M = (y, m) => y*12 + (m-1);
+  const NOW = M(2026,7);
+  // real month ranges from resume/source/_index.yaml
+  const MONTHS = {
+    ea:[M(2026,5),NOW], norsat:[M(2025,12),M(2026,5)], aa:[M(2025,6),M(2025,8)], redteam:[M(2025,5),M(2025,7)],
+    yvr_energy:[M(2025,1),M(2025,2)], diabetes_ml:[M(2025,1),M(2025,2)],
+    cross_sectional_returns:[M(2025,2),M(2025,4)], climate_policy:[M(2025,4),M(2025,4)],
+    school_bus_optimization:[M(2024,10),M(2024,12)], pharmaceutical_marketing:[M(2024,10),M(2024,12)],
+    hospital_energy:[M(2024,12),M(2024,12)], restaurant_analysis:[M(2024,10),M(2024,10)],
+    nutrition_planning:[M(2024,9),M(2024,10)], health_service_10k:[M(2024,9),M(2024,10)],
+    tiktok_sentiment:[M(2023,9),M(2023,12)], stock_prediction:[M(2023,5),M(2023,6)],
+    gender_wage_gap:[M(2023,1),M(2023,4)], miami_housing:[M(2023,1),M(2023,4)],
+    google_cloud_hackathon:[M(2025,2),M(2025,2)], rogers_hackathon:[M(2024,9),M(2024,9)],
+    learning_analytics_hackathon:[M(2024,10),M(2024,10)]
   };
-  (function buildTable(){
-    const tb=document.getElementById("tableBody");
-    const order={experience:0,project:1,domain:2};
-    [...nodes].sort((a,b)=>order[a.type]-order[b.type]).forEach(n=>{
-      const tr=document.createElement("tr");
-      const c={experience:"var(--exp)",project:"var(--proj)",domain:"var(--dom)"}[n.type];
-      const tn={experience:"Experience",project:"Project",domain:"Domain"}[n.type];
-      const doms = n.type==="domain" ? (n.degree+" connections") : n.domains.map(d=>d).join(", ");
-      tr.innerHTML='<td><span class="d" style="background:'+c+'"></span>'+n.label+'</td><td>'+tn+'</td><td>'+n.date+'</td><td>'+doms+'</td>';
-      tr.style.cursor="pointer"; tr.onclick=()=>selectNode(n.id);
-      tb.appendChild(tr);
+  const edu = [
+    {label:"BA Economics · UBC", t:M(2024,5), dates:"Graduated May 2024", gist:"Minor in Commerce, with Distinction · GPA 3.7/4.33"},
+    {label:"MBAN · UBC Sauder", t:M(2025,11), dates:"Graduated Nov 2025", gist:"Master of Business Analytics · GPA 3.75/4.33"}
+  ];
+
+  function jump(sel){
+    const t = document.querySelector(sel);
+    if(!t) return;
+    if(t.tagName === "DETAILS") t.open = true;
+    t.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+  function goItem(it){
+    hideTip();
+    if(it.type === "role"){ jump(CASE_LINKS[it.id]); } else { selectNode(it.id); }
+  }
+
+  function renderGantt(gantt, items, opts){
+    gantt.innerHTML = "";
+    if(!items.length) return;
+    const list = items.slice().sort((a,b) => a.s - b.s || a.e - b.e);
+    // axis range (pad 1 month each side; opts.t0 can widen it, e.g. to include education)
+    const t0 = opts.t0 != null ? Math.min(opts.t0, Math.min(...list.map(i => i.s)) - 1) : Math.min(...list.map(i => i.s)) - 1;
+    const t1 = Math.max(...list.map(i => i.e)) + 1;
+    const span = t1 - t0;
+    const pct = t => (t - t0) / span * 100;
+    const pxPerMonth = (gantt.clientWidth || 900) / span;
+    const labelMonths = it => (it.label.length * 6.8 + 16) / pxPerMonth;
+    // greedy lane packing; a bar occupies max(duration, label width) so labels never collide.
+    // Bars whose label would run past the axis end flip the label to their left side instead.
+    const laneEnds = [];
+    list.forEach(it => {
+      const lm = labelMonths(it);
+      it._flip = it.s + Math.max(it.e - it.s, lm) > t1;
+      const occStart = it._flip ? Math.min(it.s, it.e - lm) : it.s;
+      const occEnd = it._flip ? it.e : it.s + Math.max(it.e - it.s, lm);
+      let lane = laneEnds.findIndex(end => end + 0.2 <= occStart);
+      if(lane === -1){ lane = laneEnds.length; laneEnds.push(occEnd); } else { laneEnds[lane] = occEnd; }
+      it._lane = lane;
     });
-  })();
-
-  // Resize
-  let rt;
-  window.addEventListener("resize", ()=>{ clearTimeout(rt); rt=setTimeout(()=>{
-    W=svg.clientWidth||W; H=svg.clientHeight||H; reheat(0.3);
-  }, 150); });
-
-  // keyboard: Esc closes panel
-  window.addEventListener("keydown", e=>{ if(e.key==="Escape"){ closePanel(); tableView.classList.add("hidden"); } });
-
-  // ---- Timeline gantt (roles + projects, domain-filterable; education milestones) ----
-  (function buildTimeline(){
-    const M = (y, m) => y*12 + (m-1);
-    const NOW = M(2026,7);
-    // real month ranges from resume/source/_index.yaml
-    const MONTHS = {
-      ea:[M(2026,5),NOW], norsat:[M(2025,12),M(2026,5)], aa:[M(2025,6),M(2025,8)], redteam:[M(2025,5),M(2025,7)],
-      yvr_energy:[M(2025,1),M(2025,2)], diabetes_ml:[M(2025,1),M(2025,2)],
-      cross_sectional_returns:[M(2025,2),M(2025,4)], climate_policy:[M(2025,4),M(2025,4)],
-      school_bus_optimization:[M(2024,10),M(2024,12)], pharmaceutical_marketing:[M(2024,10),M(2024,12)],
-      hospital_energy:[M(2024,12),M(2024,12)], restaurant_analysis:[M(2024,10),M(2024,10)],
-      nutrition_planning:[M(2024,9),M(2024,10)], health_service_10k:[M(2024,9),M(2024,10)],
-      tiktok_sentiment:[M(2023,9),M(2023,12)], stock_prediction:[M(2023,5),M(2023,6)],
-      gender_wage_gap:[M(2023,1),M(2023,4)], miami_housing:[M(2023,1),M(2023,4)],
-      google_cloud_hackathon:[M(2025,2),M(2025,2)], rogers_hackathon:[M(2024,9),M(2024,9)],
-      learning_analytics_hackathon:[M(2024,10),M(2024,10)]
-    };
-    const tlItems = [
-      ...experiences.map(x => ({id:x.id, label:x.label, domains:x.domains, dates:x.date, type:"role", s:MONTHS[x.id][0], e:MONTHS[x.id][1]})),
-      ...projects.map(x => ({id:x.id, label:x.label, domains:x.domains, dates:x.date, type:"proj", s:MONTHS[x.id][0], e:MONTHS[x.id][1]}))
-    ];
-    const edu = [
-      {label:"BA Economics · UBC", t:M(2024,5), dates:"Graduated May 2024", gist:"Minor in Commerce, with Distinction · GPA 3.7/4.33"},
-      {label:"MBAN · UBC Sauder", t:M(2025,11), dates:"Graduated Nov 2025", gist:"Master of Business Analytics · GPA 3.75/4.33"}
-    ];
-
-    function tlTip(title, dates, gist, ev){
-      tip.innerHTML = '<div class="t-name">'+title+'</div><div class="t-meta">'+dates+'</div>'+(gist?'<div class="t-meta" style="margin-top:3px">'+gist+'</div>':'');
-      tip.style.opacity = 1; moveTip(ev);
+    const lanes = laneEnds.map(() => {
+      const l = document.createElement("div"); l.className = "tl-lane"; gantt.appendChild(l); return l;
+    });
+    list.forEach(it => {
+      const b = document.createElement("div");
+      b.className = "tl-bar" + (it.type === "proj" ? " proj" : "") + (it._flip ? " flip" : "");
+      b.tabIndex = 0; b.setAttribute("role","link");
+      b.setAttribute("aria-label", it.label + ", " + it.dates + ", open details");
+      b.style.left = pct(it.s) + "%";
+      b.style.width = Math.max(pct(it.e) - pct(it.s), 1.2) + "%";
+      b.innerHTML = "<span>" + it.label + "</span>";
+      const kind = it.type === "role" ? "Role" : "Project";
+      b.addEventListener("pointerenter", e => tlTip(it.label, kind + " · " + it.dates, it.type === "role" ? "Click to read the case study" : "Click for details and links", e));
+      b.addEventListener("pointermove", e => moveTip(e));
+      b.addEventListener("pointerleave", hideTip);
+      b.addEventListener("click", () => goItem(it));
+      b.addEventListener("keydown", e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); goItem(it); } });
+      lanes[it._lane].appendChild(b);
+    });
+    // axis with year ticks
+    const axis = document.createElement("div"); axis.className = "tl-axis";
+    for(let y = Math.ceil(t0/12); y*12 <= t1; y++){
+      if(M(y,1) < t0) continue;
+      const tk = document.createElement("div"); tk.className = "tl-tick";
+      tk.style.left = pct(M(y,1)) + "%"; tk.textContent = y;
+      axis.appendChild(tk);
     }
-    function jump(sel){
-      const t = document.querySelector(sel);
-      if(!t) return;
-      if(t.tagName === "DETAILS") t.open = true;
-      t.scrollIntoView({behavior:"smooth", block:"start"});
-    }
-
-    const gantt = document.getElementById("tlGantt");
-
-    function render(dom){
-      gantt.innerHTML = "";
-      const list = tlItems.filter(it => !dom || it.domains.includes(dom)).sort((a,b) => a.s-b.s || a.e-b.e);
-      if(!list.length) return;
-      // dynamic axis range (pad 1 month each side; include NOW if a current role is in view)
-      let t0 = Math.min(...list.map(i => i.s)) - 1;
-      let t1 = Math.max(...list.map(i => i.e)) + 1;
-      const span = t1 - t0;
-      const pct = t => (t - t0) / span * 100;
-      const pxPerMonth = (gantt.clientWidth || 900) / span;
-      const labelMonths = it => (it.label.length * 6.8 + 16) / pxPerMonth;
-      // greedy lane packing; a bar occupies max(duration, label width) so labels never collide
-      const laneEnds = [];
-      list.forEach(it => {
-        const eff = it.s + Math.max(it.e - it.s, labelMonths(it));
-        let lane = laneEnds.findIndex(end => end + 0.2 <= it.s);
-        if(lane === -1){ lane = laneEnds.length; laneEnds.push(eff); } else { laneEnds[lane] = eff; }
-        it._lane = lane;
-      });
-      const lanes = laneEnds.map(() => {
-        const l = document.createElement("div"); l.className = "tl-lane"; gantt.appendChild(l); return l;
-      });
-      list.forEach(it => {
-        const b = document.createElement("div");
-        b.className = "tl-bar" + (it.type === "proj" ? " proj" : "");
-        b.tabIndex = 0; b.setAttribute("role","link");
-        b.setAttribute("aria-label", it.label + ", " + it.dates + ", open details");
-        b.style.left = pct(it.s) + "%";
-        b.style.width = Math.max(pct(it.e) - pct(it.s), 1.2) + "%";
-        b.innerHTML = "<span>" + it.label + "</span>";
-        const kind = it.type === "role" ? "Role" : "Project";
-        b.addEventListener("pointerenter", e => tlTip(it.label, kind + " · " + it.dates, it.type === "role" ? "Click to read the case study" : "Click for details and links", e));
-        b.addEventListener("pointermove", e => moveTip(e));
-        b.addEventListener("pointerleave", hideTip);
-        const go = () => { hideTip(); if(it.type === "role"){ jump(CASE_LINKS[it.id]); } else { selectNode(it.id); } };
-        b.addEventListener("click", go);
-        b.addEventListener("keydown", e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); go(); } });
-        lanes[it._lane].appendChild(b);
-      });
-      // axis with year ticks
-      const axis = document.createElement("div"); axis.className = "tl-axis";
-      for(let y = Math.ceil(t0/12); y*12 <= t1; y++){
-        if(M(y,1) < t0) continue;
-        const tk = document.createElement("div"); tk.className = "tl-tick";
-        tk.style.left = pct(M(y,1)) + "%"; tk.textContent = y;
-        axis.appendChild(tk);
-      }
-      gantt.appendChild(axis);
-      // education milestones (always shown; clamp into range visually if outside)
+    gantt.appendChild(axis);
+    // education milestones (career timeline only)
+    if(opts.edu){
       const eduRow = document.createElement("div"); eduRow.className = "tl-edu-row";
-      edu.forEach(d => {
+      opts.edu.forEach(d => {
         if(d.t < t0 || d.t > t1) return;
         const m = document.createElement("button");
         m.className = "tl-edu"; m.type = "button";
@@ -970,53 +596,84 @@
         eduRow.appendChild(m);
       });
       gantt.appendChild(eduRow);
-      // now marker
-      if(NOW >= t0 && NOW <= t1){
-        const nowLine = document.createElement("div"); nowLine.className = "tl-now";
-        nowLine.style.left = pct(NOW) + "%"; nowLine.innerHTML = "<i>NOW</i>";
-        gantt.appendChild(nowLine);
-      }
     }
-
-    // filter chips
-    const chipWrap = document.getElementById("tlChips");
-    const chips = [];
-    function addChip(label, dom, count){
-      const c = document.createElement("button");
-      c.className = "tl-chip"; c.type = "button";
-      c.innerHTML = "<b>" + label + "</b>" + (count != null ? "<small>" + count + "</small>" : "");
-      c.addEventListener("click", () => {
-        chips.forEach(x => x.classList.remove("on"));
-        c.classList.add("on");
-        render(dom);
-      });
-      chipWrap.appendChild(c); chips.push(c);
-      return c;
+    // now marker
+    if(NOW >= t0 && NOW <= t1){
+      const nowLine = document.createElement("div"); nowLine.className = "tl-now";
+      nowLine.style.left = pct(NOW) + "%"; nowLine.innerHTML = "<i>NOW</i>";
+      gantt.appendChild(nowLine);
     }
-    addChip("All", null, tlItems.length).classList.add("on");
-    Object.keys(domainMeta).forEach(d => addChip(d.toUpperCase(), d, domainDegree[d]));
-    render(null);
-    let tlRt;
-    window.addEventListener("resize", () => { clearTimeout(tlRt); tlRt = setTimeout(() => {
-      const on = chips.findIndex(c => c.classList.contains("on"));
-      render(on <= 0 ? null : Object.keys(domainMeta)[on-1]);
-    }, 200); });
+  }
 
-    // mobile vertical list (roles + education, newest first)
+  const roleItems = experiences.map(x => ({id:x.id, label:x.label, domains:x.domains, dates:x.date, type:"role", s:MONTHS[x.id][0], e:MONTHS[x.id][1]}));
+  const projItems = projects.map(x => ({id:x.id, label:x.label, domains:x.domains, dates:x.date, type:"proj", s:MONTHS[x.id][0], e:MONTHS[x.id][1]}));
+
+  // ---- Career timeline: roles + education only ----
+  const tlGantt = document.getElementById("tlGantt");
+  function renderTimeline(){ renderGantt(tlGantt, roleItems, {t0:M(2024,4), edu:edu}); }
+  renderTimeline();
+
+  // mobile career list (roles + education, newest first)
+  (function buildCareerList(){
     const listEl = document.getElementById("tlList");
     const mItems = [
-      ...tlItems.filter(i => i.type === "role").map(w => ({t:w.s, type:"work", title:w.label, dates:w.dates, target:CASE_LINKS[w.id]})),
-      ...edu.map(d => ({t:d.t, type:"edu", title:d.label, dates:d.dates, target:"#skills"}))
+      ...roleItems.map(w => ({t:w.s, cls:"", title:w.label, dates:w.dates, target:CASE_LINKS[w.id]})),
+      ...edu.map(d => ({t:d.t, cls:"edu", title:d.label, dates:d.dates, target:"#skills"}))
     ].sort((a,b) => b.t - a.t);
     mItems.forEach(it => {
       const li = document.createElement("li");
-      if(it.type === "edu") li.className = "edu";
+      if(it.cls) li.className = it.cls;
       li.innerHTML = '<div class="tll-t">'+it.title+'</div><div class="tll-d">'+it.dates+'</div>';
       li.style.cursor = "pointer";
       li.addEventListener("click", () => jump(it.target));
       listEl.appendChild(li);
     });
   })();
+
+  // ---- Project map: domain-filterable gantt of all roles + projects ----
+  const pmGantt = document.getElementById("pmGantt");
+  const pmList = document.getElementById("pmList");
+  const pmItems = [...roleItems, ...projItems];
+  let activeDom = null;
+
+  function renderMap(){
+    const list = pmItems.filter(it => !activeDom || it.domains.includes(activeDom));
+    renderGantt(pmGantt, list, {});
+    // mobile fallback: vertical list, newest first, same click-through
+    pmList.innerHTML = "";
+    list.slice().sort((a,b) => b.s - a.s).forEach(it => {
+      const li = document.createElement("li");
+      if(it.type === "proj") li.className = "proj";
+      li.innerHTML = '<div class="tll-t">'+it.label+'</div><div class="tll-d">'+it.dates+'</div>';
+      li.style.cursor = "pointer";
+      li.addEventListener("click", () => goItem(it));
+      pmList.appendChild(li);
+    });
+  }
+
+  const chipWrap = document.getElementById("pmChips");
+  const chips = [];
+  function addChip(label, dom, count){
+    const c = document.createElement("button");
+    c.className = "tl-chip"; c.type = "button";
+    c.innerHTML = "<b>" + label + "</b>" + (count != null ? "<small>" + count + "</small>" : "");
+    c.addEventListener("click", () => {
+      chips.forEach(x => x.classList.remove("on"));
+      c.classList.add("on");
+      activeDom = dom;
+      renderMap();
+    });
+    chipWrap.appendChild(c); chips.push(c);
+    return c;
+  }
+  addChip("All", null, pmItems.length).classList.add("on");
+  Object.keys(domainMeta).forEach(d => addChip(d.toUpperCase(), d, domainDegree[d]));
+  renderMap();
+
+  let rt;
+  window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => {
+    renderTimeline(); renderMap();
+  }, 200); });
 
 })();
 </script>
