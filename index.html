@@ -16,8 +16,7 @@
     --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
     --hair:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,0.10);
     --exp:#2a78d6; --proj:#1baf7a;
-    --edu:#4a3aa7; --exp-wash:rgba(42,120,214,0.14); --proj-wash:rgba(27,175,122,0.13); --exp-strong:#1c5cab;
-    --exp-seg:rgba(42,120,214,0.26); --proj-seg:rgba(27,175,122,0.26);
+    --edu:#4a3aa7; --proj-wash:rgba(27,175,122,0.16); --exp-strong:#1c5cab;
     --chip:#ffffff; --chip-ink:#52514e;
     --shadow:0 1px 2px rgba(11,11,11,0.06), 0 8px 24px rgba(11,11,11,0.08);
   }
@@ -92,22 +91,30 @@
   .tl-chip.on small { color: rgba(255,255,255,0.75); }
   .tl-gantt { position: relative; margin-top: 14px; }
   .tl-lane { position: relative; height: 38px; margin-bottom: 4px; }
-  .tl-bar { position: absolute; top: 3px; height: 32px; border-radius: 8px;
-    background: var(--exp-wash); border-left: 4px solid var(--exp);
-    display: flex; align-items: center; cursor: pointer; overflow: hidden; }
-  .tl-bar span { position: relative; font-size: 12px; font-weight: 600; color: var(--ink);
-    padding: 0 10px 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .tl-bar .dur { position: absolute; top: 0; bottom: 0; left: 0; background: var(--exp-seg); }
-  .tl-bar:hover, .tl-bar:focus-visible { background: var(--exp); }
-  .tl-bar:hover .dur, .tl-bar:focus-visible .dur { opacity: 0; }
-  .tl-bar:hover span, .tl-bar:focus-visible span { color: #fff; }
+  .tl-bar { position: absolute; top: 5px; height: 28px; display: flex; align-items: center; cursor: pointer; }
+  .tl-bar .dur { height: 100%; border-radius: 6px; background: var(--exp); flex: none; min-width: 10px; }
+  .tl-bar span { font-size: 12px; font-weight: 600; color: var(--ink); padding-left: 8px; white-space: nowrap; }
+  .tl-bar:hover .dur, .tl-bar:focus-visible .dur { background: var(--exp-strong); }
   .tl-bar:focus-visible { outline: 2px solid var(--exp); outline-offset: 2px; }
-  .tl-bar.proj { background: var(--proj-wash); border-left-color: var(--proj); }
-  .tl-bar.proj .dur { background: var(--proj-seg); }
-  .tl-bar.proj:hover, .tl-bar.proj:focus-visible { background: var(--proj); }
-  .tl-bar.flip { border-left: none; border-right: 4px solid var(--exp); }
-  .tl-bar.flip.proj { border-right-color: var(--proj); }
+  .tl-bar.flip { flex-direction: row-reverse; }
+  .tl-bar.flip span { padding-left: 0; padding-right: 8px; }
   .tl-grid { position: absolute; top: 0; border-left: 1px solid var(--hair); }
+  /* Project map: year-banded chip wall (no time axis, so chip width implies nothing) */
+  .pm-years { display: flex; flex-direction: column; gap: 16px; margin-top: 14px; }
+  .pm-year { display: grid; grid-template-columns: 48px 1fr; gap: 12px; }
+  .pm-y { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: 0.08em;
+    padding-top: 10px; font-variant-numeric: tabular-nums; }
+  .pm-items { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pm-chip { font: inherit; display: inline-flex; align-items: baseline; gap: 8px; cursor: pointer;
+    background: var(--proj-wash); border: none; border-left: 3px solid var(--proj);
+    border-radius: 8px; padding: 8px 12px; text-align: left; }
+  .pm-chip b { font-size: 12.5px; font-weight: 600; color: var(--ink); }
+  .pm-chip small { font-size: 11px; color: var(--muted); }
+  .pm-chip:hover, .pm-chip:focus-visible { background: var(--proj); }
+  .pm-chip:hover b, .pm-chip:focus-visible b { color: #fff; }
+  .pm-chip:hover small, .pm-chip:focus-visible small { color: rgba(255,255,255,0.8); }
+  .pm-chip:focus-visible { outline: 2px solid var(--proj); outline-offset: 2px; }
+  @media (max-width: 480px) { .pm-year { grid-template-columns: 1fr; gap: 6px; } .pm-y { padding-top: 0; } }
   .tl-axis { position: relative; height: 22px; border-top: 1px solid var(--axis); }
   .tl-tick { position: absolute; top: 4px; transform: translateX(-50%);
     font-size: 10.5px; letter-spacing: 0.06em; color: var(--muted); font-variant-numeric: tabular-nums; }
@@ -221,10 +228,9 @@
 
   <section id="project-map">
     <h2 class="section-title">Project Map</h2>
-    <p class="section-sub">Everything I've built since 2023: roles in blue, projects in green. Filter by domain, then click a bar; roles open their case study, projects open details and links.</p>
+    <p class="section-sub">Course, client and hackathon work since 2023, grouped by year, newest first. Filter by domain, then click any project for details and links.</p>
     <div class="tl-chips" id="pmChips"></div>
-    <div class="tl-gantt" id="pmGantt"></div>
-    <ol class="tl-list" id="pmList"></ol>
+    <div class="pm-years" id="pmYears"></div>
   </section>
 
   <section id="experience">
@@ -443,9 +449,8 @@
   experiences.forEach(e => nodeById[e.id] = Object.assign({type:"experience"}, e));
   projects.forEach(p => nodeById[p.id] = Object.assign({type:"project"}, p));
   const domMembers = {};
-  const domainDegree = {};
-  Object.keys(domainMeta).forEach(d => { domMembers[d] = []; domainDegree[d] = 0; });
-  [...experiences, ...projects].forEach(it => it.domains.forEach(d => { domMembers[d].push(it.id); domainDegree[d]++; }));
+  Object.keys(domainMeta).forEach(d => domMembers[d] = []);
+  [...experiences, ...projects].forEach(it => it.domains.forEach(d => domMembers[d].push(it.id)));
 
   // ---- Tooltip ----
   const tip = document.getElementById("tip");
@@ -551,12 +556,12 @@
       gl.style.left = pct(M(y,1)) + "%"; gl.style.bottom = gridBottom + "px";
       gantt.appendChild(gl);
     }
-    // Pill sizing: a bar is at least as wide as its label (text lives inside the pill);
-    // the true duration shows as a darker segment. Pills that would run past the axis
-    // end anchor to their right edge (accent border flips sides) instead.
+    // An item = a true-duration solid bar plus its label beside it (plain text, so
+    // only the bar reads as time). Items whose label would run past the axis end
+    // flip, placing the label to the left of the bar.
     list.forEach(it => {
       it._dur = Math.max(it.e - it.s, 1);
-      it._pill = Math.max(it._dur, (it.label.length * 7 + 26) / pxPerMonth);
+      it._pill = it._dur + (it.label.length * 7 + 12) / pxPerMonth;
       it._flip = it.s + it._pill > t1;
     });
     // greedy lane packing over each pill's occupied interval so pills never collide
@@ -578,8 +583,7 @@
       b.setAttribute("aria-label", it.label + ", " + it.dates + ", open details");
       b.style.left = pct(it._flip ? it.e - it._pill : it.s) + "%";
       b.style.width = (it._pill / span * 100) + "%";
-      b.innerHTML = '<i class="dur" style="width:' + (it._dur / it._pill * 100) + '%;'
-        + (it._flip ? 'left:auto;right:0;' : '') + '"></i><span>' + it.label + "</span>";
+      b.innerHTML = '<i class="dur" style="width:' + (it._dur / it._pill * 100) + '%"></i><span>' + it.label + '</span>';
       const kind = it.type === "role" ? "Role" : "Project";
       b.addEventListener("pointerenter", e => tlTip(it.label, kind + " · " + it.dates, it.type === "role" ? "Click to read the case study" : "Click for details and links", e));
       b.addEventListener("pointermove", e => moveTip(e));
@@ -648,26 +652,40 @@
     });
   })();
 
-  // ---- Project map: domain-filterable gantt of all roles + projects ----
-  const pmGantt = document.getElementById("pmGantt");
-  const pmList = document.getElementById("pmList");
-  const pmItems = [...roleItems, ...projItems];
+  // ---- Project map: year-banded chip wall, domain-filterable ----
+  const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const monthRange = it => it.s === it.e ? MONTH_NAMES[it.s % 12]
+    : MONTH_NAMES[it.s % 12] + " to " + MONTH_NAMES[it.e % 12];
+  const pmYears = document.getElementById("pmYears");
   let activeDom = null;
 
   function renderMap(){
-    const list = pmItems.filter(it => !activeDom || it.domains.includes(activeDom));
-    renderGantt(pmGantt, list, {});
-    // mobile fallback: vertical list, newest first, same click-through
-    pmList.innerHTML = "";
-    list.slice().sort((a,b) => b.s - a.s).forEach(it => {
-      const li = document.createElement("li");
-      if(it.type === "proj") li.className = "proj";
-      li.innerHTML = '<div class="tll-t">'+it.label+'</div><div class="tll-d">'+it.dates+'</div>';
-      li.style.cursor = "pointer";
-      li.addEventListener("click", () => goItem(it));
-      pmList.appendChild(li);
+    const list = projItems.filter(it => !activeDom || it.domains.includes(activeDom));
+    pmYears.innerHTML = "";
+    const byYear = {};
+    list.forEach(it => { const y = Math.floor(it.s / 12); (byYear[y] = byYear[y] || []).push(it); });
+    Object.keys(byYear).map(Number).sort((a,b) => b - a).forEach(y => {
+      const row = document.createElement("div"); row.className = "pm-year";
+      const lab = document.createElement("div"); lab.className = "pm-y"; lab.textContent = y;
+      const items = document.createElement("div"); items.className = "pm-items";
+      byYear[y].sort((a,b) => b.s - a.s || a.label.localeCompare(b.label)).forEach(it => {
+        const c = document.createElement("button");
+        c.className = "pm-chip"; c.type = "button";
+        c.setAttribute("aria-label", it.label + ", " + it.dates + ", open details");
+        c.innerHTML = "<b>" + it.label + "</b><small>" + monthRange(it) + "</small>";
+        c.addEventListener("pointerenter", e => tlTip(it.label, "Project · " + it.dates, "Click for details and links", e));
+        c.addEventListener("pointermove", e => moveTip(e));
+        c.addEventListener("pointerleave", hideTip);
+        c.addEventListener("click", () => { hideTip(); selectNode(it.id); });
+        items.appendChild(c);
+      });
+      row.appendChild(lab); row.appendChild(items); pmYears.appendChild(row);
     });
   }
+
+  const projDegree = {};
+  Object.keys(domainMeta).forEach(d => projDegree[d] = 0);
+  projItems.forEach(it => it.domains.forEach(d => projDegree[d]++));
 
   const chipWrap = document.getElementById("pmChips");
   const chips = [];
@@ -684,14 +702,12 @@
     chipWrap.appendChild(c); chips.push(c);
     return c;
   }
-  addChip("All", null, pmItems.length).classList.add("on");
-  Object.keys(domainMeta).forEach(d => addChip(d.toUpperCase(), d, domainDegree[d]));
+  addChip("All", null, projItems.length).classList.add("on");
+  Object.keys(domainMeta).forEach(d => { if(projDegree[d]) addChip(d.toUpperCase(), d, projDegree[d]); });
   renderMap();
 
   let rt;
-  window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => {
-    renderTimeline(); renderMap();
-  }, 200); });
+  window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(renderTimeline, 200); });
 
 })();
 </script>
