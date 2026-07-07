@@ -63,7 +63,7 @@
   #panel .p-links li .d { width:8px; height:8px; border-radius:50%; flex:none; }
 
   html { scroll-behavior: smooth; }
-  section[id], .case { scroll-margin-top: 56px; }
+  section[id] { scroll-margin-top: 56px; }
   .topbar { position: sticky; top: 0; z-index: 30; background: var(--plane); border-bottom: 1px solid var(--hair);
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); }
   .tb-in { max-width: 968px; margin: 0 auto; display: flex; align-items: center; gap: 18px; padding: 11px 24px; }
@@ -78,8 +78,19 @@
   .section-title { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--exp); margin: 0 0 4px; }
 
-  /* Gantt (career timeline + project map) */
-  #timeline { margin-top: 30px; }
+  /* Career: vertical spine, work = blue dots, education = purple diamonds */
+  #career { margin-top: 30px; }
+  .career { list-style: none; margin: 16px 0 0; padding: 0; }
+  .career li { position: relative; margin-left: 8px; padding: 0 0 24px 26px; border-left: 2px solid var(--hair); }
+  .career li:last-child { border-left-color: transparent; padding-bottom: 2px; }
+  .career li::before { content: ""; position: absolute; left: -7px; top: 3px;
+    width: 12px; height: 12px; border-radius: 50%; background: var(--exp); border: 2px solid var(--plane); }
+  .career li.edu::before { border-radius: 2px; transform: rotate(45deg); background: var(--edu); }
+  .career li.now::before { box-shadow: 0 0 0 3px rgba(42,120,214,0.22); }
+  .c-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 14px; }
+  .c-role { font-weight: 600; font-size: 14.5px; }
+  .c-date { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; margin-left: auto; }
+  .c-gist { color: var(--ink2); font-size: 13.5px; margin: 3px 0 0; max-width: 60ch; }
   .tl-chips { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0 4px; }
   .tl-chip { font: inherit; font-size: 12px; cursor: pointer; background: var(--surface);
     color: var(--ink2); border: 1px solid var(--hair); border-radius: 999px; padding: 5px 13px; }
@@ -89,16 +100,6 @@
   .tl-chip:focus-visible { outline: 2px solid var(--exp); outline-offset: 2px; }
   .tl-chip.on { background: var(--exp-strong); border-color: var(--exp-strong); color: #fff; }
   .tl-chip.on small { color: rgba(255,255,255,0.75); }
-  .tl-gantt { position: relative; margin-top: 14px; }
-  .tl-lane { position: relative; height: 38px; margin-bottom: 4px; }
-  .tl-bar { position: absolute; top: 5px; height: 28px; display: flex; align-items: center; cursor: pointer; }
-  .tl-bar .dur { height: 100%; border-radius: 6px; background: var(--exp); flex: none; min-width: 10px; }
-  .tl-bar span { font-size: 12px; font-weight: 600; color: var(--ink); padding-left: 8px; white-space: nowrap; }
-  .tl-bar:hover .dur, .tl-bar:focus-visible .dur { background: var(--exp-strong); }
-  .tl-bar:focus-visible { outline: 2px solid var(--exp); outline-offset: 2px; }
-  .tl-bar.flip { flex-direction: row-reverse; }
-  .tl-bar.flip span { padding-left: 0; padding-right: 8px; }
-  .tl-grid { position: absolute; top: 0; border-left: 1px solid var(--hair); }
   /* Project map: year-banded chip wall (no time axis, so chip width implies nothing) */
   .pm-years { display: flex; flex-direction: column; gap: 16px; margin-top: 14px; }
   .pm-year { display: grid; grid-template-columns: 48px 1fr; gap: 12px; }
@@ -115,47 +116,11 @@
   .pm-chip:hover small, .pm-chip:focus-visible small { color: rgba(255,255,255,0.8); }
   .pm-chip:focus-visible { outline: 2px solid var(--proj); outline-offset: 2px; }
   @media (max-width: 480px) { .pm-year { grid-template-columns: 1fr; gap: 6px; } .pm-y { padding-top: 0; } }
-  .tl-axis { position: relative; height: 22px; border-top: 1px solid var(--axis); }
-  .tl-tick { position: absolute; top: 4px; transform: translateX(-50%);
-    font-size: 10.5px; letter-spacing: 0.06em; color: var(--muted); font-variant-numeric: tabular-nums; }
-  .tl-tick::before { content: ""; position: absolute; left: 50%; top: -5px; height: 4px; border-left: 1px solid var(--axis); }
-  .tl-now { position: absolute; top: 0; bottom: 22px; border-left: 1px dashed var(--axis); }
-  .tl-now i { position: absolute; top: -14px; left: 4px; font-style: normal;
-    font-size: 9.5px; letter-spacing: 0.1em; color: var(--muted); }
-  .tl-edu-row { position: relative; height: 34px; margin-top: 4px; }
-  .tl-edu { position: absolute; top: 4px; transform: translateX(-50%);
-    display: flex; align-items: center; gap: 7px; cursor: pointer; background: none; border: none; padding: 2px; font: inherit; }
-  .tl-edu i { width: 11px; height: 11px; background: var(--edu); transform: rotate(45deg); flex: none; }
-  .tl-edu span { font-size: 11.5px; color: var(--ink2); white-space: nowrap; }
-  .tl-edu:hover span, .tl-edu:focus-visible span { color: var(--ink); }
-  .tl-edu:focus-visible { outline: 2px solid var(--edu); outline-offset: 2px; }
-  .tl-list { display: none; }
-  @media (max-width: 720px) {
-    .tl-gantt { display: none; }
-    .tl-list { display: block; list-style: none; margin: 12px 0 0; padding: 0 0 0 2px; }
-    .tl-list li { position: relative; padding: 0 0 16px 22px; border-left: 1px solid var(--hair); margin-left: 5px; }
-    .tl-list li:last-child { border-left-color: transparent; padding-bottom: 2px; }
-    .tl-list li::before { content: ""; position: absolute; left: -6px; top: 3px;
-      width: 11px; height: 11px; border-radius: 50%; background: var(--exp); border: 2px solid var(--plane); }
-    .tl-list li.proj::before { background: var(--proj); }
-    .tl-list li.edu::before { border-radius: 2px; transform: rotate(45deg); background: var(--edu); }
-    .tl-list .tll-t { font-size: 13.5px; font-weight: 600; }
-    .tl-list .tll-d { font-size: 11.5px; color: var(--muted); margin-top: 1px; text-transform: uppercase; letter-spacing: 0.04em; }
-  }
   .section-sub { color: var(--muted); font-size: 13px; margin: 0 0 10px; max-width: 70ch; }
   .site-footer { border-top: 1px solid var(--hair); padding-top: 20px; margin-top: 48px; }
   .site-footer .fineprint { color: var(--muted); font-size: 12px; margin-top: 12px; }
   @media (max-width: 640px) {
     .topbar .navlinks { gap: 10px; overflow-x: auto; }
-  }
-  /* Experience rows (flat: role-level only; detail lives in the resume, not the public site) */
-  .case { display: grid; grid-template-columns: auto minmax(0, 1fr) max-content;
-    align-items: baseline; gap: 4px 12px; padding: 16px 0; border-bottom: 1px solid var(--hair); }
-  .case .case-date { grid-column: 3; }
-  @media (max-width: 720px) {
-    .case { grid-template-columns: minmax(0, 1fr) max-content; }
-    .case .case-date { grid-column: 2; }
-    .case .case-gist { grid-column: 1 / -1; white-space: normal; }
   }
   /* Collapsed rows (progressive disclosure) */
   .rows { display: flex; flex-direction: column; border-top: 1px solid var(--hair); }
@@ -170,15 +135,12 @@
     transition: transform .15s ease; transform-origin: 45% 55%; }
   details[open] .sum-mark { transform: rotate(45deg); }
   @media (prefers-reduced-motion: reduce) { .sum-mark { transition: none; } }
-  .case-role, .proj-title { font-weight: 600; font-size: 14.5px; }
-  .case-gist { color: var(--ink2); font-size: 13.5px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .case-date, .proj-tag { color: var(--muted); font-size: 12px; grid-column: 4; justify-self: end;
+  .proj-title { font-weight: 600; font-size: 14.5px; }
+  .proj-tag { color: var(--muted); font-size: 12px; grid-column: 4; justify-self: end;
     text-transform: uppercase; letter-spacing: .04em; }
   @media (max-width: 720px) {
     summary { grid-template-columns: 14px minmax(0,1fr) max-content; }
-    .case-date, .proj-tag { grid-column: 3; }
-    .case-gist { grid-column: 2 / -1; white-space: normal; }
+    .proj-tag { grid-column: 3; }
   }
   .proj-body { padding: 2px 4px 18px 30px; max-width: 74ch; }
   .p-case-link { color: var(--exp); font-size: 13px; text-decoration: none; }
@@ -186,15 +148,11 @@
   .proj-body p { font-size: 13px; line-height: 1.5; color: var(--ink2); margin: 6px 0 10px; }
   .proj-body a { color: var(--exp); font-size: 13px; text-decoration: none; }
   .proj-body a:hover { text-decoration: underline; }
-  /* Skills & education (flat) */
-  .skill-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 24px; }
-  @media (max-width: 760px) { .skill-grid { grid-template-columns: 1fr; } }
+  /* Skills (flat) */
+  .skill-list { margin: 14px 0 0; max-width: 74ch; }
   .skill-list dt { font-size: 13px; font-weight: 650; color: var(--ink); margin-top: 14px; }
   .skill-list dt:first-of-type { margin-top: 0; }
   .skill-list dd { font-size: 13px; color: var(--ink2); margin: 3px 0 0; line-height: 1.55; }
-  .edu { margin-bottom: 14px; }
-  .edu h3 { font-size: 13.5px; margin: 0 0 3px; }
-  .edu p { font-size: 12.5px; color: var(--ink2); margin: 0; }
 </style>
 </head>
 <body>
@@ -202,9 +160,8 @@
   <div class="tb-in">
     <span class="brand">Haibin (Allen) Yu</span>
     <div class="navlinks">
-      <a href="#timeline">Timeline</a>
+      <a href="#career">Career</a>
       <a href="#project-map">Map</a>
-      <a href="#experience">Experience</a>
       <a href="#projects">Projects</a>
       <a href="#skills">Skills</a>
     </div>
@@ -222,11 +179,41 @@
     </div>
   </header>
 
-  <section id="timeline">
-    <h2 class="section-title">Timeline</h2>
-    <p class="section-sub">Where I've worked, with education milestones below the axis; click a bar for the full story.</p>
-    <div class="tl-gantt" id="tlGantt"></div>
-    <ol class="tl-list" id="tlList"></ol>
+  <section id="career">
+    <h2 class="section-title">Career</h2>
+    <p class="section-sub">Work and education, newest first; detailed case studies live in my resume, available on request.</p>
+    <ol class="career">
+      <li class="now">
+        <div class="c-head"><span class="c-role">People Analyst · Electronic Arts</span>
+          <span class="c-date">May 2026 to Present</span></div>
+        <p class="c-gist">People analytics: workforce reporting and internal AI tooling</p>
+      </li>
+      <li>
+        <div class="c-head"><span class="c-role">Marketing Business Analyst · Norsat International</span>
+          <span class="c-date">Dec 2025 to May 2026</span></div>
+        <p class="c-gist">Marketing analytics and AI-assisted process automation</p>
+      </li>
+      <li class="edu">
+        <div class="c-head"><span class="c-role">MBAN · UBC Sauder School of Business</span>
+          <span class="c-date">Graduated Nov 2025</span></div>
+        <p class="c-gist">Master of Business Analytics · GPA 3.75/4.33</p>
+      </li>
+      <li>
+        <div class="c-head"><span class="c-role">Graduate Academic Assistant · UBC</span>
+          <span class="c-date">Jun to Aug 2025</span></div>
+        <p class="c-gist">Research data support for two university-press book projects</p>
+      </li>
+      <li>
+        <div class="c-head"><span class="c-role">Business Consultant Analyst · Redteam Projects</span>
+          <span class="c-date">May to Jul 2025</span></div>
+        <p class="c-gist">Business analytics and financial modeling for a consulting firm</p>
+      </li>
+      <li class="edu">
+        <div class="c-head"><span class="c-role">BA Economics · UBC Vancouver School of Economics</span>
+          <span class="c-date">Graduated May 2024</span></div>
+        <p class="c-gist">Minor in Commerce, with Distinction · GPA 3.7/4.33</p>
+      </li>
+    </ol>
   </section>
 
   <section id="project-map">
@@ -234,38 +221,6 @@
     <p class="section-sub">Course, client and hackathon work since 2023, grouped by year, newest first. Filter by domain, then click any project for details and links.</p>
     <div class="tl-chips" id="pmChips"></div>
     <div class="pm-years" id="pmYears"></div>
-  </section>
-
-  <section id="experience">
-    <h2 class="section-title">Experience</h2>
-    <p class="section-sub">Where I've worked; detailed case studies live in my resume, available on request.</p>
-    <div class="rows">
-
-      <div class="case" id="case-ea">
-        <span class="case-role">People Analyst · Electronic Arts</span>
-        <span class="case-gist">People analytics: workforce reporting and internal AI tooling</span>
-        <span class="case-date">May 2026 to Present</span>
-      </div>
-
-      <div class="case" id="case-norsat">
-        <span class="case-role">Marketing Business Analyst · Norsat International</span>
-        <span class="case-gist">Marketing analytics and AI-assisted process automation</span>
-        <span class="case-date">Dec 2025 to May 2026</span>
-      </div>
-
-      <div class="case" id="case-aa">
-        <span class="case-role">Graduate Academic Assistant · UBC</span>
-        <span class="case-gist">Research data support for two university-press book projects</span>
-        <span class="case-date">Jun to Aug 2025</span>
-      </div>
-
-      <div class="case" id="case-redteam">
-        <span class="case-role">Business Consultant Analyst · Redteam Projects</span>
-        <span class="case-gist">Business analytics and financial modeling for a consulting firm</span>
-        <span class="case-date">May to Jul 2025</span>
-      </div>
-
-    </div>
   </section>
 
   <section id="projects">
@@ -331,28 +286,14 @@
   </section>
 
   <section id="skills">
-    <h2 class="section-title">Skills &amp; Education</h2>
-    <div class="skill-grid">
-      <div class="skill-col">
-        <dl class="skill-list">
-          <dt>Programming &amp; Data Science</dt><dd>Python, R, SQL, PyTorch, TensorFlow, Pandas, Scikit-learn, A/B Testing, Time Series Forecasting</dd>
-          <dt>Machine Learning &amp; Optimization</dt><dd>Prophet, Genetic Algorithms, Simulated Annealing, Particle Swarm, Monte Carlo Simulation, Gurobi</dd>
-          <dt>Visualization &amp; Analytics</dt><dd>Power BI, Tableau, Looker Studio, Advanced Excel, Interactive Dashboards, KPI Tracking</dd>
-          <dt>AI &amp; Developer Tools</dt><dd>Claude Code (MCP, CLI, API), GitHub Copilot, Power Automate, Prompt Engineering, AI Workflow Automation</dd>
-          <dt>Finance &amp; Research</dt><dd>DCF Modeling, Equity Valuation, Comparable Company Analysis, Quantitative Risk Analysis, @Risk, Market Research · CFA Level II Candidate</dd>
-        </dl>
-      </div>
-      <div class="skill-col">
-        <div class="edu">
-          <h3>University of British Columbia · Sauder School of Business</h3>
-          <p>Master of Business Analytics (MBAN), Nov 2025 · GPA 3.75/4.33</p>
-        </div>
-        <div class="edu">
-          <h3>University of British Columbia · Vancouver School of Economics</h3>
-          <p>BA Economics, Minor in Commerce, with Distinction, May 2024 · GPA 3.7/4.33</p>
-        </div>
-      </div>
-    </div>
+    <h2 class="section-title">Skills</h2>
+    <dl class="skill-list">
+      <dt>Programming &amp; Data Science</dt><dd>Python, R, SQL, PyTorch, TensorFlow, Pandas, Scikit-learn, A/B Testing, Time Series Forecasting</dd>
+      <dt>Machine Learning &amp; Optimization</dt><dd>Prophet, Genetic Algorithms, Simulated Annealing, Particle Swarm, Monte Carlo Simulation, Gurobi</dd>
+      <dt>Visualization &amp; Analytics</dt><dd>Power BI, Tableau, Looker Studio, Advanced Excel, Interactive Dashboards, KPI Tracking</dd>
+      <dt>AI &amp; Developer Tools</dt><dd>Claude Code (MCP, CLI, API), GitHub Copilot, Power Automate, Prompt Engineering, AI Workflow Automation</dd>
+      <dt>Finance &amp; Research</dt><dd>DCF Modeling, Equity Valuation, Comparable Company Analysis, Quantitative Risk Analysis, @Risk, Market Research · CFA Level II Candidate</dd>
+    </dl>
   </section>
 
   <footer class="site-footer">
@@ -404,7 +345,6 @@
     {id:"learning_analytics_hackathon", label:"Learning Analytics Hackathon", date:"Oct 2024", domains:["ml","data","product"]}
   ];
 
-  const CASE_LINKS = {ea:"#case-ea", norsat:"#case-norsat", aa:"#case-aa", redteam:"#case-redteam"};
   const REPO_LINKS = {
     yvr_energy: "https://github.com/haiiibin/Vancouver-International-Airport-Energy-Consumption-Forecasting",
     diabetes_ml: "https://github.com/haiiibin/Machine-Learning-for-Diabetes-Risk-Screening",
@@ -468,12 +408,9 @@
   function closePanel(){ panel.classList.remove("open"); }
   window.addEventListener("keydown", e => { if(e.key === "Escape") closePanel(); });
 
-  // ---- Gantt machinery (shared by career timeline and project map) ----
+  // ---- Project month ranges (from resume/source/_index.yaml) ----
   const M = (y, m) => y*12 + (m-1);
-  const NOW = M(2026,7);
-  // real month ranges from resume/source/_index.yaml
   const MONTHS = {
-    ea:[M(2026,5),NOW], norsat:[M(2025,12),M(2026,5)], aa:[M(2025,6),M(2025,8)], redteam:[M(2025,5),M(2025,7)],
     yvr_energy:[M(2025,1),M(2025,2)], diabetes_ml:[M(2025,1),M(2025,2)],
     cross_sectional_returns:[M(2025,2),M(2025,4)], climate_policy:[M(2025,4),M(2025,4)],
     school_bus_optimization:[M(2024,10),M(2024,12)], pharmaceutical_marketing:[M(2024,10),M(2024,12)],
@@ -484,135 +421,7 @@
     google_cloud_hackathon:[M(2025,2),M(2025,2)], rogers_hackathon:[M(2024,9),M(2024,9)],
     learning_analytics_hackathon:[M(2024,10),M(2024,10)]
   };
-  const edu = [
-    {label:"BA Economics · UBC", t:M(2024,5), dates:"Graduated May 2024", gist:"Minor in Commerce, with Distinction · GPA 3.7/4.33"},
-    {label:"MBAN · UBC Sauder", t:M(2025,11), dates:"Graduated Nov 2025", gist:"Master of Business Analytics · GPA 3.75/4.33"}
-  ];
-
-  function jump(sel){
-    const t = document.querySelector(sel);
-    if(!t) return;
-    if(t.tagName === "DETAILS") t.open = true;
-    t.scrollIntoView({behavior:"smooth", block:"start"});
-  }
-  function goItem(it){
-    hideTip();
-    if(it.type === "role"){ jump(CASE_LINKS[it.id]); } else { selectNode(it.id); }
-  }
-
-  function renderGantt(gantt, items, opts){
-    gantt.innerHTML = "";
-    if(!items.length) return;
-    const list = items.slice().sort((a,b) => a.s - b.s || a.e - b.e);
-    // axis range (pad 1 month each side; opts.t0 can widen it, e.g. to include education)
-    const t0 = opts.t0 != null ? Math.min(opts.t0, Math.min(...list.map(i => i.s)) - 1) : Math.min(...list.map(i => i.s)) - 1;
-    const t1 = Math.max(...list.map(i => i.e)) + 1;
-    const span = t1 - t0;
-    const pct = t => (t - t0) / span * 100;
-    const pxPerMonth = (gantt.clientWidth || 900) / span;
-    // faint year gridlines behind the bars (appended first so bars paint over them)
-    const gridBottom = 22 + (opts.edu ? 38 : 0);
-    for(let y = Math.ceil(t0/12); y*12 <= t1; y++){
-      if(M(y,1) < t0) continue;
-      const gl = document.createElement("div"); gl.className = "tl-grid";
-      gl.style.left = pct(M(y,1)) + "%"; gl.style.bottom = gridBottom + "px";
-      gantt.appendChild(gl);
-    }
-    // An item = a true-duration solid bar plus its label beside it (plain text, so
-    // only the bar reads as time). Items whose label would run past the axis end
-    // flip, placing the label to the left of the bar.
-    list.forEach(it => {
-      it._dur = Math.max(it.e - it.s, 1);
-      it._pill = it._dur + (it.label.length * 7 + 12) / pxPerMonth;
-      it._flip = it.s + it._pill > t1;
-    });
-    // greedy lane packing over each pill's occupied interval so pills never collide
-    const laneEnds = [];
-    list.forEach(it => {
-      const occStart = it._flip ? it.e - it._pill : it.s;
-      const occEnd = it._flip ? it.e : it.s + it._pill;
-      let lane = laneEnds.findIndex(end => end + 0.2 <= occStart);
-      if(lane === -1){ lane = laneEnds.length; laneEnds.push(occEnd); } else { laneEnds[lane] = occEnd; }
-      it._lane = lane;
-    });
-    const lanes = laneEnds.map(() => {
-      const l = document.createElement("div"); l.className = "tl-lane"; gantt.appendChild(l); return l;
-    });
-    list.forEach(it => {
-      const b = document.createElement("div");
-      b.className = "tl-bar" + (it.type === "proj" ? " proj" : "") + (it._flip ? " flip" : "");
-      b.tabIndex = 0; b.setAttribute("role","link");
-      b.setAttribute("aria-label", it.label + ", " + it.dates + ", open details");
-      b.style.left = pct(it._flip ? it.e - it._pill : it.s) + "%";
-      b.style.width = (it._pill / span * 100) + "%";
-      b.innerHTML = '<i class="dur" style="width:' + (it._dur / it._pill * 100) + '%"></i><span>' + it.label + '</span>';
-      const kind = it.type === "role" ? "Role" : "Project";
-      b.addEventListener("pointerenter", e => tlTip(it.label, kind + " · " + it.dates, "", e));
-      b.addEventListener("pointermove", e => moveTip(e));
-      b.addEventListener("pointerleave", hideTip);
-      b.addEventListener("click", () => goItem(it));
-      b.addEventListener("keydown", e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); goItem(it); } });
-      lanes[it._lane].appendChild(b);
-    });
-    // axis with year ticks
-    const axis = document.createElement("div"); axis.className = "tl-axis";
-    for(let y = Math.ceil(t0/12); y*12 <= t1; y++){
-      if(M(y,1) < t0) continue;
-      const tk = document.createElement("div"); tk.className = "tl-tick";
-      tk.style.left = pct(M(y,1)) + "%"; tk.textContent = y;
-      axis.appendChild(tk);
-    }
-    gantt.appendChild(axis);
-    // education milestones (career timeline only)
-    if(opts.edu){
-      const eduRow = document.createElement("div"); eduRow.className = "tl-edu-row";
-      opts.edu.forEach(d => {
-        if(d.t < t0 || d.t > t1) return;
-        const m = document.createElement("button");
-        m.className = "tl-edu"; m.type = "button";
-        m.setAttribute("aria-label", d.label + ", " + d.dates);
-        m.style.left = pct(d.t) + "%";
-        m.innerHTML = "<i></i><span>" + d.label + "</span>";
-        m.addEventListener("pointerenter", e => tlTip(d.label, d.dates, d.gist, e));
-        m.addEventListener("pointermove", e => moveTip(e));
-        m.addEventListener("pointerleave", hideTip);
-        m.addEventListener("click", () => { hideTip(); jump("#skills"); });
-        eduRow.appendChild(m);
-      });
-      gantt.appendChild(eduRow);
-    }
-    // now marker
-    if(NOW >= t0 && NOW <= t1){
-      const nowLine = document.createElement("div"); nowLine.className = "tl-now";
-      nowLine.style.left = pct(NOW) + "%"; nowLine.innerHTML = "<i>NOW</i>";
-      gantt.appendChild(nowLine);
-    }
-  }
-
-  const roleItems = experiences.map(x => ({id:x.id, label:x.label, domains:x.domains, dates:x.date, type:"role", s:MONTHS[x.id][0], e:MONTHS[x.id][1]}));
-  const projItems = projects.map(x => ({id:x.id, label:x.label, domains:x.domains, dates:x.date, type:"proj", s:MONTHS[x.id][0], e:MONTHS[x.id][1]}));
-
-  // ---- Career timeline: roles + education only ----
-  const tlGantt = document.getElementById("tlGantt");
-  function renderTimeline(){ renderGantt(tlGantt, roleItems, {t0:M(2024,4), edu:edu}); }
-  renderTimeline();
-
-  // mobile career list (roles + education, newest first)
-  (function buildCareerList(){
-    const listEl = document.getElementById("tlList");
-    const mItems = [
-      ...roleItems.map(w => ({t:w.s, cls:"", title:w.label, dates:w.dates, target:CASE_LINKS[w.id]})),
-      ...edu.map(d => ({t:d.t, cls:"edu", title:d.label, dates:d.dates, target:"#skills"}))
-    ].sort((a,b) => b.t - a.t);
-    mItems.forEach(it => {
-      const li = document.createElement("li");
-      if(it.cls) li.className = it.cls;
-      li.innerHTML = '<div class="tll-t">'+it.title+'</div><div class="tll-d">'+it.dates+'</div>';
-      li.style.cursor = "pointer";
-      li.addEventListener("click", () => jump(it.target));
-      listEl.appendChild(li);
-    });
-  })();
+  const projItems = projects.map(x => ({id:x.id, label:x.label, domains:x.domains, dates:x.date, s:MONTHS[x.id][0], e:MONTHS[x.id][1]}));
 
   // ---- Project map: year-banded chip wall, domain-filterable ----
   const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -668,8 +477,6 @@
   Object.keys(domainMeta).forEach(d => { if(projDegree[d]) addChip(d.toUpperCase(), d, projDegree[d]); });
   renderMap();
 
-  let rt;
-  window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(renderTimeline, 200); });
 
 })();
 </script>
