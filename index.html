@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Haibin (Allen) Yu, data and people analytics professional in Vancouver. Career timeline, filterable project map, quantified case studies, and open-source data projects.">
+<meta name="description" content="Haibin (Allen) Yu, data and people analytics professional in Vancouver. Career timeline, filterable project map, and open-source data projects.">
 <meta property="og:title" content="Haibin (Allen) Yu | Data & People Analytics">
 <meta property="og:description" content="Career timeline, filterable project map, and open-source data projects.">
 <meta property="og:type" content="website">
@@ -148,9 +148,18 @@
   @media (max-width: 640px) {
     .topbar .navlinks { gap: 10px; overflow-x: auto; }
   }
+  /* Experience rows (flat: role-level only; detail lives in the resume, not the public site) */
+  .case { display: grid; grid-template-columns: auto minmax(0, 1fr) max-content;
+    align-items: baseline; gap: 4px 12px; padding: 16px 0; border-bottom: 1px solid var(--hair); }
+  .case .case-date { grid-column: 3; }
+  @media (max-width: 720px) {
+    .case { grid-template-columns: minmax(0, 1fr) max-content; }
+    .case .case-date { grid-column: 2; }
+    .case .case-gist { grid-column: 1 / -1; white-space: normal; }
+  }
   /* Collapsed rows (progressive disclosure) */
   .rows { display: flex; flex-direction: column; border-top: 1px solid var(--hair); }
-  details.case, details.proj { border-bottom: 1px solid var(--hair); }
+  details.proj { border-bottom: 1px solid var(--hair); }
   summary { list-style: none; cursor: pointer; display: grid;
     grid-template-columns: 14px auto minmax(0, 1fr) max-content;
     align-items: baseline; gap: 4px 12px; padding: 16px 10px; margin: 0 -10px; border-radius: 8px; }
@@ -171,13 +180,7 @@
     .case-date, .proj-tag { grid-column: 3; }
     .case-gist { grid-column: 2 / -1; white-space: normal; }
   }
-  .case-body, .proj-body { padding: 2px 4px 18px 30px; max-width: 74ch; }
-  .case-metrics { display: flex; gap: 18px; margin: 8px 0 12px; flex-wrap: wrap; }
-  .case-metrics b { display: block; font-size: 17px; font-variant-numeric: tabular-nums; }
-  .case-metrics span { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
-  .case-body p { font-size: 13.5px; line-height: 1.55; color: var(--ink2); margin: 8px 0; }
-  .case-body p b { color: var(--ink); }
-  .case-stack { font-size: 12px; color: var(--muted); margin-top: 10px; }
+  .proj-body { padding: 2px 4px 18px 30px; max-width: 74ch; }
   .p-case-link { color: var(--exp); font-size: 13px; text-decoration: none; }
   .p-case-link:hover { text-decoration: underline; }
   .proj-body p { font-size: 13px; line-height: 1.5; color: var(--ink2); margin: 6px 0 10px; }
@@ -235,64 +238,32 @@
 
   <section id="experience">
     <h2 class="section-title">Experience</h2>
-    <p class="section-sub">Click any role for the full problem, approach and outcome.</p>
+    <p class="section-sub">Where I've worked; detailed case studies live in my resume, available on request.</p>
     <div class="rows">
 
-      <details class="case" id="case-ea">
-        <summary><span class="sum-mark">+</span><span class="case-role">People Analyst · Electronic Arts</span>
-          <span class="case-gist">Headcount truth for a 15,000-person workforce, plus an AI skills assistant</span>
-          <span class="case-date">May 2026 to Present</span></summary>
-        <div class="case-body">
-          <div class="case-metrics"><div><b>15,000</b><span>person workforce</span></div>
-            <div><b>100%</b><span>ID-level parity</span></div><div><b>5</b><span>AI tools shipped</span></div></div>
-          <p><b>Problem.</b> A 15,000-person workforce needed a single headcount truth reconciled against the finance plan, but the reporting process was manual and undocumented.</p>
-          <p><b>Approach.</b> Automated the Snowflake headcount pull to replace manual exports, rebuilt the process into a documented repeatable workflow, and built a skills self-service AI assistant: five SQL-backed Snowflake tools (course recommendations, skill-gap analysis, internal-mobility planning) exposed to an agentic LLM through an MCP server, with PII-safe handling via surrogate-ID mapping.</p>
-          <p><b>Outcome.</b> Owns the monthly SVP headcount briefing surfacing hiring, attrition and seat-capacity risk by org and geography; data validated to 100% ID-level parity with published figures; working end-to-end AI Q&amp;A demo delivered.</p>
-          <p class="case-stack">Snowflake SQL · Python · MCP · Azure OpenAI · Power BI · Visier · Workday</p>
-        </div>
-      </details>
+      <div class="case" id="case-ea">
+        <span class="case-role">People Analyst · Electronic Arts</span>
+        <span class="case-gist">People analytics: workforce reporting and internal AI tooling</span>
+        <span class="case-date">May 2026 to Present</span>
+      </div>
 
-      <details class="case" id="case-norsat">
-        <summary><span class="sum-mark">+</span><span class="case-role">Marketing Business Analyst · Norsat International</span>
-          <span class="case-gist">AI pipelines cut manual production time 80% across 13+ lines</span>
-          <span class="case-date">Dec 2025 to May 2026</span></summary>
-        <div class="case-body">
-          <div class="case-metrics"><div><b>80%</b><span>manual time cut</span></div>
-            <div><b>13+</b><span>product lines</span></div><div><b>50+</b><span>DAX measures</span></div></div>
-          <p><b>Problem.</b> Vendor manuals were rebranded by hand, and product data lived inconsistently across four systems (Windchill PLM, Business Central, Shopify, HubSpot), slowing every product launch.</p>
-          <p><b>Approach.</b> Built an AI-assisted manual-conversion pipeline (Python, Word COM automation, PDF extraction), designed a five-stage product-launch workflow from vendor intake to Matrixify-ready Shopify listings, unified the product taxonomy across all four systems, and shipped a four-page Power BI dashboard on a star-schema model with eight tables.</p>
-          <p><b>Outcome.</b> Cut per-manual production time by roughly 80% across 13+ antenna and robotics product lines, standardized onboarding for 20+ product categories, and gave the team live funnel-to-sales KPIs with period-over-period tracking.</p>
-          <p class="case-stack">Python · Power BI · DAX · Shopify · HubSpot · Claude Code</p>
-        </div>
-      </details>
+      <div class="case" id="case-norsat">
+        <span class="case-role">Marketing Business Analyst · Norsat International</span>
+        <span class="case-gist">Marketing analytics and AI-assisted process automation</span>
+        <span class="case-date">Dec 2025 to May 2026</span>
+      </div>
 
-      <details class="case" id="case-aa">
-        <summary><span class="sum-mark">+</span><span class="case-role">Graduate Academic Assistant · UBC</span>
-          <span class="case-gist">50,000+ data points powering two university-press books, delivered on time</span>
-          <span class="case-date">Jun to Aug 2025</span></summary>
-        <div class="case-body">
-          <div class="case-metrics"><div><b>50,000+</b><span>data points</span></div>
-            <div><b>20+</b><span>countries</span></div><div><b>100%</b><span>on-time delivery</span></div></div>
-          <p><b>Problem.</b> Two academic books under contract with Cambridge University Press and Cornell University Press needed real-time evidence on trade-war impacts and geopolitical positioning, on strict three-week deadlines.</p>
-          <p><b>Approach.</b> Built three real-time datasets with 50,000+ systematically categorized data points across 20+ countries, processed macroeconomic, UN-voting and BRICS positioning data with advanced Excel, and independently managed four concurrent sub-projects with collaborators at Sciences Po Paris.</p>
-          <p><b>Outcome.</b> Delivered 30+ visualizations and 10+ interactive dashboards for publication, with both manuscript submissions completed 100% on time.</p>
-          <p class="case-stack">Excel · Data Visualization · Research Design</p>
-        </div>
-      </details>
+      <div class="case" id="case-aa">
+        <span class="case-role">Graduate Academic Assistant · UBC</span>
+        <span class="case-gist">Research data support for two university-press book projects</span>
+        <span class="case-date">Jun to Aug 2025</span>
+      </div>
 
-      <details class="case" id="case-redteam">
-        <summary><span class="sum-mark">+</span><span class="case-role">Business Consultant Analyst · Redteam Projects</span>
-          <span class="case-gist">Data-backed growth plan from $1.8M to $3.3M revenue</span>
-          <span class="case-date">May to Jul 2025</span></summary>
-        <div class="case-body">
-          <div class="case-metrics"><div><b>$1.8M→$3.3M</b><span>growth plan</span></div>
-            <div><b>8h→2h</b><span>risk analysis</span></div><div><b>20+</b><span>KPIs live</span></div></div>
-          <p><b>Problem.</b> A consulting firm scaling from 6 to 30 employees needed a data-backed plan to grow revenue from $1.8M to $3.3M, with cash-flow visibility stuck in periodic manual reports.</p>
-          <p><b>Approach.</b> Analyzed two years of financial and operational data, integrated QuickBooks and BigTime through Power Query into five Power BI dashboards tracking AR aging, utilization and 20+ KPIs, and standardized risk assessment with an @Risk Monte Carlo framework covering 1,000+ variables and 10,000+ iterations plus DCF scenario modeling.</p>
-          <p><b>Outcome.</b> Management adopted the growth recommendations; risk analysis time dropped from 8 hours to 2 with 35% better assessment accuracy; leadership gained real-time cash-flow monitoring.</p>
-          <p class="case-stack">Power BI · Power Query · @Risk · Monte Carlo · DCF</p>
-        </div>
-      </details>
+      <div class="case" id="case-redteam">
+        <span class="case-role">Business Consultant Analyst · Redteam Projects</span>
+        <span class="case-gist">Business analytics and financial modeling for a consulting firm</span>
+        <span class="case-date">May to Jul 2025</span>
+      </div>
 
     </div>
   </section>
@@ -476,9 +447,6 @@
     body += '<div class="p-type" style="color:'+(isExp?"var(--exp)":"var(--proj)")+'">'+(isExp?"EXPERIENCE":"PROJECT")+'</div>';
     body += '<div class="p-name">'+n.label+'</div>';
     body += '<div class="p-date">'+n.date+'</div>';
-    if(isExp && CASE_LINKS[n.id]){
-      body += '<p style="margin:10px 0 0"><a href="'+CASE_LINKS[n.id]+'" class="p-case-link">View case study ↓</a></p>';
-    }
     if(REPO_LINKS[n.id]){
       body += '<p style="margin:10px 0 0"><a href="'+REPO_LINKS[n.id]+'" target="_blank" rel="noopener" class="p-case-link">View on GitHub ↗</a></p>';
     }
@@ -496,12 +464,6 @@
     panel.innerHTML = body; panel.classList.add("open");
     panel.querySelector(".close").onclick = closePanel;
     panel.querySelectorAll("[data-goto]").forEach(li => li.onclick = () => selectNode(li.getAttribute("data-goto")));
-    const cl = panel.querySelector(".p-case-link[href^='#']");
-    if(cl) cl.onclick = () => {
-      const t = document.querySelector(cl.getAttribute("href"));
-      if(t && t.tagName === "DETAILS") t.open = true;   // expand the case row before jumping
-      closePanel();
-    };
   }
   function closePanel(){ panel.classList.remove("open"); }
   window.addEventListener("keydown", e => { if(e.key === "Escape") closePanel(); });
@@ -585,7 +547,7 @@
       b.style.width = (it._pill / span * 100) + "%";
       b.innerHTML = '<i class="dur" style="width:' + (it._dur / it._pill * 100) + '%"></i><span>' + it.label + '</span>';
       const kind = it.type === "role" ? "Role" : "Project";
-      b.addEventListener("pointerenter", e => tlTip(it.label, kind + " · " + it.dates, it.type === "role" ? "Click to read the case study" : "Click for details and links", e));
+      b.addEventListener("pointerenter", e => tlTip(it.label, kind + " · " + it.dates, "", e));
       b.addEventListener("pointermove", e => moveTip(e));
       b.addEventListener("pointerleave", hideTip);
       b.addEventListener("click", () => goItem(it));
