@@ -47,6 +47,11 @@
   .title { font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
     font-size: clamp(30px, 5vw, 44px); font-weight:600; letter-spacing:-0.015em; margin:0; text-wrap:balance; }
   .subtitle { font-size: 15px; color:var(--ink2); margin:14px 0 0; max-width:58ch; line-height:1.65; }
+  .status-pill { display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:600;
+    color:var(--ink2); background:var(--surface); border:1px solid var(--hair);
+    border-radius:999px; padding:5px 12px; margin:0 0 14px; }
+  .status-pill .dot { width:7px; height:7px; border-radius:50%; background:var(--proj);
+    box-shadow:0 0 0 3px rgba(27,175,122,0.18); }
 
   /* Tooltip */
   #tip { position:fixed; pointer-events:none; z-index:40; max-width:260px;
@@ -79,6 +84,24 @@
   .os-card .os-stack { font-size:11.5px; color:var(--muted); letter-spacing:0.02em; margin:0 0 10px; }
   .os-card .os-link { font-size:13px; color:var(--exp); text-decoration:none; }
   .os-card .os-link:hover { text-decoration:underline; }
+  /* Light static transcript: one AI tool shown running (honest, no fake streaming) */
+  .transcript { margin:6px 0 0; border:1px solid var(--hair); border-radius:12px;
+    background:var(--surface); overflow:hidden; box-shadow:var(--shadow); }
+  .transcript .tr-bar { display:flex; align-items:center; gap:10px; padding:9px 14px;
+    border-bottom:1px solid var(--hair); background:var(--plane); }
+  .transcript .tr-dots { display:flex; gap:6px; flex:none; }
+  .transcript .tr-dots i { width:9px; height:9px; border-radius:50%; background:var(--axis); display:block; }
+  .transcript .tr-title { font:600 12px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color:var(--muted); letter-spacing:0.01em; }
+  .transcript pre { margin:0; padding:15px 18px; overflow-x:auto;
+    font:12.5px/1.75 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color:var(--ink2); }
+  .transcript .c-prompt { color:var(--exp); font-weight:700; }
+  .transcript .c-cmd { color:var(--exp-strong); font-weight:600; }
+  .transcript .c-agent { color:var(--ink); font-weight:600; }
+  .transcript .c-dot { color:var(--proj); }
+  .transcript .c-key { color:var(--ink); font-weight:600; }
+  .transcript .c-mut { color:var(--muted); }
+  .tr-cap { font-size:11.5px; color:var(--muted); margin:9px 2px 0; max-width:70ch; line-height:1.5; }
   #panel h4 { font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin:20px 0 8px; }
   #panel .p-doms { display:flex; flex-wrap:wrap; gap:6px; }
   #panel .p-doms span { font-size:12px; background:var(--chip); color:var(--chip-ink);
@@ -210,6 +233,7 @@
 </nav>
 <div class="wrap">
   <header id="top">
+    <p class="status-pill"><span class="dot"></span>Open to data &amp; AI roles</p>
     <p class="eyebrow">Data &amp; AI Analyst · Vancouver, Canada</p>
     <h1 class="title">Haibin (Allen) Yu</h1>
     <p class="subtitle">I turn messy operational data into decisions: data analysis, forecasting, optimization, and AI-agent tooling. Below is my career, a map of everything I've built, and the skills behind it; click anything that interests you.</p>
@@ -260,6 +284,31 @@
   <section id="open-source">
     <h2 class="section-title">Open Source & AI Systems</h2>
     <p class="section-sub">Claude Code tools I build and ship, plus fixes I contribute upstream.</p>
+      <div class="transcript" role="img" aria-label="Example run of my multi-agent investing tool: twelve agents debate a ticker and the portfolio-manager issues one tax-aware rating">
+        <div class="tr-bar">
+          <span class="tr-dots"><i></i><i></i><i></i></span>
+          <span class="tr-title">claude-multi-agent-investing — /research</span>
+        </div>
+<pre aria-hidden="true"><span class="c-mut"># 12 agents, 13 slash commands, advisory only</span>
+<span class="c-prompt">$</span> claude
+<span class="c-prompt">&gt;</span> <span class="c-cmd">/research NVDA</span>
+
+  running a 5-persona debate + 6 fact analysts, in parallel
+    <span class="c-dot">●</span> <span class="c-agent">buffett</span>   <span class="c-mut">moat · intrinsic value · margin of safety</span>
+    <span class="c-dot">●</span> <span class="c-agent">munger</span>    <span class="c-mut">invert the question · red-flag checklist</span>
+    <span class="c-dot">●</span> <span class="c-agent">burry</span>     <span class="c-mut">deep-value contrarian · hard catalysts</span>
+    <span class="c-dot">●</span> <span class="c-agent">bull</span>      <span class="c-mut">strongest case for</span>
+    <span class="c-dot">●</span> <span class="c-agent">bear</span>      <span class="c-mut">strongest case against</span>
+    <span class="c-dot">●</span> <span class="c-agent">analysts</span>  <span class="c-mut">fundamentals · technical · macro · news · sec · risk</span>
+
+  <span class="c-agent">portfolio-manager</span> <span class="c-mut">reads all 12 and issues one call →</span>
+    <span class="c-key">rating</span>   <span class="c-mut">Buy › Overweight › Hold › Underweight › Sell</span>
+    <span class="c-key">routing</span>  <span class="c-mut">tax-aware · taxable / TFSA / RRSP</span>
+    <span class="c-key">gate</span>     <span class="c-mut">money-moving actions pause for confirmation</span>
+
+<span class="c-mut">advisory only · runs on a Claude Code subscription, zero extra API cost</span></pre>
+      </div>
+      <p class="tr-cap">A live-style trace of one tool I built: twelve agents debate a single ticker, then the portfolio-manager synthesizes them into one tax-aware rating. This shows the mechanism, not an investment call.</p>
     <div class="os-grid">
       <div class="os-card">
         <h3><a href="https://github.com/haiiibin/claude-multi-agent-investing" target="_blank" rel="noopener">Claude Multi-Agent Investing ↗</a></h3>
