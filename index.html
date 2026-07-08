@@ -5,15 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Haibin (Allen) Yu, data and people analytics professional in Vancouver. Career timeline, filterable project map, and open-source data projects.">
 <meta property="og:title" content="Haibin (Allen) Yu | Data & People Analytics">
-<meta property="og:description" content="Career timeline, filterable project map, and open-source data projects.">
+<meta property="og:description" content="Career timeline, filterable project map, and open-source AI and data projects.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://haiiibin.github.io/">
+<meta property="og:image" content="https://haiiibin.github.io/images/og-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Haibin (Allen) Yu | Data & People Analytics">
+<meta name="twitter:description" content="I build AI agent workflows and data products with Claude Code.">
+<meta name="twitter:image" content="https://haiiibin.github.io/images/og-card.png">
+<link rel="canonical" href="https://haiiibin.github.io/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Haibin (Allen) Yu","alternateName":"Allen Yu","jobTitle":"People Analyst","worksFor":{"@type":"Organization","name":"Electronic Arts"},"alumniOf":{"@type":"CollegeOrUniversity","name":"University of British Columbia"},"address":{"@type":"PostalAddress","addressLocality":"Vancouver","addressRegion":"BC","addressCountry":"CA"},"url":"https://haiiibin.github.io","sameAs":["https://github.com/haiiibin","https://www.linkedin.com/in/haiiibin"]}
+</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='7' width='17' height='6' rx='2' fill='%232a78d6'/%3E%3Crect x='9' y='16' width='20' height='6' rx='2' fill='%231baf7a'/%3E%3Crect x='5' y='25' width='12' height='5' rx='2' fill='%23eda100'/%3E%3C/svg%3E">
 <title>Haibin (Allen) Yu | Data & People Analytics</title>
 <style>
   :root {
     color-scheme: light;
     --plane:#f9f9f7; --surface:#fcfcfb;
-    --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+    --ink:#0b0b0b; --ink2:#52514e; --muted:#6f6d67;
     --hair:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,0.10);
     --exp:#2a78d6; --proj:#1baf7a;
     --edu:#4a3aa7; --proj-wash:rgba(27,175,122,0.16); --exp-strong:#1c5cab; --exp-wash:rgba(42,120,214,0.15);
@@ -54,6 +64,21 @@
   #panel .p-type { font-size:11px; letter-spacing:0.1em; text-transform:uppercase; font-weight:700; }
   #panel .p-name { font-size:20px; font-weight:700; margin:8px 0 4px; text-wrap:balance; }
   #panel .p-date { color:var(--ink2); font-size:13px; }
+  #panel .p-gist { color:var(--ink2); font-size:13.5px; line-height:1.5; margin:10px 0 0; }
+  #panel .p-links li:focus-visible { outline:2px solid var(--exp); outline-offset:2px; border-radius:4px; }
+
+  /* Open Source & AI Systems cards */
+  .os-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px; }
+  @media (max-width:640px){ .os-grid { grid-template-columns:1fr; } }
+  .os-card { border:1px solid var(--hair); border-left:3px solid var(--exp);
+    border-radius:10px; padding:16px 18px; background:var(--surface); }
+  .os-card h3 { margin:0 0 6px; font-size:15px; }
+  .os-card h3 a { color:var(--ink); text-decoration:none; }
+  .os-card h3 a:hover { color:var(--exp); }
+  .os-card p { font-size:13px; line-height:1.55; color:var(--ink2); margin:0 0 10px; }
+  .os-card .os-stack { font-size:11.5px; color:var(--muted); letter-spacing:0.02em; margin:0 0 10px; }
+  .os-card .os-link { font-size:13px; color:var(--exp); text-decoration:none; }
+  .os-card .os-link:hover { text-decoration:underline; }
   #panel h4 { font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin:20px 0 8px; }
   #panel .p-doms { display:flex; flex-wrap:wrap; gap:6px; }
   #panel .p-doms span { font-size:12px; background:var(--chip); color:var(--chip-ink);
@@ -176,6 +201,7 @@
     <span class="brand">Haibin (Allen) Yu</span>
     <div class="navlinks">
       <a href="#career">Career</a>
+      <a href="#open-source">AI Systems</a>
       <a href="#project-map">Map</a>
       <a href="#projects">Projects</a>
       <a href="#skills">Skills</a>
@@ -231,6 +257,26 @@
     </ol>
   </section>
 
+  <section id="open-source">
+    <h2 class="section-title">Open Source & AI Systems</h2>
+    <p class="section-sub">Claude Code tools I build and ship, plus fixes I contribute upstream.</p>
+    <div class="os-grid">
+      <div class="os-card">
+        <h3><a href="https://github.com/haiiibin/claude-multi-agent-investing" target="_blank" rel="noopener">Claude Multi-Agent Investing ↗</a></h3>
+        <p>12 agents (Buffett, Munger and Burry personas, six fact-gathering analysts, one portfolio-manager synthesizer) debate a stock portfolio across 13 slash commands. Tax-aware for Canadian accounts, advisory only, zero API cost beyond a Claude Code subscription.</p>
+        <p class="os-stack">Claude Code &middot; MCP &middot; multi-agent &middot; Python</p>
+        <a class="os-link" href="https://github.com/haiiibin/claude-multi-agent-investing" target="_blank" rel="noopener">View on GitHub ↗</a>
+      </div>
+      <div class="os-card">
+        <h3><a href="https://github.com/haiiibin/ai-job-hunt-pipeline" target="_blank" rel="noopener">AI Job Hunt Pipeline ↗</a></h3>
+        <p>End-to-end job-application workflow: scan boards, score each posting against a weighted rubric, tailor a one-page resume, compile the PDF, and stop before submit so a human always hits the button. A leaner North America version ships separately.</p>
+        <p class="os-stack">Claude Code &middot; MCP &middot; workflow automation</p>
+        <a class="os-link" href="https://github.com/haiiibin/ai-job-hunt-pipeline" target="_blank" rel="noopener">View on GitHub ↗</a>
+      </div>
+    </div>
+    <p class="section-sub" style="margin-top:12px">Upstream: contributing <a href="https://github.com/Alex2Yang97/yahoo-finance-mcp/pull/16" target="_blank" rel="noopener">date-range support</a> and <a href="https://github.com/Alex2Yang97/yahoo-finance-mcp/pull/17" target="_blank" rel="noopener">class-share ticker normalization</a> to the yahoo-finance-mcp server.</p>
+  </section>
+
   <section id="project-map">
     <h2 class="section-title">Project Map</h2>
     <p class="section-sub">Course, client and hackathon work since 2023, grouped by year, newest first. Filter by domain, then click any project for details and links.</p>
@@ -240,7 +286,7 @@
 
   <section id="projects">
     <h2 class="section-title">Projects</h2>
-    <p class="section-sub">Six open-source analytics projects; every repository is public on GitHub.</p>
+    <p class="section-sub">Deep-dives on six analytics projects worth reading; the Map above holds the full breadth. Every repository is public on GitHub.</p>
     <div class="rows">
 
       <details class="proj">
@@ -335,7 +381,7 @@
 </div>
 
 <div id="tip" role="status" aria-live="polite"></div>
-<aside id="panel" aria-label="Details"></aside>
+<aside id="panel" role="dialog" aria-modal="true" aria-label="Details" aria-hidden="true"></aside>
 
 <script>
 (function(){
@@ -347,29 +393,29 @@
     consulting:"Consulting", marketing:"Marketing", ops:"Operations", product:"Product", research:"Research"
   };
   const experiences = [
-    {id:"ea", label:"People Analyst · Electronic Arts", date:"May 2026 to Present", domains:["data","ai","ops","product"]},
-    {id:"norsat", label:"Marketing Business Analyst · Norsat", date:"Dec 2025 to May 2026", domains:["data","marketing","ops","product","ai"]},
-    {id:"aa", label:"Academic Assistant · UBC SPPGA", date:"Jun to Aug 2025", domains:["research","data","ops"]},
-    {id:"redteam", label:"Business Consultant · Redteam Projects", date:"May to Jul 2025", domains:["consulting","finance","data","ops"]}
+    {id:"ea", label:"People Analyst · Electronic Arts", date:"May 2026 to Present", domains:["data","ai","ops","product"], gist:"Workforce reporting and internal AI tooling for people analytics."},
+    {id:"norsat", label:"Marketing Business Analyst · Norsat", date:"Dec 2025 to May 2026", domains:["data","marketing","ops","product","ai"], gist:"Marketing analytics dashboards and AI-assisted process automation."},
+    {id:"aa", label:"Academic Assistant · UBC SPPGA", date:"Jun to Aug 2025", domains:["research","data","ops"], gist:"Built research datasets supporting two university-press book projects."},
+    {id:"redteam", label:"Business Consultant · Redteam Projects", date:"May to Jul 2025", domains:["consulting","finance","data","ops"], gist:"Financial modeling and business analysis for a consulting firm's growth strategy."}
   ];
   const projects = [
-    {id:"yvr_energy", label:"YVR Energy Forecasting", date:"Jan to Feb 2025", domains:["data","ml","ops"]},
-    {id:"diabetes_ml", label:"Diabetes Risk Screening", date:"Jan to Feb 2025", domains:["ml","data"]},
-    {id:"cross_sectional_returns", label:"Cross-Sectional Returns", date:"Feb to Apr 2025", domains:["finance","data","research"]},
-    {id:"climate_policy", label:"Climate Policy Analysis", date:"Apr 2025", domains:["research","data"]},
-    {id:"school_bus_optimization", label:"School Bus Optimization", date:"Oct to Dec 2024", domains:["ops","consulting","data"]},
-    {id:"pharmaceutical_marketing", label:"Pharma Marketing Analytics", date:"Oct to Dec 2024", domains:["marketing","data","consulting"]},
-    {id:"hospital_energy", label:"Hospital Energy Audit", date:"Dec 2024", domains:["ops","consulting","data"]},
-    {id:"restaurant_analysis", label:"Restaurant Analytics", date:"Oct 2024", domains:["data","marketing"]},
-    {id:"nutrition_planning", label:"Nutrition Planning", date:"Sep to Oct 2024", domains:["ops","data"]},
-    {id:"health_service_10k", label:"Health-Service 10-K NLP", date:"Sep to Oct 2024", domains:["data","ml","finance","research"]},
-    {id:"tiktok_sentiment", label:"TikTok Sentiment Analysis", date:"Sep to Dec 2023", domains:["ml","data","marketing"]},
-    {id:"stock_prediction", label:"US Stock Prediction", date:"May to Jun 2023", domains:["ml","finance","data"]},
-    {id:"gender_wage_gap", label:"Gender Wage Gap Study", date:"Jan to Apr 2023", domains:["research","data"]},
-    {id:"miami_housing", label:"Miami Housing Analysis", date:"Jan to Apr 2023", domains:["research","data","finance"]},
-    {id:"google_cloud_hackathon", label:"Google Cloud Hackathon", date:"Feb 2025", domains:["data","ml","marketing"]},
-    {id:"rogers_hackathon", label:"Rogers API Hackathon", date:"Sep 2024", domains:["data","product","marketing"]},
-    {id:"learning_analytics_hackathon", label:"Learning Analytics Hackathon", date:"Oct 2024", domains:["ml","data","product"]}
+    {id:"yvr_energy", label:"YVR Energy Forecasting", date:"Jan to Feb 2025", domains:["data","ml","ops"], gist:"Seasonal ARIMA forecast of 14 years of airport energy demand, to 1.7% MAPE."},
+    {id:"diabetes_ml", label:"Diabetes Risk Screening", date:"Jan to Feb 2025", domains:["ml","data"], gist:"Two-stage screening model that cuts unnecessary lab tests at 95% sensitivity."},
+    {id:"cross_sectional_returns", label:"Cross-Sectional Returns", date:"Feb to Apr 2025", domains:["finance","data","research"], gist:"Cross-sectional factor study of equity returns."},
+    {id:"climate_policy", label:"Climate Policy Analysis", date:"Apr 2025", domains:["research","data"], gist:"Quantitative analysis of climate-policy positioning across countries."},
+    {id:"school_bus_optimization", label:"School Bus Optimization", date:"Oct to Dec 2024", domains:["ops","consulting","data"], gist:"MILP reassigning 2,000 students across bus routes at minimum cost."},
+    {id:"pharmaceutical_marketing", label:"Pharma Marketing Analytics", date:"Oct to Dec 2024", domains:["marketing","data","consulting"], gist:"Marketing-mix and segmentation analysis for a pharmaceutical client."},
+    {id:"hospital_energy", label:"Hospital Energy Audit", date:"Dec 2024", domains:["ops","consulting","data"], gist:"Energy-use audit and efficiency analysis for a hospital facility."},
+    {id:"restaurant_analysis", label:"Restaurant Analytics", date:"Oct 2024", domains:["data","marketing"], gist:"Sales and customer analytics for a restaurant operation."},
+    {id:"nutrition_planning", label:"Nutrition Planning", date:"Sep to Oct 2024", domains:["ops","data"], gist:"Linear program building least-cost, nutrition-complete meal plans."},
+    {id:"health_service_10k", label:"Health-Service 10-K NLP", date:"Sep to Oct 2024", domains:["data","ml","finance","research"], gist:"NLP over 27 years of healthcare 10-K filings to map competitors."},
+    {id:"tiktok_sentiment", label:"TikTok Sentiment Analysis", date:"Sep to Dec 2023", domains:["ml","data","marketing"], gist:"Sentiment analysis of 307K app-store reviews with regression."},
+    {id:"stock_prediction", label:"US Stock Prediction", date:"May to Jun 2023", domains:["ml","finance","data"], gist:"Compared VAR, LASSO and LSTM on S&P 500 price prediction."},
+    {id:"gender_wage_gap", label:"Gender Wage Gap Study", date:"Jan to Apr 2023", domains:["research","data"], gist:"Regression study of the gender wage gap."},
+    {id:"miami_housing", label:"Miami Housing Analysis", date:"Jan to Apr 2023", domains:["research","data","finance"], gist:"Housing-price analysis of the Miami market."},
+    {id:"google_cloud_hackathon", label:"Google Cloud Hackathon", date:"Feb 2025", domains:["data","ml","marketing"], gist:"Team hackathon build on Google Cloud."},
+    {id:"rogers_hackathon", label:"Rogers API Hackathon", date:"Sep 2024", domains:["data","product","marketing"], gist:"API-driven prototype built at the Rogers hackathon."},
+    {id:"learning_analytics_hackathon", label:"Learning Analytics Hackathon", date:"Oct 2024", domains:["ml","data","product"], gist:"Learning-analytics prototype built at a hackathon."}
   ];
 
   const REPO_LINKS = {
@@ -407,13 +453,17 @@
 
   // ---- Detail panel ----
   const panel = document.getElementById("panel");
-  function selectNode(id){
+  let lastTrigger = null;
+  function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+  function selectNode(id, trigger){
+    if(!panel.classList.contains("open")) lastTrigger = trigger || document.activeElement;
     const n = nodeById[id];
     const isExp = n.type === "experience";
     let body = '<button class="close" aria-label="Close">×</button>';
     body += '<div class="p-type" style="color:'+(isExp?"var(--exp)":"var(--proj)")+'">'+(isExp?"EXPERIENCE":"PROJECT")+'</div>';
-    body += '<div class="p-name">'+n.label+'</div>';
-    body += '<div class="p-date">'+n.date+'</div>';
+    body += '<div class="p-name">'+esc(n.label)+'</div>';
+    body += '<div class="p-date">'+esc(n.date)+'</div>';
+    if(n.gist){ body += '<p class="p-gist">'+esc(n.gist)+'</p>'; }
     if(REPO_LINKS[n.id]){
       body += '<p style="margin:10px 0 0"><a href="'+REPO_LINKS[n.id]+'" target="_blank" rel="noopener" class="p-case-link">View on GitHub ↗</a></p>';
     }
@@ -425,15 +475,35 @@
     n.domains.forEach(d => domMembers[d].forEach(x => { if(x !== id) sib.add(x); }));
     [...sib].map(x => nodeById[x]).forEach(m => {
       const c = m.type === "experience" ? "var(--exp)" : "var(--proj)";
-      body += '<li data-goto="'+m.id+'"><span class="d" style="background:'+c+'"></span>'+m.label+'</li>';
+      body += '<li tabindex="0" role="button" data-goto="'+m.id+'"><span class="d" style="background:'+c+'"></span>'+esc(m.label)+'</li>';
     });
     body += '</ul>';
-    panel.innerHTML = body; panel.classList.add("open");
+    panel.innerHTML = body;
+    panel.classList.add("open"); panel.setAttribute("aria-hidden", "false");
     panel.querySelector(".close").onclick = closePanel;
-    panel.querySelectorAll("[data-goto]").forEach(li => li.onclick = () => selectNode(li.getAttribute("data-goto")));
+    panel.querySelectorAll("[data-goto]").forEach(li => {
+      const go = () => selectNode(li.getAttribute("data-goto"), lastTrigger);
+      li.onclick = go;
+      li.onkeydown = e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); go(); } };
+    });
+    panel.querySelector(".close").focus();
   }
-  function closePanel(){ panel.classList.remove("open"); }
+  function closePanel(){
+    if(!panel.classList.contains("open")) return;
+    panel.classList.remove("open"); panel.setAttribute("aria-hidden", "true");
+    if(lastTrigger && typeof lastTrigger.focus === "function") lastTrigger.focus();
+    lastTrigger = null;
+  }
   window.addEventListener("keydown", e => { if(e.key === "Escape") closePanel(); });
+  // Focus trap: keep Tab within the open panel
+  panel.addEventListener("keydown", e => {
+    if(e.key !== "Tab" || !panel.classList.contains("open")) return;
+    const f = panel.querySelectorAll('button, a[href], [tabindex="0"]');
+    if(!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+  });
 
   // ---- Project month ranges (from resume/source/_index.yaml) ----
   const M = (y, m) => y*12 + (m-1);
@@ -474,7 +544,7 @@
         c.addEventListener("pointerenter", e => tlTip(it.label, "Project · " + it.dates, "Click for details and links", e));
         c.addEventListener("pointermove", e => moveTip(e));
         c.addEventListener("pointerleave", hideTip);
-        c.addEventListener("click", () => { hideTip(); selectNode(it.id); });
+        c.addEventListener("click", () => { hideTip(); selectNode(it.id, c); });
         items.appendChild(c);
       });
       row.appendChild(lab); row.appendChild(items); pmYears.appendChild(row);
