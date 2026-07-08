@@ -16,7 +16,7 @@
     --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
     --hair:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,0.10);
     --exp:#2a78d6; --proj:#1baf7a;
-    --edu:#4a3aa7; --proj-wash:rgba(27,175,122,0.16); --exp-strong:#1c5cab;
+    --edu:#4a3aa7; --proj-wash:rgba(27,175,122,0.16); --exp-strong:#1c5cab; --exp-wash:rgba(42,120,214,0.15);
     --chip:#ffffff; --chip-ink:#52514e;
     --shadow:0 1px 2px rgba(11,11,11,0.06), 0 8px 24px rgba(11,11,11,0.08);
   }
@@ -148,8 +148,23 @@
   .proj-body p { font-size: 13px; line-height: 1.5; color: var(--ink2); margin: 6px 0 10px; }
   .proj-body a { color: var(--exp); font-size: 13px; text-decoration: none; }
   .proj-body a:hover { text-decoration: underline; }
+  /* Skills: competency radar + toolset list */
+  .skills-grid { display: grid; grid-template-columns: minmax(0, 430px) 1fr; gap: 30px; align-items: start; margin-top: 16px; }
+  @media (max-width: 780px) { .skills-grid { grid-template-columns: 1fr; gap: 22px; } }
+  .radar-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
+  svg#radar { display: block; width: 100%; height: auto; overflow: visible; }
+  .rdr-ring, .rdr-spoke { fill: none; stroke: var(--hair); stroke-width: 1; }
+  .rdr-axis-label { font-size: 11px; font-weight: 600; fill: var(--ink2); }
+  .rdr-me-fill { fill: var(--exp-wash); stroke: var(--exp); stroke-width: 2; stroke-linejoin: round; }
+  .rdr-me-dot { fill: var(--exp); stroke: var(--surface); stroke-width: 1.5; }
+  .rdr-arch { fill: none; stroke: var(--ink2); stroke-width: 1.6; stroke-dasharray: 5 3; stroke-linejoin: round; }
+  .radar-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 10px; font-size: 11.5px; color: var(--muted); }
+  .radar-legend .item { display: flex; align-items: center; gap: 6px; }
+  .radar-legend .k { width: 16px; height: 0; border-top: 2px solid var(--exp); }
+  .radar-legend .k.arch { border-top: 2px dashed var(--ink2); }
+  .radar-note { font-size: 11.5px; color: var(--muted); margin: 8px 0 0; }
   /* Skills (flat) */
-  .skill-list { margin: 14px 0 0; max-width: 74ch; }
+  .skill-list { margin: 0; }
   .skill-list dt { font-size: 13px; font-weight: 650; color: var(--ink); margin-top: 14px; }
   .skill-list dt:first-of-type { margin-top: 0; }
   .skill-list dd { font-size: 13px; color: var(--ink2); margin: 3px 0 0; line-height: 1.55; }
@@ -287,13 +302,25 @@
 
   <section id="skills">
     <h2 class="section-title">Skills</h2>
-    <dl class="skill-list">
-      <dt>Programming &amp; Data Science</dt><dd>Python, R, SQL, PyTorch, TensorFlow, Pandas, Scikit-learn, A/B Testing, Time Series Forecasting</dd>
-      <dt>Machine Learning &amp; Optimization</dt><dd>Prophet, Genetic Algorithms, Simulated Annealing, Particle Swarm, Monte Carlo Simulation, Gurobi</dd>
-      <dt>Visualization &amp; Analytics</dt><dd>Power BI, Tableau, Looker Studio, Advanced Excel, Interactive Dashboards, KPI Tracking</dd>
-      <dt>AI &amp; Developer Tools</dt><dd>Claude Code (MCP, CLI, API), GitHub Copilot, Power Automate, Prompt Engineering, AI Workflow Automation</dd>
-      <dt>Finance &amp; Research</dt><dd>DCF Modeling, Equity Valuation, Comparable Company Analysis, Quantitative Risk Analysis, @Risk, Market Research · CFA Level II Candidate</dd>
-    </dl>
+    <p class="section-sub">My competency profile in blue (self-assessed). Tap a role to see how the shape lines up; the full toolset is listed alongside.</p>
+    <div class="skills-grid">
+      <div class="radar-col">
+        <div class="radar-chips" id="radarChips"></div>
+        <svg id="radar" viewBox="0 0 460 340" role="img" aria-label="Competency radar comparing my skill profile against data-role archetypes"></svg>
+        <div class="radar-legend">
+          <span class="item"><span class="k"></span>My profile</span>
+          <span class="item"><span class="k arch"></span>Selected role (typical emphasis)</span>
+        </div>
+        <p class="radar-note">A self-assessment across seven competency areas; role shapes show where each archetype typically concentrates.</p>
+      </div>
+      <dl class="skill-list">
+        <dt>Programming &amp; Data Science</dt><dd>Python, R, SQL, PyTorch, TensorFlow, Pandas, Scikit-learn, A/B Testing, Time Series Forecasting</dd>
+        <dt>Machine Learning &amp; Optimization</dt><dd>Prophet, Genetic Algorithms, Simulated Annealing, Particle Swarm, Monte Carlo Simulation, Gurobi</dd>
+        <dt>Visualization &amp; Analytics</dt><dd>Power BI, Tableau, Looker Studio, Advanced Excel, Interactive Dashboards, KPI Tracking</dd>
+        <dt>AI &amp; Developer Tools</dt><dd>Claude Code (MCP, CLI, API), GitHub Copilot, Power Automate, Prompt Engineering, AI Workflow Automation</dd>
+        <dt>Finance &amp; Research</dt><dd>DCF Modeling, Equity Valuation, Comparable Company Analysis, Quantitative Risk Analysis, @Risk, Market Research · CFA Level II Candidate</dd>
+      </dl>
+    </div>
   </section>
 
   <footer class="site-footer">
@@ -477,6 +504,83 @@
   Object.keys(domainMeta).forEach(d => { if(projDegree[d]) addChip(d.toUpperCase(), d, projDegree[d]); });
   renderMap();
 
+  // ---- Skills radar: my competency profile vs role archetypes ----
+  (function buildRadar(){
+    const svg = document.getElementById("radar");
+    if(!svg) return;
+    const NS = "http://www.w3.org/2000/svg";
+    // Seven competency areas, grounded in resume/source/skills.md.
+    // Values are a 0-5 self-assessment; archetypes are generic role emphasis, not measured.
+    const AX = [
+      {k:"Programming",  full:"Programming & Data Science"},
+      {k:"Viz & BI",     full:"Visualization & BI"},
+      {k:"ML & Optim.",  full:"Machine Learning & Optimization"},
+      {k:"AI & Auto.",   full:"AI & Automation"},
+      {k:"Finance",      full:"Finance & Quantitative"},
+      {k:"Research",     full:"Research & Communication"},
+      {k:"Data Eng.",    full:"Data Engineering & Cloud"}
+    ];
+    const ME = [5,5,4,4,4,4,3];
+    const ARCH = {
+      "Data Analyst":     [4,5,2,2,3,4,2],
+      "Data Scientist":   [5,3,5,3,2,3,4],
+      "Business Analyst": [3,5,1,2,4,5,1]
+    };
+    const CX=230, CY=165, R=110, LR=138, MAX=5, N=AX.length;
+    const ang = i => -Math.PI/2 + i*2*Math.PI/N;
+    const pt = (i,v) => [CX + Math.cos(ang(i))*R*(v/MAX), CY + Math.sin(ang(i))*R*(v/MAX)];
+    const poly = vals => vals.map((v,i)=>pt(i,v).join(",")).join(" ");
+    let activeArch = null;
+
+    function render(){
+      let s = "";
+      for(let r=1;r<=MAX;r++) s += '<polygon class="rdr-ring" points="'+AX.map((_,i)=>pt(i,r).join(",")).join(" ")+'"/>';
+      AX.forEach((a,i)=>{
+        const [x,y]=pt(i,MAX);
+        s += '<line class="rdr-spoke" x1="'+CX+'" y1="'+CY+'" x2="'+x+'" y2="'+y+'"/>';
+        const lx=CX+Math.cos(ang(i))*LR, ly=CY+Math.sin(ang(i))*LR;
+        const c=Math.cos(ang(i)), sn=Math.sin(ang(i));
+        const anchor = c>0.3 ? "start" : (c<-0.3 ? "end" : "middle");
+        const dy = sn>0.3 ? "0.85em" : (sn<-0.3 ? "-0.35em" : "0.32em");
+        s += '<text class="rdr-axis-label" x="'+lx.toFixed(1)+'" y="'+ly.toFixed(1)+'" text-anchor="'+anchor+'" dy="'+dy+'">'+a.k+'</text>';
+      });
+      if(activeArch) s += '<polygon class="rdr-arch" points="'+poly(ARCH[activeArch])+'"/>';
+      s += '<polygon class="rdr-me-fill" points="'+poly(ME)+'"/>';
+      AX.forEach((a,i)=>{ const [x,y]=pt(i,ME[i]); s += '<circle class="rdr-me-dot" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="3.5"/>'; });
+      svg.innerHTML = s;
+      // invisible hover hit targets at each vertex
+      AX.forEach((a,i)=>{
+        const [x,y]=pt(i,ME[i]);
+        const hit=document.createElementNS(NS,"circle");
+        hit.setAttribute("cx",x); hit.setAttribute("cy",y); hit.setAttribute("r",13); hit.setAttribute("fill","transparent");
+        hit.addEventListener("pointerenter", e => {
+          const extra = activeArch ? " · "+activeArch+" "+ARCH[activeArch][i]+"/5" : "";
+          tlTip(a.full, "My profile "+ME[i]+"/5"+extra, "", e);
+        });
+        hit.addEventListener("pointermove", moveTip);
+        hit.addEventListener("pointerleave", hideTip);
+        svg.appendChild(hit);
+      });
+    }
+    render();
+
+    const wrap = document.getElementById("radarChips");
+    const chips=[];
+    Object.keys(ARCH).forEach(name=>{
+      const c=document.createElement("button");
+      c.className="tl-chip"; c.type="button";
+      c.setAttribute("aria-pressed","false");
+      c.innerHTML="<b>"+name+"</b>";
+      c.addEventListener("click",()=>{
+        const off = activeArch===name;
+        chips.forEach(x=>{ x.classList.remove("on"); x.setAttribute("aria-pressed","false"); });
+        activeArch = off ? null : name;
+        if(!off){ c.classList.add("on"); c.setAttribute("aria-pressed","true"); }
+        render();
+      });
+      wrap.appendChild(c); chips.push(c);
+    });
+  })();
 
 })();
 </script>
