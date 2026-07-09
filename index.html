@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- Hand-coded in one file. No framework, no build step, no external requests. If you're reading this, hello. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -33,6 +34,7 @@
   * { box-sizing:border-box; }
   html, body { margin:0; padding:0; background:var(--plane); }
   button { -webkit-appearance:none; appearance:none; }
+  .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
   .wrap {
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     color: var(--ink);
@@ -119,6 +121,7 @@
   .topbar .navlinks { display: flex; gap: 16px; flex: 1; }
   .topbar a { color: var(--ink2); text-decoration: none; font-size: 13px; }
   .topbar a:hover { color: var(--ink); }
+  .topbar a[aria-current="true"] { color: var(--ink); font-weight: 650; }
   .contact { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 16px; }
   .contact a { color: var(--exp); font-size: 13.5px; text-decoration: none; border-bottom: 1px solid transparent; }
   .contact a:hover { border-bottom-color: var(--exp); }
@@ -137,7 +140,7 @@
   .career li.now::before { box-shadow: 0 0 0 3px rgba(42,120,214,0.22); }
   .c-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 14px; }
   .c-role { font-weight: 600; font-size: 14.5px; }
-  .c-date { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; margin-left: auto; }
+  .c-date { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; margin-left: auto; font-variant-numeric: tabular-nums; }
   .c-gist { color: var(--ink2); font-size: 13.5px; margin: 3px 0 0; max-width: 60ch; }
   .tl-chips { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0 4px; }
   .tl-chip { font: inherit; font-size: 12px; cursor: pointer; background: var(--surface);
@@ -167,6 +170,8 @@
   .section-sub { color: var(--muted); font-size: 13px; margin: 0 0 10px; max-width: 70ch; }
   .site-footer { border-top: 1px solid var(--hair); padding-top: 20px; margin-top: 48px; }
   .site-footer .fineprint { color: var(--muted); font-size: 12px; margin-top: 12px; }
+  .site-footer .fineprint a { color: var(--exp); text-decoration: none; }
+  .site-footer .fineprint a:hover { text-decoration: underline; }
   @media (max-width: 640px) {
     .topbar .navlinks { gap: 10px; overflow-x: auto; }
   }
@@ -216,6 +221,33 @@
   .skill-list dt { font-size: 13px; font-weight: 650; color: var(--ink); margin-top: 14px; }
   .skill-list dt:first-of-type { margin-top: 0; }
   .skill-list dd { font-size: 13px; color: var(--ink2); margin: 3px 0 0; line-height: 1.55; }
+
+  /* Print / Save-as-PDF: strip the interactive shell, reflow to a clean document */
+  @media print {
+    @page { margin: 1.4cm; }
+    html, body, .wrap { background:#fff; color:#000; }
+    .wrap { max-width:100%; margin:0; padding:0; gap:0; }
+    .topbar, #tip, #panel, #sr, .tl-chips, #pmChips, .radar-col,
+    .transcript, .tr-cap { display:none !important; }
+    .sum-mark { visibility:hidden; }  /* keep its grid column so the title does not fall into the marker track */
+    section { margin-top:20px; }
+    .section-title, .eyebrow { color:#000; }
+    a { color:#000; text-decoration:underline; }
+    a[href^="http"]::after { content:" (" attr(href) ")"; font-size:0.82em; color:#555; word-break:break-all; }
+    /* Career spine: drop the decorative rail + dots, keep the text */
+    .career li { border-left:none; margin-left:0; padding:0 0 10px 0; page-break-inside:avoid; }
+    .career li::before { display:none; }
+    .c-date { color:#333; }
+    /* Force every project accordion open on paper */
+    .rows details.proj .proj-body { display:block !important; }
+    details.proj, .os-card, .pm-year { page-break-inside:avoid; }
+    .skills-grid, .os-grid { display:block; }
+    .os-card { margin-bottom:10px; }
+    /* Neutralize the green chip wash so it does not waste ink */
+    .pm-chip { background:transparent !important; border-left:2px solid #666; padding:2px 0 2px 8px; }
+    .pm-chip b { color:#000 !important; }
+    .pm-chip small { color:#333 !important; }
+  }
 </style>
 </head>
 <body>
@@ -237,7 +269,7 @@
     <h1 class="title">Haibin (Allen) Yu</h1>
     <p class="subtitle">I turn messy operational data into decisions: data analysis, forecasting, optimization, and AI-agent tooling. Below is my career, a map of everything I've built, and the skills behind it; click anything that interests you.</p>
     <div class="contact">
-      <a href="mailto:haibiny123@gmail.com">haibiny123@gmail.com</a>
+      <a class="copy-email" href="mailto:haibiny123@gmail.com">haibiny123@gmail.com</a>
       <a href="https://www.linkedin.com/in/haiiibin" target="_blank" rel="noopener">LinkedIn</a>
       <a href="https://github.com/haiiibin" target="_blank" rel="noopener">GitHub</a>
     </div>
@@ -420,17 +452,18 @@
 
   <footer class="site-footer">
     <div class="contact">
-      <a href="mailto:haibiny123@gmail.com">haibiny123@gmail.com</a>
+      <a class="copy-email" href="mailto:haibiny123@gmail.com">haibiny123@gmail.com</a>
       <a href="https://www.linkedin.com/in/haiiibin" target="_blank" rel="noopener">LinkedIn</a>
       <a href="https://github.com/haiiibin" target="_blank" rel="noopener">GitHub</a>
     </div>
-    <p class="fineprint">Hand-coded single-file site. No trackers, no cookies. © 2026 Haibin Yu</p>
+    <p class="fineprint">Hand-coded single-file site: no build step, no web fonts, no external requests. No trackers, no cookies. <a href="https://github.com/haiiibin/haiiibin.github.io/blob/main/index.html" target="_blank" rel="noopener">View source ↗</a> · © 2026 Haibin Yu</p>
   </footer>
 
 </div>
 
 <div id="tip" role="status" aria-live="polite"></div>
 <aside id="panel" role="dialog" aria-modal="true" aria-label="Details" aria-hidden="true"></aside>
+<span id="sr" class="sr-only" aria-live="polite"></span>
 
 <script>
 (function(){
@@ -694,6 +727,73 @@
         render();
       });
       wrap.appendChild(c); chips.push(c);
+    });
+  })();
+
+  // ---- Accessible live announcements ----
+  const srRegion = document.getElementById("sr");
+  function announce(msg){ if(srRegion){ srRegion.textContent = ""; srRegion.textContent = msg; } }
+
+  // ---- Click-to-copy email (mailto stays as href for right-click / middle-click) ----
+  document.querySelectorAll("a.copy-email").forEach(a => {
+    const email = a.getAttribute("href").replace(/^mailto:/, "");
+    a.title = "Click to copy";
+    a.addEventListener("click", e => {
+      if(!navigator.clipboard) return;            // no async clipboard -> let the mailto fire
+      e.preventDefault();
+      const original = a.textContent;
+      navigator.clipboard.writeText(email).then(() => {
+        a.textContent = "Copied ✓";
+        announce("Email address copied to clipboard");
+        setTimeout(() => { a.textContent = original; }, 1500);
+      }).catch(() => { window.location.href = a.getAttribute("href"); });
+    });
+  });
+
+  // ---- Scroll-spy: mark the in-view section in the nav (aria-current + weight) ----
+  (function scrollSpy(){
+    if(!("IntersectionObserver" in window)) return;
+    const links = [...document.querySelectorAll(".topbar .navlinks a")];
+    const byId = {};
+    links.forEach(a => { const id = a.getAttribute("href").slice(1); if(id) byId[id] = a; });
+    const secs = Object.keys(byId).map(id => document.getElementById(id)).filter(Boolean);
+    if(!secs.length) return;
+    const state = new Map();
+    secs.forEach(s => state.set(s.id, { top: Infinity, vis: false }));
+    let current = null;
+    const setCurrent = a => {
+      if(a === current) return;
+      links.forEach(x => x.removeAttribute("aria-current"));
+      if(a) a.setAttribute("aria-current", "true");
+      current = a;
+    };
+    const pick = () => {
+      // At the very bottom the last section wins: short trailing sections cannot reach the top band.
+      if(window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4){
+        setCurrent(links[links.length - 1]); return;
+      }
+      let best = null, bestTop = Infinity;
+      state.forEach((v, id) => { if(v.vis && v.top < bestTop){ bestTop = v.top; best = id; } });
+      setCurrent(best ? byId[best] : null);
+    };
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => state.set(e.target.id, { top: e.boundingClientRect.top, vis: e.isIntersecting }));
+      pick();
+    }, { rootMargin: "-52px 0px -65% 0px", threshold: 0 });
+    secs.forEach(s => io.observe(s));
+    window.addEventListener("scroll", pick, { passive: true });
+  })();
+
+  // ---- Expand project accordions for printing, then restore (CSS alone cannot
+  //      override the closed <details> content-visibility on current Chromium) ----
+  (function printExpand(){
+    let opened = [];
+    window.addEventListener("beforeprint", () => {
+      opened = [...document.querySelectorAll("details.proj:not([open])")];
+      opened.forEach(d => d.open = true);
+    });
+    window.addEventListener("afterprint", () => {
+      opened.forEach(d => d.open = false); opened = [];
     });
   })();
 
