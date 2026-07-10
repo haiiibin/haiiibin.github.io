@@ -89,9 +89,17 @@
   /* Light static transcript: one AI tool shown running (honest, no fake streaming) */
   .transcript { margin:6px 0 0; border:1px solid var(--hair); border-radius:12px;
     background:var(--surface); overflow:hidden; box-shadow:var(--shadow); }
-  .transcript .tr-bar { display:flex; align-items:center; gap:10px; padding:9px 14px;
+  .transcript .tr-bar { display:flex; align-items:center; flex-wrap:wrap; gap:0 10px; padding:0 14px;
     border-bottom:1px solid var(--hair); background:var(--plane); }
   .transcript .tr-dots { display:flex; gap:6px; flex:none; }
+  .transcript .tr-tabs { display:flex; }
+  .transcript .tr-tab { font:600 12px/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color:var(--muted); background:transparent; border:none; border-bottom:2px solid transparent;
+    margin-bottom:-1px; padding:10px 10px 8px; cursor:pointer; letter-spacing:0.01em; }
+  .transcript .tr-tab:hover { color:var(--ink); }
+  .transcript .tr-tab[aria-selected="true"] { color:var(--ink); border-bottom-color:var(--exp); }
+  .transcript .tr-tab:focus-visible { outline:2px solid var(--exp); outline-offset:-2px; }
+  @media (max-width:480px){ .transcript .tr-dots { display:none; } } /* decorative; frees the bar row on small screens */
   .transcript .tr-dots i { width:9px; height:9px; border-radius:50%; background:var(--axis); display:block; }
   .transcript .tr-title { font:600 12px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     color:var(--muted); letter-spacing:0.01em; }
@@ -222,10 +230,16 @@
   .skill-list dt:first-of-type { margin-top: 0; }
   .skill-list dd { font-size: 13px; color: var(--ink2); margin: 3px 0 0; line-height: 1.55; }
 
+  /* Scroll entrance: sections get .fx via JS (no-JS users never see hidden content) */
+  .fx { opacity: 0; transform: translateY(8px); transition: opacity .45s ease-out, transform .45s ease-out; }
+  .fx.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .fx { opacity: 1; transform: none; transition: none; } }
+
   /* Print / Save-as-PDF: strip the interactive shell, reflow to a clean document */
   @media print {
     @page { margin: 1.4cm; }
     html, body, .wrap { background:#fff; color:#000; }
+    .fx { opacity:1 !important; transform:none !important; transition:none !important; }
     .wrap { max-width:100%; margin:0; padding:0; gap:0; }
     .topbar, #tip, #panel, #sr, .tl-chips, #pmChips, .radar-col,
     .transcript, .tr-cap { display:none !important; }
@@ -315,12 +329,16 @@
   <section id="open-source">
     <h2 class="section-title">Open Source & AI Systems</h2>
     <p class="section-sub">Claude Code tools I build and ship, plus fixes I contribute upstream.</p>
-      <div class="transcript" role="img" aria-label="Example run of my multi-agent investing tool: twelve agents debate a ticker and the portfolio-manager issues one tax-aware rating">
+      <div class="transcript">
         <div class="tr-bar">
           <span class="tr-dots"><i></i><i></i><i></i></span>
-          <span class="tr-title">claude-multi-agent-investing — /research</span>
+          <div class="tr-tabs" role="tablist" aria-label="Pick which tool's run to show">
+            <button class="tr-tab" id="trTab0" type="button" role="tab" aria-selected="true" aria-controls="trPanel0">multi-agent-investing</button>
+            <button class="tr-tab" id="trTab1" type="button" role="tab" aria-selected="false" aria-controls="trPanel1">job-hunt-pipeline</button>
+          </div>
         </div>
-<pre aria-hidden="true"><span class="c-mut"># 12 agents, 13 slash commands, advisory only</span>
+<div id="trPanel0" role="tabpanel" aria-labelledby="trTab0">
+<pre><span class="c-mut"># 12 agents, 13 slash commands, advisory only</span>
 <span class="c-prompt">$</span> claude
 <span class="c-prompt">&gt;</span> <span class="c-cmd">/research NVDA</span>
 
@@ -338,8 +356,29 @@
     <span class="c-key">gate</span>     <span class="c-mut">money-moving actions pause for confirmation</span>
 
 <span class="c-mut">advisory only · runs on a Claude Code subscription, zero extra API cost</span></pre>
+</div>
+<div id="trPanel1" role="tabpanel" aria-labelledby="trTab1" hidden>
+<pre><span class="c-mut"># a job posting in, a submission-ready application out · 2 commands</span>
+<span class="c-prompt">$</span> claude
+<span class="c-prompt">&gt;</span> <span class="c-cmd">/hunt</span>
+
+  sweeping four channels in one pass
+    <span class="c-dot">●</span> <span class="c-agent">scan</span>      <span class="c-mut">career sites · aggregators · job boards · Boss, read-only</span>
+    <span class="c-dot">●</span> <span class="c-agent">filter</span>    <span class="c-mut">hard-rule wordbook rejects junk before any LLM scoring</span>
+    <span class="c-dot">●</span> <span class="c-agent">score</span>     <span class="c-mut">five weighted dimensions → one F score per posting</span>
+    <span class="c-dot">●</span> <span class="c-agent">report</span>    <span class="c-mut">two tiers · confirmed eligible / worth a look · you pick</span>
+
+<span class="c-prompt">&gt;</span> <span class="c-cmd">/apply &lt;job link&gt;</span>
+    <span class="c-dot">●</span> <span class="c-agent">tailor</span>    <span class="c-mut">resume rebuilt from tagged fragments matched to the JD</span>
+    <span class="c-dot">●</span> <span class="c-agent">compile</span>   <span class="c-mut">LaTeX/HTML → PDF, verified as one full page</span>
+    <span class="c-dot">●</span> <span class="c-agent">autofill</span>  <span class="c-mut">fills the portal form, uploads the PDF, screenshots it</span>
+    <span class="c-key">gate</span>     <span class="c-mut">stops before Submit · a human clicks it, every time</span>
+
+<span class="c-mut">never auto-submits · red-flag deductions only on lines stated in the JD</span></pre>
+</div>
       </div>
-      <p class="tr-cap">A live-style trace of one tool I built: twelve agents debate a single ticker, then the portfolio-manager synthesizes them into one tax-aware rating. This shows the mechanism, not an investment call.</p>
+      <p class="tr-cap" id="trCap0">A live-style trace of one tool I built: twelve agents debate a single ticker, then the portfolio-manager synthesizes them into one tax-aware rating. This shows the mechanism, not an investment call.</p>
+      <p class="tr-cap" id="trCap1" hidden>The same discipline applied to job hunting: the pipeline scans, scores, tailors and fills, but the Submit click is reserved for a human. A leaner North America variant ships separately.</p>
     <div class="os-grid">
       <div class="os-card">
         <h3><a href="https://github.com/haiiibin/claude-multi-agent-investing" target="_blank" rel="noopener">Claude Multi-Agent Investing ↗</a></h3>
@@ -782,6 +821,46 @@
     }, { rootMargin: "-52px 0px -65% 0px", threshold: 0 });
     secs.forEach(s => io.observe(s));
     window.addEventListener("scroll", pick, { passive: true });
+  })();
+
+  // ---- Transcript tabs: one card, two tool runs ----
+  (function trTabs(){
+    const tabs = [...document.querySelectorAll(".tr-tab")];
+    if(!tabs.length) return;
+    const select = i => tabs.forEach((t, j) => {
+      const on = i === j;
+      t.setAttribute("aria-selected", String(on));
+      const panel = document.getElementById(t.getAttribute("aria-controls"));
+      if(panel) panel.hidden = !on;
+      const cap = document.getElementById("trCap" + j);
+      if(cap) cap.hidden = !on;
+    });
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => select(i));
+      t.addEventListener("keydown", e => {
+        if(e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+        e.preventDefault();
+        const n = (i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length;
+        tabs[n].focus(); select(n);
+      });
+    });
+  })();
+
+  // ---- Scroll entrance: gentle one-time fade-up per section (JS-added, so
+  //      no-JS visitors and reduced-motion users always see everything) ----
+  (function fadeUp(){
+    if(!("IntersectionObserver" in window)) return;
+    const els = ["career","open-source","project-map","projects","skills"]
+      .map(id => document.getElementById(id)).filter(Boolean);
+    const io = new IntersectionObserver(entries => entries.forEach(e => {
+      if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
+    }), { rootMargin: "0px 0px -6% 0px", threshold: 0.04 });
+    const vh = window.innerHeight;
+    els.forEach(el => {
+      el.classList.add("fx");
+      if(el.getBoundingClientRect().top < vh * 0.92) el.classList.add("in"); // in view at load: no entrance
+      else io.observe(el);
+    });
   })();
 
   // ---- Expand project accordions for printing, then restore (CSS alone cannot
