@@ -20,6 +20,16 @@
 </script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='7' width='17' height='6' rx='2' fill='%232a78d6'/%3E%3Crect x='9' y='16' width='20' height='6' rx='2' fill='%231baf7a'/%3E%3Crect x='5' y='25' width='12' height='5' rx='2' fill='%23eda100'/%3E%3C/svg%3E">
 <title>Haibin (Allen) Yu | Data & AI Analyst</title>
+<script>
+/* Paint the saved (or OS-preferred) theme before first render to avoid a flash */
+(function(){
+  try {
+    var t = localStorage.getItem("theme");
+    if(t !== "dark" && t !== "light") t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", t);
+  } catch(e){ document.documentElement.setAttribute("data-theme", "light"); }
+})();
+</script>
 <style>
   :root {
     color-scheme: light;
@@ -31,6 +41,23 @@
     --chip:#ffffff; --chip-ink:#52514e;
     --shadow:0 1px 2px rgba(11,11,11,0.06), 0 8px 24px rgba(11,11,11,0.08);
   }
+  /* Dark theme: same hue families re-picked for a dark surface
+     (categorical trio 4a8ad9/17a273/8d7cea validated: lightness band + CVD dE 61 + contrast) */
+  [data-theme="dark"] {
+    color-scheme: dark;
+    --plane:#0e1116; --surface:#151a21;
+    --ink:#e9e7e2; --ink2:#b4b2ab; --muted:#8b897f;
+    --hair:#252b34; --axis:#3c434e; --border:rgba(233,231,226,0.12);
+    --exp:#4a8ad9; --proj:#17a273;
+    --edu:#8d7cea; --proj-wash:rgba(23,162,115,0.16); --exp-strong:#6ca4ec; --exp-wash:rgba(74,138,217,0.18);
+    --chip:#1a212b; --chip-ink:#b4b2ab;
+    --shadow:0 1px 2px rgba(0,0,0,0.5), 0 10px 28px rgba(0,0,0,0.55);
+  }
+  /* Fixes where light-theme hardcodes assume a dark-on-light chip */
+  [data-theme="dark"] .tl-chip.on { color:#0e1116; }
+  [data-theme="dark"] .tl-chip.on small { color:rgba(14,17,22,0.7); }
+  [data-theme="dark"] .career li.now::before { box-shadow: 0 0 0 3px rgba(74,138,217,0.32); }
+  [data-theme="dark"] .pm-chip:hover { box-shadow:0 4px 12px rgba(0,0,0,0.45); }
   * { box-sizing:border-box; }
   html, body { margin:0; padding:0; background:var(--plane); }
   button { -webkit-appearance:none; appearance:none; }
@@ -152,6 +179,11 @@
   .topbar a:hover::after { width:100%; }
   .topbar a[aria-current="true"] { color: var(--ink); font-weight: 650; }
   .topbar a[aria-current="true"]::after { width:100%; }
+  .theme-btn { flex:none; width:30px; height:30px; border-radius:50%; border:1px solid var(--hair);
+    background:var(--surface); color:var(--ink2); cursor:pointer; font-size:15px; line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0; }
+  .theme-btn:hover { color:var(--ink); border-color:var(--axis); }
+  .theme-btn:focus-visible { outline:2px solid var(--exp); outline-offset:2px; }
   .contact { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 16px; }
   .contact a { color: var(--exp); font-size: 13.5px; text-decoration: none; border-bottom: 1px solid transparent; }
   .contact a:hover { border-bottom-color: var(--exp); }
@@ -273,9 +305,18 @@
   /* Print / Save-as-PDF: strip the interactive shell, reflow to a clean document */
   @media print {
     @page { margin: 1.4cm; }
+    /* Whatever theme is active on screen, paper is always light */
+    :root, :root[data-theme="dark"] {
+      color-scheme: light;
+      --plane:#fff; --surface:#fff; --ink:#000; --ink2:#333; --muted:#555;
+      --hair:#ddd; --axis:#bbb; --border:rgba(0,0,0,0.15);
+      --exp:#1c5cab; --proj:#0f7a55; --edu:#4a3aa7;
+      --exp-strong:#1c5cab; --exp-wash:transparent; --proj-wash:transparent;
+      --chip:#fff; --chip-ink:#333; --shadow:none;
+    }
     html, body, .wrap { background:#fff; color:#000; }
     .fx { opacity:1 !important; transform:none !important; transition:none !important; }
-    #bg, .type-cursor { display:none !important; }
+    #bg, .type-cursor, .theme-btn { display:none !important; }
     header .title, header .subtitle, header .contact { animation:none !important; }
     .title { background:none; -webkit-text-fill-color:initial; color:#000; }
     .wrap { max-width:100%; margin:0; padding:0; gap:0; }
@@ -313,6 +354,7 @@
       <a href="#projects">Projects</a>
       <a href="#skills">Skills</a>
     </div>
+    <button id="themeBtn" class="theme-btn" type="button" aria-label="Switch to dark theme">☾</button>
   </div>
 </nav>
 <div class="wrap">
@@ -863,6 +905,25 @@
 
   const REDUCE = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // ---- Theme toggle: warm light <-> dark (saved only when the user chooses) ----
+  (function themeToggle(){
+    const btn = document.getElementById("themeBtn");
+    if(!btn) return;
+    const root = document.documentElement;
+    const paint = t => {
+      btn.textContent = t === "dark" ? "☀" : "☾";
+      btn.setAttribute("aria-label", t === "dark" ? "Switch to warm light theme" : "Switch to dark theme");
+    };
+    paint(root.getAttribute("data-theme") || "light");
+    btn.addEventListener("click", () => {
+      const t = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", t);
+      paint(t);
+      try { localStorage.setItem("theme", t); } catch(e){}
+      if(window.__particlesRecolor) window.__particlesRecolor();
+    });
+  })();
+
   // ---- Transcript typewriter: panels replay line-by-line when first seen ----
   const typePanel = panel => {
     const pre = panel.querySelector("pre");
@@ -955,6 +1016,16 @@
     const ctx = cv.getContext("2d");
     let W, H, pts = [];
     const DPR = Math.min(window.devicePixelRatio || 1, 2);
+    // theme-aware colors: brighter steps on the dark ground
+    let C;
+    const recolor = () => {
+      const dark = document.documentElement.getAttribute("data-theme") === "dark";
+      C = dark
+        ? { link:"116,166,235", linkA:.2,  dot:"rgba(116,166,235,.5)", dotG:"rgba(52,204,150,.5)"  }
+        : { link:"42,120,214",  linkA:.26, dot:"rgba(42,120,214,.5)",  dotG:"rgba(27,175,122,.55)" };
+    };
+    recolor();
+    window.__particlesRecolor = recolor;
     function resize(){
       W = window.innerWidth; H = window.innerHeight;
       cv.width = W * DPR; cv.height = H * DPR;
@@ -989,13 +1060,13 @@
           const dx = pts[a].x - pts[b].x, dy = pts[a].y - pts[b].y;
           const d = Math.hypot(dx, dy);
           if(d < LINK){
-            ctx.strokeStyle = "rgba(42,120,214," + ((1 - d / LINK) * .26).toFixed(3) + ")";
+            ctx.strokeStyle = "rgba(" + C.link + "," + ((1 - d / LINK) * C.linkA).toFixed(3) + ")";
             ctx.beginPath(); ctx.moveTo(pts[a].x, pts[a].y); ctx.lineTo(pts[b].x, pts[b].y); ctx.stroke();
           }
         }
       }
       for(const p of pts){
-        ctx.fillStyle = p.g ? "rgba(27,175,122,.55)" : "rgba(42,120,214,.5)";
+        ctx.fillStyle = p.g ? C.dotG : C.dot;
         ctx.beginPath(); ctx.arc(p.x, p.y, 2.1, 0, Math.PI * 2); ctx.fill();
       }
       requestAnimationFrame(frame);
