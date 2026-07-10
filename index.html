@@ -914,12 +914,13 @@
         tabs[n].focus(); select(n);
       });
     });
-    // start the replay the first time the card scrolls into view
+    // start the replay only once HALF the card is on screen: on tall viewports the
+    // card peeks above the fold and a lower threshold would self-play before anyone looks
     const card = document.querySelector(".transcript");
     if(card && "IntersectionObserver" in window){
       const io = new IntersectionObserver(es => es.forEach(e => {
         if(e.isIntersecting){ transcriptSeen = true; typeVisiblePanel(); io.disconnect(); }
-      }), { threshold: 0.2 });
+      }), { threshold: 0.5 });
       io.observe(card);
     } else { transcriptSeen = true; typeVisiblePanel(); }
   })();
@@ -959,7 +960,7 @@
       cv.width = W * DPR; cv.height = H * DPR;
       cv.style.width = W + "px"; cv.style.height = H + "px";
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-      const n = Math.max(30, Math.min(90, Math.round(W * H / 22000)));
+      const n = Math.max(34, Math.min(110, Math.round(W * H / 17000)));
       pts = Array.from({length: n}, () => ({
         x: Math.random() * W, y: Math.random() * H,
         vx: (Math.random() - .5) * .4, vy: (Math.random() - .5) * .4,
@@ -968,7 +969,7 @@
     }
     resize();
     window.addEventListener("resize", resize);
-    const LINK = 110;
+    const LINK = 130;
     let running = true;
     document.addEventListener("visibilitychange", () => {
       running = !document.hidden;
@@ -988,14 +989,14 @@
           const dx = pts[a].x - pts[b].x, dy = pts[a].y - pts[b].y;
           const d = Math.hypot(dx, dy);
           if(d < LINK){
-            ctx.strokeStyle = "rgba(42,120,214," + ((1 - d / LINK) * .16).toFixed(3) + ")";
+            ctx.strokeStyle = "rgba(42,120,214," + ((1 - d / LINK) * .26).toFixed(3) + ")";
             ctx.beginPath(); ctx.moveTo(pts[a].x, pts[a].y); ctx.lineTo(pts[b].x, pts[b].y); ctx.stroke();
           }
         }
       }
       for(const p of pts){
-        ctx.fillStyle = p.g ? "rgba(27,175,122,.42)" : "rgba(42,120,214,.38)";
-        ctx.beginPath(); ctx.arc(p.x, p.y, 1.7, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = p.g ? "rgba(27,175,122,.55)" : "rgba(42,120,214,.5)";
+        ctx.beginPath(); ctx.arc(p.x, p.y, 2.1, 0, Math.PI * 2); ctx.fill();
       }
       requestAnimationFrame(frame);
     }
