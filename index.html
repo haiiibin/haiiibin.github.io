@@ -34,6 +34,9 @@
   * { box-sizing:border-box; }
   html, body { margin:0; padding:0; background:var(--plane); }
   button { -webkit-appearance:none; appearance:none; }
+  /* Particle constellation backdrop (canvas injected by JS; light-tuned) */
+  #bg { position:fixed; inset:0; z-index:0; pointer-events:none; }
+  .wrap { position:relative; z-index:1; }
   .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
   .wrap {
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -45,10 +48,23 @@
   }
 
   /* Header */
-  .eyebrow { font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--exp); margin:0 0 10px; }
+  .eyebrow { font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--exp); margin:0 0 10px; min-height:1.2em; }
   .title { font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
     font-size: clamp(30px, 5vw, 44px); font-weight:600; letter-spacing:-0.015em; margin:0; text-wrap:balance; }
+  @supports (-webkit-background-clip: text) {
+    .title { width:fit-content; background:linear-gradient(105deg, var(--ink) 42%, var(--exp-strong) 78%, var(--proj) 104%);
+      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  }
   .subtitle { font-size: 15px; color:var(--ink2); margin:14px 0 0; max-width:58ch; line-height:1.65; }
+  /* Hero entrance: staggered rise on load */
+  @keyframes rise { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
+  header .title    { animation: rise .55s ease-out both .05s; }
+  header .subtitle { animation: rise .55s ease-out both .18s; }
+  header .contact  { animation: rise .55s ease-out both .30s; }
+  /* Blinking terminal cursor (typewriter effects) */
+  .type-cursor { display:inline-block; width:0.55em; height:1.05em; vertical-align:text-bottom;
+    background:var(--exp); animation: blink 1.05s steps(1) infinite; }
+  @keyframes blink { 0%,55% { opacity:1; } 56%,100% { opacity:0; } }
   .status-pill { display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:600;
     color:var(--ink2); background:var(--surface); border:1px solid var(--hair);
     border-radius:999px; padding:5px 12px; margin:0 0 14px; }
@@ -78,7 +94,9 @@
   .os-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px; }
   @media (max-width:640px){ .os-grid { grid-template-columns:1fr; } }
   .os-card { border:1px solid var(--hair); border-left:3px solid var(--exp);
-    border-radius:10px; padding:16px 18px; background:var(--surface); }
+    border-radius:10px; padding:16px 18px; background:var(--surface);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+  .os-card:hover { transform:translateY(-3px); box-shadow:var(--shadow); border-color:var(--exp); }
   .os-card h3 { margin:0 0 6px; font-size:15px; }
   .os-card h3 a { color:var(--ink); text-decoration:none; }
   .os-card h3 a:hover { color:var(--exp); }
@@ -127,9 +145,13 @@
   .tb-in { max-width: 968px; margin: 0 auto; display: flex; align-items: center; gap: 18px; padding: 11px 24px; }
   .topbar .brand { font-weight: 650; font-size: 14px; }
   .topbar .navlinks { display: flex; gap: 16px; flex: 1; }
-  .topbar a { color: var(--ink2); text-decoration: none; font-size: 13px; }
+  .topbar a { color: var(--ink2); text-decoration: none; font-size: 13px; position:relative; padding-bottom:2px; }
+  .topbar a::after { content:""; position:absolute; left:0; bottom:0; height:2px; width:0;
+    background:var(--exp); transition:width .22s ease; }
   .topbar a:hover { color: var(--ink); }
+  .topbar a:hover::after { width:100%; }
   .topbar a[aria-current="true"] { color: var(--ink); font-weight: 650; }
+  .topbar a[aria-current="true"]::after { width:100%; }
   .contact { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 16px; }
   .contact a { color: var(--exp); font-size: 13.5px; text-decoration: none; border-bottom: 1px solid transparent; }
   .contact a:hover { border-bottom-color: var(--exp); }
@@ -167,7 +189,9 @@
   .pm-items { display: flex; flex-wrap: wrap; gap: 8px; }
   .pm-chip { font: inherit; display: inline-flex; align-items: baseline; gap: 8px; cursor: pointer;
     background: var(--proj-wash); border: none; border-left: 3px solid var(--proj);
-    border-radius: 8px; padding: 8px 12px; text-align: left; }
+    border-radius: 8px; padding: 8px 12px; text-align: left;
+    transition: transform .18s ease, background .18s ease, box-shadow .18s ease; }
+  .pm-chip:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(27,175,122,0.25); }
   .pm-chip b { font-size: 12.5px; font-weight: 600; color: var(--ink); }
   .pm-chip small { font-size: 11px; color: var(--muted); }
   .pm-chip:hover, .pm-chip:focus-visible { background: var(--proj); }
@@ -231,15 +255,29 @@
   .skill-list dd { font-size: 13px; color: var(--ink2); margin: 3px 0 0; line-height: 1.55; }
 
   /* Scroll entrance: sections get .fx via JS (no-JS users never see hidden content) */
-  .fx { opacity: 0; transform: translateY(8px); transition: opacity .45s ease-out, transform .45s ease-out; }
+  .fx { opacity: 0; transform: translateY(20px); transition: opacity .55s ease-out, transform .55s ease-out; }
   .fx.in { opacity: 1; transform: none; }
-  @media (prefers-reduced-motion: reduce) { .fx { opacity: 1; transform: none; transition: none; } }
+  /* Radar polygon draws in on every render (initial + archetype toggles) */
+  @keyframes radarIn { from { opacity:0; transform:scale(.65); } to { opacity:1; transform:none; } }
+  .rdr-me-fill, .rdr-arch { transform-box: view-box; transform-origin: 230px 165px; animation: radarIn .6s ease-out; }
+  /* One switch kills every effect for reduced-motion users */
+  @media (prefers-reduced-motion: reduce) {
+    .fx { opacity: 1; transform: none; transition: none; }
+    header .title, header .subtitle, header .contact { animation: none; }
+    .type-cursor { animation: none; }
+    .rdr-me-fill, .rdr-arch { animation: none; }
+    .os-card, .pm-chip, .topbar a::after { transition: none; }
+    .os-card:hover, .pm-chip:hover { transform: none; }
+  }
 
   /* Print / Save-as-PDF: strip the interactive shell, reflow to a clean document */
   @media print {
     @page { margin: 1.4cm; }
     html, body, .wrap { background:#fff; color:#000; }
     .fx { opacity:1 !important; transform:none !important; transition:none !important; }
+    #bg, .type-cursor { display:none !important; }
+    header .title, header .subtitle, header .contact { animation:none !important; }
+    .title { background:none; -webkit-text-fill-color:initial; color:#000; }
     .wrap { max-width:100%; margin:0; padding:0; gap:0; }
     .topbar, #tip, #panel, #sr, .tl-chips, #pmChips, .radar-col,
     .transcript, .tr-cap { display:none !important; }
@@ -823,18 +861,50 @@
     window.addEventListener("scroll", pick, { passive: true });
   })();
 
+  const REDUCE = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---- Transcript typewriter: panels replay line-by-line when first seen ----
+  const typePanel = panel => {
+    const pre = panel.querySelector("pre");
+    if(!pre || panel.dataset.typed) return;
+    panel.dataset.typed = "run";
+    const full = pre.innerHTML;
+    const done = () => {
+      pre.innerHTML = full + '\n<span class="c-prompt">$</span> <span class="type-cursor"></span>';
+      panel.dataset.typed = "done";
+    };
+    if(REDUCE){ done(); return; }
+    const lines = full.split("\n");
+    pre.style.minHeight = (pre.offsetHeight + 26) + "px";   // reserve room: no layout jump while typing
+    let i = 0;
+    pre.innerHTML = '<span class="type-cursor"></span>';
+    const tick = setInterval(() => {
+      i++;
+      if(i >= lines.length){ clearInterval(tick); done(); return; }
+      pre.innerHTML = lines.slice(0, i).join("\n") + '\n<span class="type-cursor"></span>';
+    }, 65);
+  };
+  let transcriptSeen = false;
+  const typeVisiblePanel = () => {
+    const p = [...document.querySelectorAll('[id^="trPanel"]')].find(x => !x.hidden);
+    if(p) typePanel(p);
+  };
+
   // ---- Transcript tabs: one card, two tool runs ----
   (function trTabs(){
     const tabs = [...document.querySelectorAll(".tr-tab")];
     if(!tabs.length) return;
-    const select = i => tabs.forEach((t, j) => {
-      const on = i === j;
-      t.setAttribute("aria-selected", String(on));
-      const panel = document.getElementById(t.getAttribute("aria-controls"));
-      if(panel) panel.hidden = !on;
-      const cap = document.getElementById("trCap" + j);
-      if(cap) cap.hidden = !on;
-    });
+    const select = i => {
+      tabs.forEach((t, j) => {
+        const on = i === j;
+        t.setAttribute("aria-selected", String(on));
+        const panel = document.getElementById(t.getAttribute("aria-controls"));
+        if(panel) panel.hidden = !on;
+        const cap = document.getElementById("trCap" + j);
+        if(cap) cap.hidden = !on;
+      });
+      if(transcriptSeen) typeVisiblePanel();
+    };
     tabs.forEach((t, i) => {
       t.addEventListener("click", () => select(i));
       t.addEventListener("keydown", e => {
@@ -844,6 +914,92 @@
         tabs[n].focus(); select(n);
       });
     });
+    // start the replay the first time the card scrolls into view
+    const card = document.querySelector(".transcript");
+    if(card && "IntersectionObserver" in window){
+      const io = new IntersectionObserver(es => es.forEach(e => {
+        if(e.isIntersecting){ transcriptSeen = true; typeVisiblePanel(); io.disconnect(); }
+      }), { threshold: 0.2 });
+      io.observe(card);
+    } else { transcriptSeen = true; typeVisiblePanel(); }
+  })();
+
+  // ---- Hero eyebrow typewriter (enhancement only; no-JS shows plain text) ----
+  (function eyebrowType(){
+    if(REDUCE) return;
+    const el = document.querySelector(".eyebrow");
+    if(!el) return;
+    const text = el.textContent;
+    el.textContent = "";
+    const cur = document.createElement("span");
+    cur.className = "type-cursor";
+    el.appendChild(cur);
+    let i = 0;
+    const tick = setInterval(() => {
+      i++;
+      el.firstChild ? el.insertBefore(document.createTextNode(text[i-1]), cur) : null;
+      if(i >= text.length){
+        clearInterval(tick);
+        setTimeout(() => cur.remove(), 1600);
+      }
+    }, 26);
+  })();
+
+  // ---- Particle constellation backdrop (light-tuned, pauses when tab hidden) ----
+  (function particles(){
+    if(REDUCE || !document.createElement("canvas").getContext) return;
+    const cv = document.createElement("canvas");
+    cv.id = "bg"; cv.setAttribute("aria-hidden", "true");
+    document.body.prepend(cv);
+    const ctx = cv.getContext("2d");
+    let W, H, pts = [];
+    const DPR = Math.min(window.devicePixelRatio || 1, 2);
+    function resize(){
+      W = window.innerWidth; H = window.innerHeight;
+      cv.width = W * DPR; cv.height = H * DPR;
+      cv.style.width = W + "px"; cv.style.height = H + "px";
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      const n = Math.max(30, Math.min(90, Math.round(W * H / 22000)));
+      pts = Array.from({length: n}, () => ({
+        x: Math.random() * W, y: Math.random() * H,
+        vx: (Math.random() - .5) * .4, vy: (Math.random() - .5) * .4,
+        g: Math.random() < .22                        // some green, mostly blue
+      }));
+    }
+    resize();
+    window.addEventListener("resize", resize);
+    const LINK = 110;
+    let running = true;
+    document.addEventListener("visibilitychange", () => {
+      running = !document.hidden;
+      if(running) requestAnimationFrame(frame);
+    });
+    function frame(){
+      if(!running) return;
+      ctx.clearRect(0, 0, W, H);
+      for(const p of pts){
+        p.x += p.vx; p.y += p.vy;
+        if(p.x < 0) p.x = W; else if(p.x > W) p.x = 0;
+        if(p.y < 0) p.y = H; else if(p.y > H) p.y = 0;
+      }
+      ctx.lineWidth = 1;
+      for(let a = 0; a < pts.length; a++){
+        for(let b = a + 1; b < pts.length; b++){
+          const dx = pts[a].x - pts[b].x, dy = pts[a].y - pts[b].y;
+          const d = Math.hypot(dx, dy);
+          if(d < LINK){
+            ctx.strokeStyle = "rgba(42,120,214," + ((1 - d / LINK) * .16).toFixed(3) + ")";
+            ctx.beginPath(); ctx.moveTo(pts[a].x, pts[a].y); ctx.lineTo(pts[b].x, pts[b].y); ctx.stroke();
+          }
+        }
+      }
+      for(const p of pts){
+        ctx.fillStyle = p.g ? "rgba(27,175,122,.42)" : "rgba(42,120,214,.38)";
+        ctx.beginPath(); ctx.arc(p.x, p.y, 1.7, 0, Math.PI * 2); ctx.fill();
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
   })();
 
   // ---- Scroll entrance: gentle one-time fade-up per section (JS-added, so
