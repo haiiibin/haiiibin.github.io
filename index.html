@@ -118,8 +118,8 @@
   #panel .p-links li:focus-visible { outline:2px solid var(--exp); outline-offset:2px; border-radius:4px; }
 
   /* Open Source & AI Systems cards */
-  .os-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px; }
-  @media (max-width:640px){ .os-grid { grid-template-columns:1fr; } }
+  .os-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:14px; }
+  @media (max-width:840px){ .os-grid { grid-template-columns:1fr; } }
   .os-card { border:1px solid var(--hair); border-left:3px solid var(--exp);
     border-radius:10px; padding:16px 18px; background:var(--surface);
     transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
@@ -414,7 +414,7 @@
           <span class="tr-dots"><i></i><i></i><i></i></span>
           <div class="tr-tabs" role="tablist" aria-label="Pick which tool's run to show">
             <button class="tr-tab" id="trTab0" type="button" role="tab" aria-selected="true" aria-controls="trPanel0">multi-agent-investing</button>
-            <button class="tr-tab" id="trTab1" type="button" role="tab" aria-selected="false" aria-controls="trPanel1">job-hunt-pipeline</button>
+            <button class="tr-tab" id="trTab1" type="button" role="tab" aria-selected="false" aria-controls="trPanel1">data-profiler-mcp</button>
           </div>
         </div>
 <div id="trPanel0" role="tabpanel" aria-labelledby="trTab0">
@@ -438,27 +438,27 @@
 <span class="c-mut">advisory only · runs on a Claude Code subscription, zero extra API cost</span></pre>
 </div>
 <div id="trPanel1" role="tabpanel" aria-labelledby="trTab1" hidden>
-<pre><span class="c-mut"># a job posting in, a submission-ready application out · 2 commands</span>
+<pre><span class="c-mut"># point Claude at any tabular file · 6 tools · published on PyPI</span>
+<span class="c-prompt">$</span> <span class="c-cmd">pip install data-profiler-mcp</span>
 <span class="c-prompt">$</span> claude
-<span class="c-prompt">&gt;</span> <span class="c-cmd">/hunt</span>
+<span class="c-prompt">&gt;</span> <span class="c-cmd">profile sales.csv and tell me what's wrong with it</span>
 
-  sweeping four channels in one pass
-    <span class="c-dot">●</span> <span class="c-agent">scan</span>      <span class="c-mut">career sites · aggregators · job boards · Boss, read-only</span>
-    <span class="c-dot">●</span> <span class="c-agent">filter</span>    <span class="c-mut">hard-rule wordbook rejects junk before any LLM scoring</span>
-    <span class="c-dot">●</span> <span class="c-agent">score</span>     <span class="c-mut">five weighted dimensions → one F score per posting</span>
-    <span class="c-dot">●</span> <span class="c-agent">report</span>    <span class="c-mut">two tiers · confirmed eligible / worth a look · you pick</span>
+  reads the file itself, no pasting df.head() into chat
+    <span class="c-dot">●</span> <span class="c-agent">profile_dataset</span>        <span class="c-mut">shape · memory · missing values · per-column summary</span>
+    <span class="c-dot">●</span> <span class="c-agent">preview_data</span>           <span class="c-mut">head / tail / random rows, as real records</span>
+    <span class="c-dot">●</span> <span class="c-agent">column_stats</span>           <span class="c-mut">percentiles · outliers · histograms · top values</span>
+    <span class="c-dot">●</span> <span class="c-agent">detect_quality_issues</span>  <span class="c-mut">duplicates · numbers stored as text · mixed types, by severity</span>
+    <span class="c-dot">●</span> <span class="c-agent">suggest_dtypes</span>         <span class="c-mut">memory-saving load plan, with estimated savings</span>
+    <span class="c-dot">●</span> <span class="c-agent">compare_datasets</span>       <span class="c-mut">schema + distribution drift between two files</span>
 
-<span class="c-prompt">&gt;</span> <span class="c-cmd">/apply &lt;job link&gt;</span>
-    <span class="c-dot">●</span> <span class="c-agent">tailor</span>    <span class="c-mut">resume rebuilt from tagged fragments matched to the JD</span>
-    <span class="c-dot">●</span> <span class="c-agent">compile</span>   <span class="c-mut">LaTeX/HTML → PDF, verified as one full page</span>
-    <span class="c-dot">●</span> <span class="c-agent">autofill</span>  <span class="c-mut">fills the portal form, uploads the PDF, screenshots it</span>
-    <span class="c-key">gate</span>     <span class="c-mut">stops before Submit · a human clicks it, every time</span>
+    <span class="c-key">formats</span>  <span class="c-mut">CSV · TSV · Parquet · Excel · JSON/JSONL</span>
+    <span class="c-key">guard</span>    <span class="c-mut">large files sampled to a row cap, never loaded whole</span>
 
-<span class="c-mut">never auto-submits · red-flag deductions only on lines stated in the JD</span></pre>
+<span class="c-mut">works with Claude Desktop · Claude Code · Cursor · any MCP client</span></pre>
 </div>
       </div>
       <p class="tr-cap" id="trCap0">A live-style trace of one tool I built: twelve agents debate a single ticker, then the portfolio-manager synthesizes them into one tax-aware rating. This shows the mechanism, not an investment call.</p>
-      <p class="tr-cap" id="trCap1" hidden>The same discipline applied to job hunting: the pipeline scans, scores, tailors and fills, but the Submit click is reserved for a human. A leaner North America variant ships separately.</p>
+      <p class="tr-cap" id="trCap1" hidden>A second tool, live on PyPI: six MCP tools that let Claude audit an unfamiliar dataset (schema, quality flags, dtype plan) before any analysis touches it. One pip install away for any MCP client.</p>
     <div class="os-grid">
       <div class="os-card">
         <h3><a href="https://github.com/haiiibin/claude-multi-agent-investing" target="_blank" rel="noopener">Claude Multi-Agent Investing ↗</a></h3>
@@ -467,10 +467,16 @@
         <a class="os-link" href="https://github.com/haiiibin/claude-multi-agent-investing" target="_blank" rel="noopener">View on GitHub ↗</a>
       </div>
       <div class="os-card">
-        <h3><a href="https://github.com/haiiibin/ai-job-hunt-pipeline" target="_blank" rel="noopener">AI Job Hunt Pipeline ↗</a></h3>
-        <p>End-to-end job-application workflow: scan boards, score each posting against a weighted rubric, tailor a one-page resume, compile the PDF, and stop before submit so a human always hits the button. A leaner North America version ships separately.</p>
-        <p class="os-stack">Claude Code &middot; MCP &middot; workflow automation</p>
-        <a class="os-link" href="https://github.com/haiiibin/ai-job-hunt-pipeline" target="_blank" rel="noopener">View on GitHub ↗</a>
+        <h3><a href="https://github.com/haiiibin/data-profiler-mcp" target="_blank" rel="noopener">data-profiler-mcp ↗</a></h3>
+        <p>An MCP server that lets an LLM understand any tabular file: schema, distributions, severity-ranked quality flags and memory-saving dtype suggestions from CSV, Parquet, Excel or JSON. Large files are sampled, never loaded whole.</p>
+        <p class="os-stack">Python &middot; pandas &middot; FastMCP &middot; on PyPI</p>
+        <a class="os-link" href="https://github.com/haiiibin/data-profiler-mcp" target="_blank" rel="noopener">View on GitHub ↗</a>
+      </div>
+      <div class="os-card">
+        <h3><a href="https://github.com/haiiibin/acb-tax-mcp" target="_blank" rel="noopener">acb-tax-mcp ↗</a></h3>
+        <p>Canadian capital-gains math as an MCP server: CRA average-cost ACB, per-disposition gains, a Schedule-3-style yearly report and superficial-loss detection, with commissions and per-trade FX handled. Decimal-precise, zero heavy dependencies.</p>
+        <p class="os-stack">Python &middot; MCP &middot; Decimal &middot; on PyPI</p>
+        <a class="os-link" href="https://github.com/haiiibin/acb-tax-mcp" target="_blank" rel="noopener">View on GitHub ↗</a>
       </div>
     </div>
     <p class="section-sub" style="margin-top:12px">Upstream: contributing <a href="https://github.com/Alex2Yang97/yahoo-finance-mcp/pull/16" target="_blank" rel="noopener">date-range support</a> and <a href="https://github.com/Alex2Yang97/yahoo-finance-mcp/pull/17" target="_blank" rel="noopener">class-share ticker normalization</a> to the yahoo-finance-mcp server.</p>
