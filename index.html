@@ -438,7 +438,7 @@
 <span class="c-mut">advisory only · runs on a Claude Code subscription, zero extra API cost</span></pre>
 </div>
 <div id="trPanel1" role="tabpanel" aria-labelledby="trTab1" hidden>
-<pre><span class="c-mut"># point Claude at any tabular file · 6 tools · published on PyPI</span>
+<pre><span class="c-mut"># point Claude at any tabular file · 7 tools · published on PyPI</span>
 <span class="c-prompt">$</span> <span class="c-cmd">pip install data-profiler-mcp</span>
 <span class="c-prompt">$</span> claude
 <span class="c-prompt">&gt;</span> <span class="c-cmd">profile sales.csv and tell me what's wrong with it</span>
@@ -450,6 +450,7 @@
     <span class="c-dot">●</span> <span class="c-agent">detect_quality_issues</span>  <span class="c-mut">duplicates · numbers stored as text · mixed types, by severity</span>
     <span class="c-dot">●</span> <span class="c-agent">suggest_dtypes</span>         <span class="c-mut">memory-saving load plan, with estimated savings</span>
     <span class="c-dot">●</span> <span class="c-agent">compare_datasets</span>       <span class="c-mut">schema + distribution drift between two files</span>
+    <span class="c-dot">●</span> <span class="c-agent">correlation_matrix</span>     <span class="c-mut">pearson · spearman · kendall, multicollinearity flags</span>
 
     <span class="c-key">formats</span>  <span class="c-mut">CSV · TSV · Parquet · Excel · JSON/JSONL</span>
     <span class="c-key">guard</span>    <span class="c-mut">large files sampled to a row cap, never loaded whole</span>
@@ -458,7 +459,7 @@
 </div>
       </div>
       <p class="tr-cap" id="trCap0">A live-style trace of one tool I built: twelve agents debate a single ticker, then the portfolio-manager synthesizes them into one tax-aware rating. This shows the mechanism, not an investment call.</p>
-      <p class="tr-cap" id="trCap1" hidden>A second tool, live on PyPI: six MCP tools that let Claude audit an unfamiliar dataset (schema, quality flags, dtype plan) before any analysis touches it. One pip install away for any MCP client.</p>
+      <p class="tr-cap" id="trCap1" hidden>A second tool, live on PyPI: seven MCP tools that let Claude audit an unfamiliar dataset (schema, quality flags, correlations, dtype plan) before any analysis touches it. One pip install away for any MCP client.</p>
     <div class="os-grid">
       <div class="os-card">
         <h3><a href="https://github.com/haiiibin/claude-multi-agent-investing" target="_blank" rel="noopener">Claude Multi-Agent Investing ↗</a></h3>
@@ -468,18 +469,18 @@
       </div>
       <div class="os-card">
         <h3><a href="https://github.com/haiiibin/data-profiler-mcp" target="_blank" rel="noopener">data-profiler-mcp ↗</a></h3>
-        <p>An MCP server that lets an LLM understand any tabular file: schema, distributions, severity-ranked quality flags and memory-saving dtype suggestions from CSV, Parquet, Excel or JSON. Large files are sampled, never loaded whole.</p>
+        <p>An MCP server that lets an LLM understand any tabular file: schema, distributions, severity-ranked quality flags, correlation analysis with multicollinearity warnings and memory-saving dtype suggestions from CSV, Parquet, Excel or JSON. Large files are sampled, never loaded whole.</p>
         <p class="os-stack">Python &middot; pandas &middot; MCP &middot; on PyPI</p>
         <a class="os-link" href="https://github.com/haiiibin/data-profiler-mcp" target="_blank" rel="noopener">View on GitHub ↗</a>
       </div>
       <div class="os-card">
         <h3><a href="https://github.com/haiiibin/acb-tax-mcp" target="_blank" rel="noopener">acb-tax-mcp ↗</a></h3>
-        <p>Canadian capital-gains math as an MCP server: CRA average-cost ACB, Schedule-3-style yearly reports and superficial-loss detection, plus unrealized gains against market prices and a normalizer that turns raw broker CSV exports into clean transactions. Decimal-precise, zero heavy dependencies.</p>
+        <p>Canadian capital-gains math as an MCP server: CRA average-cost ACB, per-security Schedule 3 filing rows, superficial-loss detection, unrealized gains against market prices and a normalizer that turns raw broker CSV exports into clean transactions. Decimal-precise, zero heavy dependencies.</p>
         <p class="os-stack">Python &middot; MCP &middot; Decimal &middot; on PyPI</p>
         <a class="os-link" href="https://github.com/haiiibin/acb-tax-mcp" target="_blank" rel="noopener">View on GitHub ↗</a>
       </div>
     </div>
-    <p class="section-sub" style="margin-top:12px">Upstream: contributing <a href="https://github.com/Alex2Yang97/yahoo-finance-mcp/pull/16" target="_blank" rel="noopener">date-range support</a> and <a href="https://github.com/Alex2Yang97/yahoo-finance-mcp/pull/17" target="_blank" rel="noopener">class-share ticker normalization</a> to the yahoo-finance-mcp server.</p>
+    <p class="section-sub" style="margin-top:12px">Both MCP servers are published on the official <a href="https://registry.modelcontextprotocol.io" target="_blank" rel="noopener">MCP Registry</a> and listed in awesome-mcp-servers. Upstream, merged: <a href="https://github.com/unit8co/darts/pull/3167" target="_blank" rel="noopener">short-series training support in darts</a> and <a href="https://github.com/coin-or/pulp/pull/936" target="_blank" rel="noopener">reproducible CBC solves in PuLP</a>; in review: <a href="https://github.com/stefanoamorelli/sec-edgar-mcp/pull/142" target="_blank" rel="noopener">a 9-tool description fix in sec-edgar-mcp</a>, plus <a href="https://github.com/Alex2Yang97/yahoo-finance-mcp/pull/16" target="_blank" rel="noopener">date-range support</a> and <a href="https://github.com/Alex2Yang97/yahoo-finance-mcp/pull/17" target="_blank" rel="noopener">ticker normalization</a> in yahoo-finance-mcp.</p>
   </section>
 
   <section id="project-map">
