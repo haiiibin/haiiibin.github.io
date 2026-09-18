@@ -133,7 +133,7 @@
   #panel .p-links li:focus-visible { outline:2px solid var(--exp); outline-offset:2px; border-radius:4px; }
 
   /* Open Source & AI Systems cards */
-  .os-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:14px; }
+  .os-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:14px; }
   @media (max-width:840px){ .os-grid { grid-template-columns:1fr; } }
   .os-card { border:1px solid var(--hair); border-left:3px solid var(--exp);
     border-radius:10px; padding:16px 18px; background:var(--surface);
@@ -493,6 +493,12 @@
         <p>Canadian capital-gains math as an MCP server: CRA average-cost ACB, per-security Schedule 3 filing rows, superficial-loss detection, unrealized gains against market prices and a normalizer that turns raw broker CSV exports into clean transactions. Decimal-precise, zero heavy dependencies.</p>
         <p class="os-stack">Python &middot; MCP &middot; Decimal &middot; on PyPI</p>
         <a class="os-link" href="https://github.com/haiiibin/acb-tax-mcp" target="_blank" rel="noopener">View on GitHub ↗</a>
+      </div>
+      <div class="os-card">
+        <h3><a href="https://github.com/haiiibin/vlog-pipeline" target="_blank" rel="noopener">vlog-pipeline ↗</a></h3>
+        <p>Turns a week of raw phone clips into a 1-3 minute 9:16 vlog draft: PySceneDetect scene cuts, optional whisper.cpp Chinese subtitles, heuristic clip scoring, a Claude-generated cut list (or a deterministic fallback), an ffmpeg render with burned-in subtitles, and a local FastAPI web UI to pick the keepers. Work in progress, phase 3 of 5.</p>
+        <p class="os-stack">Python &middot; ffmpeg &middot; whisper.cpp &middot; Claude API</p>
+        <a class="os-link" href="https://github.com/haiiibin/vlog-pipeline" target="_blank" rel="noopener">View on GitHub ↗</a>
       </div>
     </div>
     <p class="section-sub" style="margin-top:12px">Both MCP servers are published on the official <a href="https://registry.modelcontextprotocol.io" target="_blank" rel="noopener">MCP Registry</a> and listed in awesome-mcp-servers. Upstream, merged: <a href="https://github.com/unit8co/darts/pull/3167" target="_blank" rel="noopener">short-series training support in darts</a> (shipped in 0.47.0) and <a href="https://github.com/coin-or/pulp/pull/936" target="_blank" rel="noopener">reproducible CBC solves in PuLP</a>; in review: <a href="https://github.com/stefanoamorelli/sec-edgar-mcp/pull/142" target="_blank" rel="noopener">a 9-tool description fix in sec-edgar-mcp</a>, plus <a href="https://github.com/Alex2Yang97/yahoo-finance-mcp/pull/16" target="_blank" rel="noopener">date-range support</a> and <a href="https://github.com/Alex2Yang97/yahoo-finance-mcp/pull/17" target="_blank" rel="noopener">ticker normalization</a> in yahoo-finance-mcp.</p>
